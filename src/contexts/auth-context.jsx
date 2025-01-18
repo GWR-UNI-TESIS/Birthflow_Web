@@ -4,43 +4,96 @@ import api from '../api/api';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [authTokens, setAuthTokens] = useState(() => ({
-        accessToken: localStorage.getItem('accessToken'),
-        refreshToken: localStorage.getItem('refreshToken'),
-    }));
+
+    const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
+    const [isAuthenticated, setIsAuthenticated] = useState(!!accessToken);
+    const [authError, setAuthError] = useState(null);
+
+    useEffect(() => {
+        const interceptor = axios.interceptors.request.use(
+            async (config) => {
+                if (accessToken) {
+                    config.headers.Authorization = `Bearer ${accessToken}`;
+                }
+
+                try {
+                    // Check if token is expired
+                    await axios.post(`${process.env.REACT_APP_API_URL}/auth/verify-token`, {
+                        token: accessToken,
+                    });
+                } catch (error) {
+                    if (error.response?.status === 401) {
+                        try {
+                            await refreshAccessToken();
+                        } catch (refreshError) {
+                            handleAuthError();
+                        }
+                    }
+                }
+
+                return config;
+            },
+            (error) => Promise.reject(error)
+        );
+
+        return () => {
+            axios.interceptors.request.eject(interceptor);
+        };
+    }, [accessToken]);
 
     const login = async (credentials) => {
-        const response = await api.post('/api/auth/login', credentials);
-        const { accessToken, refreshToken } = response.data;
-
-        setAuthTokens({ accessToken, refreshToken });
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
-    };
-
-    const refreshToken = async () => {
         try {
-            const response = await api.post('/api/auth/refresh', {
-                refreshToken: authTokens.refreshToken,
-            });
-            const { accessToken } = response.data;
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, credentials);
+            const { accessToken, refreshToken } = response.data;
 
-            setAuthTokens((prev) => ({ ...prev, accessToken }));
             localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            setAccessToken(accessToken);
+            setRefreshToken(refreshToken);
+            setIsAuthenticated(true);
         } catch (error) {
-            logout();
-            throw error;
+            throw new Error('Login failed.');
         }
     };
 
+
     const logout = () => {
-        setAuthTokens(null);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        setAccessToken(null);
+        setRefreshToken(null);
+        setIsAuthenticated(false);
+    };
+
+    const refreshAccessToken = async () => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/refresh-token`, {
+                refreshToken,
+            });
+
+            const { accessToken: newAccessToken } = response.data;
+            localStorage.setItem('accessToken', newAccessToken);
+            setAccessToken(newAccessToken);
+        } catch (error) {
+            throw new Error('Failed to refresh access token.');
+        }
+    };
+    const handleAuthError = () => {
+        setAuthError('Session expired. Please log in again.');
+        logout();
     };
 
     return (
-        <AuthContext.Provider value={{ authTokens, login, refreshToken, logout }}>
+        <AuthContext.Provider
+            value={{
+                isAuthenticated,
+                accessToken,
+                login,
+                logout,
+                authError,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
