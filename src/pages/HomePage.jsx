@@ -1,12 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Dropdown, Button, Space, Typography, Card, Flex, Divider, Table } from "antd";
-import { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from "@ant-design/icons";
-
+import {
+    Layout,
+    Menu,
+    Flex,
+    Dropdown,
+    Button,
+    Space,
+    Typography,
+    Card,
+    Divider,
+    Tabs,
+    Input,
+    Select,
+    Table,
+    Radio
+} from "antd";
+import {
+    UserOutlined,
+    LogoutOutlined,
+    SettingOutlined,
+    BellOutlined,
+    AppstoreOutlined,
+    TableOutlined
+} from "@ant-design/icons";
 import axios from 'axios';
 import { useAuth } from '../contexts/auth-context';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
+const { TabPane } = Tabs;
+const { Option } = Select;
 
 const HomePage = () => {
     const [data, setData] = useState(null);
@@ -31,6 +54,8 @@ const HomePage = () => {
         fetchData();
     }, []);
 
+    const [viewMode, setViewMode] = useState("table");
+
     const userMenu = (
         <Menu>
             <Menu.Item key="1" icon={<SettingOutlined />}>
@@ -40,75 +65,57 @@ const HomePage = () => {
         </Menu>
     );
 
-    const columns = [
-        {
-            title: 'Full Name',
-            width: 100,
-            dataIndex: 'name',
-            key: 'name',
-            fixed: 'left',
-        },
-        {
-            title: 'Age',
-            width: 100,
-            dataIndex: 'age',
-            key: 'age',
-            fixed: 'left',
-        },
-        {
-            title: 'Column 1',
-            dataIndex: 'address',
-            key: '1',
-            width: 150,
-        },
-        {
-            title: 'Column 2',
-            dataIndex: 'address',
-            key: '2',
-            width: 150,
-        },
-        {
-            title: 'Column 3',
-            dataIndex: 'address',
-            key: '3',
-            width: 150,
-        },
-        {
-            title: 'Column 4',
-            dataIndex: 'address',
-            key: '4',
-            width: 150,
-        },
-        {
-            title: 'Column 5',
-            dataIndex: 'address',
-            key: '5',
-            width: 150,
-        },
-        {
-            title: 'Column 6',
-            dataIndex: 'address',
-            key: '6',
-            width: 150,
-        },
-        {
-            title: 'Column 7',
-            dataIndex: 'address',
-            key: '7',
-            width: 150,
-        },
+    const handleViewChange = (e) => {
+        setViewMode(e.target.value);
+    };
 
-
+    const dataSource = [
+        {
+            key: "1",
+            name: "Partograma 1",
+            expediente: "EXP001",
+            modified: "2025-01-01",
+            owner: "Usuario 1",
+            activity: "Revisión",
+        },
+        {
+            key: "2",
+            name: "Partograma 2",
+            expediente: "EXP002",
+            modified: "2025-01-02",
+            owner: "Usuario 2",
+            activity: "Edición",
+        },
     ];
 
-    const dataSource = Array.from({
-        length: 100,
-    }).map((_, i) => ({
-        key: i,
-        name: `Partograpma ${i}`,
-        age: 32,
-        address: `Expediente ${i}`,
-    }));
+    const columns = [
+        {
+            title: "Nombre",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "Expediente",
+            dataIndex: "expediente",
+            key: "expediente",
+        },
+        {
+            title: "Modificado",
+            dataIndex: "modified",
+            key: "modified",
+        },
+        {
+            title: "Propiedad",
+            dataIndex: "owner",
+            key: "owner",
+        },
+        {
+            title: "Actividad",
+            dataIndex: "activity",
+            key: "activity",
+        },
+    ];
+
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
@@ -142,25 +149,68 @@ const HomePage = () => {
 
             {/* Main Content Area */}
             <Content style={{ padding: "16px" }}>
-                <div style={{ backgroundColor: "#fff", padding: 24, minHeight: 360 }}>
-                    <h1>Partogramas recientes</h1>
-                    <Flex justify={'space-between'} align={'center'}>
-                        <Card title={"Partograma1"}></Card>
-                        <Card title={"Partograma2"}></Card>
-                        <Card title={"Partograma3"}></Card>
-                        <Card title={"Partograma4"}></Card>
-                    </Flex>
-                    <Divider />
+                <Card title="Partogramas Recientes" style={{ marginBottom: 16 }}>
+                    {/* Add recent partograms content here */}
+                    <p>Aquí se muestran los partogramas recientes...</p>
+                </Card>
 
-                    <Table
-                        columns={columns}
-                        dataSource={dataSource}
-                        scroll={{
-                            x: 'max-content',
-                            y: 55 * 5,
-                        }}
-                    />
-                </div>
+                <Divider />
+
+                <Card style={{ marginBottom: 16 }}>
+                    <Flex justify="space-between">
+                        <Tabs defaultActiveKey="1" style={{ marginBottom: 16 }}>
+                            <TabPane tab="Todos" key="1">
+                                {/* Content for Todos */}
+                            </TabPane>
+                            <TabPane tab="Abiertos" key="2">
+                                {/* Content for Abiertos */}
+                            </TabPane>
+                            <TabPane tab="Compartidos" key="3">
+                                {/* Content for Compartidos */}
+                            </TabPane>
+                            <TabPane tab="Favoritos" key="4">
+                                {/* Content for Favoritos */}
+                            </TabPane>
+                        </Tabs>
+
+                        <Space style={{ marginBottom: 16 }}>
+                            <Input placeholder="Buscar..." style={{ width: 200 }} />
+                            <Select placeholder="Filtrar" style={{ width: 150 }}>
+                                <Option value="opcion1">Opción 1</Option>
+                                <Option value="opcion2">Opción 2</Option>
+                            </Select>
+                            <Radio.Group
+                                optionType="button"
+                                buttonStyle="solid"
+                                value={viewMode}
+                                onChange={handleViewChange}
+                            >
+                                <Radio.Button value="table">
+                                    <TableOutlined />
+                                </Radio.Button>
+                                <Radio.Button value="cards">
+                                    <AppstoreOutlined />
+                                </Radio.Button>
+                            </Radio.Group>
+                        </Space>
+                    </Flex >
+                    {viewMode === "table" ? (
+                        <Table dataSource={dataSource} columns={columns} />
+                    ) : (
+                        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                            {dataSource.map((item) => (
+                                <Card key={item.key} title={item.name} style={{ width: 300 }}>
+                                    <p>Expediente: {item.expediente}</p>
+                                    <p>Modificado: {item.modified}</p>
+                                    <p>Propiedad: {item.owner}</p>
+                                    <p>Actividad: {item.activity}</p>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
+                </Card>
+
+
             </Content>
         </Layout>
     );
