@@ -1,21 +1,32 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage';
-import HomePage from '../pages/HomePage';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from '../pages/LoginPage';
+import Home from '../pages/HomePage';
+import Register from '../pages/RegisterPage';
+import Welcome from '../pages/WelcomePage';
+import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuth } from '../contexts/auth-context';
+const AppRoutes = () => {
 
-const PrivateRoute = ({ children }) => {
-    const { authTokens } = useAuth();
-    return authTokens ? children : <Navigate to="/login" />;
-};
+  const { login, logout } = useAuth();
 
-const AppRoutes = () => (
+  return (
     <Router>
-        <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-            <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
+      <Routes>
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </Router>
-);
+  );
+};
 
 export default AppRoutes;

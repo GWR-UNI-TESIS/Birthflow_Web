@@ -1,10 +1,14 @@
 import AppRoutes from './routes/routes';
+import { App } from 'antd';
 import { AuthProvider } from './contexts/auth-context';
 
-const App = () => (
-    <AuthProvider>
-        <AppRoutes />
-    </AuthProvider>
+
+const MyApp = () => (
+    <App>
+        <AuthProvider>
+            <AppRoutes />
+        </AuthProvider>
+    </App>
 );
 
-export default App;
+export default MyApp;
