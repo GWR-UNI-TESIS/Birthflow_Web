@@ -24,7 +24,8 @@ import {
     TableOutlined
 } from "@ant-design/icons";
 import axios from 'axios';
-import { useAuth } from '../contexts/auth-context';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/auth-context';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -32,29 +33,49 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 const HomePage = () => {
-    const [data, setData] = useState(null);
-    const { authError } = useAuth();
-
+    const navigate = useNavigate();
+    const { isAuthenticated, accessToken, validateAccessToken, refreshAccessToken, logout, loading } = useAuth();
+    const [data, setData] = useState([]);
+    const [viewMode, setViewMode] = useState("table");
+    const [loadingData, setLoadingData] = useState(true);
     useEffect(() => {
-        const fetchData = async () => {
+        const initialize = async () => {
+            if (!accessToken) {
+                navigate("/login");
+                return;
+            }
+
             try {
-                // Realiza la solicitud utilizando Axios
-                const response = await axios.get('/api/account/me', {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                        'Device-Info': 'ases', // O usa tu función getDeviceInfo si es necesario
-                    },
-                });
-                setData(response);
+                const isValid = await validateAccessToken();
+                if (!isValid) {
+                    await refreshAccessToken(); // Intenta renovar el token si no es válido
+                }
+
+                await fetchData(); // Carga los datos después de validar el token
             } catch (error) {
-                console.error('Error al obtener datos:', error);
+                console.error("Error durante la inicialización:", error.message);
+                logout();
+                navigate("/login");
+            } finally {
+                setLoadingData(false);
             }
         };
 
-        fetchData();
-    }, []);
+        initialize();
+    }, [accessToken]);
 
-    const [viewMode, setViewMode] = useState("table");
+    const fetchData = async () => {
+        try {
+            const response = await axios.get("/api/account/me", {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+            setData(response.data);
+        } catch (error) {
+            console.error("Error al obtener datos:", error.response?.data || error.message);
+        }
+    };
 
     const userMenu = (
         <Menu>

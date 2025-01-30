@@ -12,7 +12,7 @@ const LoginPage = () => {
         try {
             setAuthError(null); // Clear previous error before attempting login 
             await login(values);
-            navigate('/home');
+            navigate('/');
         } catch (error) {
             console.error(error.message);
         }
