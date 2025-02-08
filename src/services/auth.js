@@ -1,5 +1,5 @@
 import { plainAxios } from "./api";
-import { getDeviceInfo } from "./device";
+import { getDeviceInfo } from "../utils/device-id";
 
 export const login = async (credentials) => {
   const response = await plainAxios.post("/api/auth/login", credentials, {

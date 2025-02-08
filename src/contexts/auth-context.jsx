@@ -1,15 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-
-const getDeviceInfo = () => {
-    const userAgent = navigator.userAgent;
-    const platform = navigator.platform;
-    const screenWidth = window.screen.width;
-    const screenHeight = window.screen.height;
-
-    return `Platform: ${platform}; User-Agent: ${userAgent}; Screen: ${screenWidth}x${screenHeight}`;
-};
-
+import { api } from '../services/api';
+import { login as loginService, refreshToken as refreshService } from "../services/auth";
 
 const AuthContext = createContext();
 
@@ -21,6 +12,7 @@ export const AuthProvider = ({ children }) => {
     const [loginMessage, setLoginMessage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [tokenCheckRunning, setTokenCheckRunning] = useState(false); // Avoid multiple calls
+
     useEffect(() => {
         const interceptor = axios.interceptors.response.use(
             (response) => response,
@@ -28,14 +20,21 @@ export const AuthProvider = ({ children }) => {
                 if (error.response?.status === 401 && !error.config._retry) {
                     error.config._retry = true;
                     try {
-                        await refreshAccessToken();
-                        error.config.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
-                        error.config.headers['Device-Info'] = getDeviceInfo();
-                        return axios(error.config);
+                        setLoading(true);
+                        const { accessToken: newAccessToken } = await refreshService(
+                            accessToken,
+                            refreshToken
+                        );
+                        localStorage.setItem("accessToken", newAccessToken);
+                        setAccessToken(newAccessToken);
+                        error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+                        return api(error.config);
                     } catch (refreshError) {
                         setAuthError(refreshError.response?.data?.message || 'Failed to refresh access token.');
                         handleAuthError();
                         return Promise.reject(refreshError);
+                    } finally {
+                        setLoading(false);
                     }
                 }
                 setAuthError(error.response?.data?.message || 'An error occurred.');
@@ -50,30 +49,26 @@ export const AuthProvider = ({ children }) => {
 
     const validateAccessToken = async () => {
         try {
-          setLoading(true);
-          await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/validate-token`, {
-            accessToken: accessToken,
-          }, {
-            headers: {
-              'Device-Info': getDeviceInfo(),
-            },
-          });
-          return true;
-        } catch (error) {
-          return false;
-        } finally {
-          setLoading(false);
-        }
-      };
-
-    const login = async (credentials) => {
-        try {
             setLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, credentials, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/validate-token`, {
+                accessToken: accessToken,
+            }, {
                 headers: {
                     'Device-Info': getDeviceInfo(),
                 },
             });
+            return true;
+        } catch (error) {
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const login = async (credentials) => {
+        try {
+            setLoading(true);
+            const response = await loginService(credentials);
 
             const { statusCode, message, response: responseData } = response.data;
 
@@ -106,29 +101,6 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
 
-    const refreshAccessToken = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/refresh`, {
-                accessToken,
-                refreshToken,
-            }, {
-                headers: {
-                    'Device-Info': getDeviceInfo(),
-                },
-            });
-
-            const { accessToken: newAccessToken } = response.data;
-            localStorage.setItem('accessToken', newAccessToken);
-            setAccessToken(newAccessToken);
-            return true;
-        } catch (error) {
-            setAuthError(error.response?.data?.message || 'Failed to refresh access token.');
-            throw new Error('Failed to refresh access token.');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleAuthError = () => {
         logout();
