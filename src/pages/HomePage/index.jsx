@@ -39,30 +39,8 @@ const HomePage = () => {
     const [viewMode, setViewMode] = useState("table");
     const [loadingData, setLoadingData] = useState(true);
     useEffect(() => {
-        const initialize = async () => {
-            if (!accessToken) {
-                navigate("/login");
-                return;
-            }
-
-            try {
-                const isValid = await validateAccessToken();
-                if (!isValid) {
-                    await refreshAccessToken(); // Intenta renovar el token si no es válido
-                }
-
-                await fetchData(); // Carga los datos después de validar el token
-            } catch (error) {
-                console.error("Error durante la inicialización:", error.message);
-                logout();
-                navigate("/login");
-            } finally {
-                setLoadingData(false);
-            }
-        };
-
-        initialize();
-    }, [accessToken]);
+        fetchData();
+    }, []);
 
     const fetchData = async () => {
         try {

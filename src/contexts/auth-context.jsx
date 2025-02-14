@@ -1,128 +1,110 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { api } from '../services/api';
-import { login as loginService, refreshToken as refreshService } from "../services/auth";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { login as loginService, refreshToken as refreshService, validateAccessToken as validateAccessTokenService } from "../services/auth-service";
+import { plainAxios } from "../services/api";
+import { getDeviceInfo } from "../utils/device-id";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-    const [refreshToken, setRefreshToken] = useState(localStorage.getItem('refreshToken'));
-    const [isAuthenticated, setIsAuthenticated] = useState(!!accessToken);
+    const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || null);
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken") || null);
     const [authError, setAuthError] = useState(null);
-    const [loginMessage, setLoginMessage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [tokenCheckRunning, setTokenCheckRunning] = useState(false); // Avoid multiple calls
 
     useEffect(() => {
-        const interceptor = axios.interceptors.response.use(
-            (response) => response,
-            async (error) => {
-                if (error.response?.status === 401 && !error.config._retry) {
-                    error.config._retry = true;
-                    try {
-                        setLoading(true);
-                        const { accessToken: newAccessToken } = await refreshService(
-                            accessToken,
-                            refreshToken
-                        );
-                        localStorage.setItem("accessToken", newAccessToken);
-                        setAccessToken(newAccessToken);
-                        error.config.headers.Authorization = `Bearer ${newAccessToken}`;
-                        return api(error.config);
-                    } catch (refreshError) {
-                        setAuthError(refreshError.response?.data?.message || 'Failed to refresh access token.');
-                        handleAuthError();
-                        return Promise.reject(refreshError);
-                    } finally {
-                        setLoading(false);
-                    }
-                }
-                setAuthError(error.response?.data?.message || 'An error occurred.');
-                return Promise.reject(error);
+        if (accessToken) {
+            handleTokenValidation();
+        }
+    }, []);
+
+    // 🔹 Validar o refrescar el token
+    const handleTokenValidation = async () => {
+        try {
+            const isValid = await validateAccessToken();
+            if (!isValid) {
+                const newToken = await refreshAccessToken();
+                if (!newToken) throw new Error("No se pudo refrescar el token");
             }
-        );
+        } catch (error) {
+            console.error("Error en la validación del token:", error);
+            logout();
+        }
+    };
 
-        return () => {
-            axios.interceptors.response.eject(interceptor);
-        };
-    }, [refreshToken]);
-
+    // Validar si el accessToken sigue siendo válido
     const validateAccessToken = async () => {
+        if (!accessToken) return false;
         try {
-            setLoading(true);
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/validate-token`, {
-                accessToken: accessToken,
-            }, {
-                headers: {
-                    'Device-Info': getDeviceInfo(),
-                },
-            });
-            return true;
-        } catch (error) {
+            const { message, response, statusCode } = await validateAccessTokenService(accessToken);
+            return response;
+        } catch {
             return false;
-        } finally {
-            setLoading(false);
         }
     };
 
-    const login = async (credentials) => {
+    // Refrescar Token
+    const refreshAccessToken = async () => {
+        if (!accessToken || !refreshToken) return null;
         try {
-            setLoading(true);
-            const response = await loginService(credentials);
-
-            const { statusCode, message, response: responseData } = response.data;
-
-            if (statusCode === 200) {
-                setLoginMessage(message);
-                const { accessToken, refreshToken } = responseData;
-
-                localStorage.setItem('accessToken', accessToken);
-                localStorage.setItem('refreshToken', refreshToken);
-                setAccessToken(accessToken);
-                setRefreshToken(refreshToken);
-                setIsAuthenticated(true);
-                setAuthError(null);
-            } else {
-                throw new Error(message);
-            }
-        } catch (error) {
-            setAuthError(error.response?.data?.message || 'Login failed.');
-            throw new Error(error.response?.data?.message || 'Login failed.');
-        } finally {
-            setLoading(false);
+            const newAccessToken = await refreshService(accessToken, refreshToken);
+            setAccessToken(newAccessToken);
+            localStorage.setItem("accessToken", newAccessToken);
+            return newAccessToken;
+        } catch {
+            logout();
+            return null;
         }
     };
 
+    // 🔹 Iniciar sesión
+    const login = async (userLogin) => {
+        setLoading(true); // Activar el estado de carga
+        try {
+          // Llamar al servicio de login
+          const response = await loginService({
+            email: userLogin.email,
+            password: userLogin.password,
+          });
+      
+          // Si la respuesta es exitosa, actualizar el estado y localStorage
+          setAccessToken(response.accessToken);
+          setRefreshToken(response.refreshToken);
+          localStorage.setItem("accessToken", response.accessToken);
+          localStorage.setItem("refreshToken", response.refreshToken);
+      
+          // Limpiar el error de autenticación
+          setAuthError(null);
+      
+          // Devolver el mensaje de éxito
+          return { success: true, message: response.message };
+        } catch (error) {
+      
+          // Establecer el mensaje de error
+          const errorMessage = error.message || "Error al iniciar sesión";
+          setAuthError(errorMessage);
+      
+          setAccessToken(null);
+          setRefreshToken(null);
+          localStorage.setItem("accessToken", null);
+          localStorage.setItem("refreshToken", null);
+          // Devolver el mensaje de error
+          return { success: false, message: errorMessage };
+        } finally {
+          setLoading(false); // Desactivar el estado de carga
+        }
+      };
+
+    // 🔹 Cerrar sesión
     const logout = () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
         setAccessToken(null);
         setRefreshToken(null);
-        setIsAuthenticated(false);
-    };
-
-
-    const handleAuthError = () => {
-        logout();
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
     };
 
     return (
         <AuthContext.Provider
-            value={{
-                isAuthenticated,
-                accessToken,
-                login,
-                logout,
-                authError,
-                setAuthError,
-                loginMessage,
-                loading,
-                validateAccessToken,
-                refreshAccessToken,
-                tokenCheckRunning,
-                setTokenCheckRunning,
-            }}
-        >
+            value={{ accessToken, refreshAccessToken, login, logout, validateAccessToken, authError, setAuthError, loading }}>
             {children}
         </AuthContext.Provider>
     );

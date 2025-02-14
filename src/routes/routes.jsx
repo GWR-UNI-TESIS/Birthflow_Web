@@ -6,27 +6,26 @@ import Register from '../pages/RegisterPage';
 import Welcome from '../pages/WelcomePage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuth } from '../contexts/auth-context';
+
 const AppRoutes = () => {
 
-  const { login, logout } = useAuth();
-
-  return (
-    <Router>
-      <Routes>
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/welcome" element={<Welcome />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute>
+                            <Home />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </Router>
+    );
 };
 
 export default AppRoutes;
