@@ -1,23 +1,42 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
 import { login as loginService, refreshToken as refreshService, validateAccessToken as validateAccessTokenService } from "../services/auth-service";
-import { plainAxios } from "../services/api";
-import { getDeviceInfo } from "../utils/device-id";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || null);
-    const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken") || null);
+    const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+    const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
     const [authError, setAuthError] = useState(null);
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (accessToken) {
             handleTokenValidation();
         }
-    }, []);
+    }, [accessToken]); //  Solo ejecuta cuando `accessToken` cambia
 
-    // 🔹 Validar o refrescar el token
+    //  Función para actualizar tokens en el estado y localStorage
+    const updateTokens = ({ accessToken, refreshToken, user }) => {
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+        setUser(user);
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("user", JSON.stringify(user));
+    };
+
+    //  Función para limpiar datos de autenticación
+    const clearAuthData = () => {
+        setAccessToken(null);
+        setRefreshToken(null);
+        setUser(null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+    };
+
+    //  Validar y refrescar token si es necesario
     const handleTokenValidation = async () => {
         try {
             const isValid = await validateAccessToken();
@@ -31,83 +50,67 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Validar si el accessToken sigue siendo válido
+    //  Validar si el `accessToken` sigue siendo válido
     const validateAccessToken = async () => {
         if (!accessToken) return false;
         try {
-            const { message, response, statusCode } = await validateAccessTokenService(accessToken);
-            return response;
+            return await validateAccessTokenService(accessToken);
         } catch {
             return false;
         }
     };
 
-    // Refrescar Token
+    //  Refrescar `accessToken`
     const refreshAccessToken = async () => {
-        if (!accessToken || !refreshToken) return null;
+        if (!refreshToken) return null;
         try {
-            const newAccessToken = await refreshService(accessToken, refreshToken);
-            setAccessToken(newAccessToken);
-            localStorage.setItem("accessToken", newAccessToken);
-            return newAccessToken;
-        } catch {
+            const response = await refreshService(accessToken, refreshToken);
+            updateTokens(response);
+            return response;
+        } catch (error) {
+            console.error("Error al refrescar token:", error);
             logout();
             return null;
         }
     };
 
-    // 🔹 Iniciar sesión
-    const login = async (userLogin) => {
-        setLoading(true); // Activar el estado de carga
+    //  Iniciar sesión
+    const login = async ({ email, password }) => {
+        setLoading(true);
         try {
-          // Llamar al servicio de login
-          const response = await loginService({
-            email: userLogin.email,
-            password: userLogin.password,
-          });
-      
-          // Si la respuesta es exitosa, actualizar el estado y localStorage
-          setAccessToken(response.accessToken);
-          setRefreshToken(response.refreshToken);
-          localStorage.setItem("accessToken", response.accessToken);
-          localStorage.setItem("refreshToken", response.refreshToken);
-      
-          // Limpiar el error de autenticación
-          setAuthError(null);
-      
-          // Devolver el mensaje de éxito
-          return { success: true, message: response.message };
+            const response = await loginService({ email, password });
+            updateTokens(response);
+            setAuthError(null);
+            return { success: true, message: response.message };
         } catch (error) {
-      
-          // Establecer el mensaje de error
-          const errorMessage = error.message || "Error al iniciar sesión";
-          setAuthError(errorMessage);
-      
-          setAccessToken(null);
-          setRefreshToken(null);
-          localStorage.setItem("accessToken", null);
-          localStorage.setItem("refreshToken", null);
-          // Devolver el mensaje de error
-          return { success: false, message: errorMessage };
+            const errorMessage = error.message || "Error al iniciar sesión";
+            setAuthError(errorMessage);
+            clearAuthData();
+            return { success: false, message: errorMessage };
         } finally {
-          setLoading(false); // Desactivar el estado de carga
+            setLoading(false);
         }
-      };
-
-    // 🔹 Cerrar sesión
-    const logout = () => {
-        setAccessToken(null);
-        setRefreshToken(null);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
     };
 
-    return (
-        <AuthContext.Provider
-            value={{ accessToken, refreshAccessToken, login, logout, validateAccessToken, authError, setAuthError, loading }}>
-            {children}
-        </AuthContext.Provider>
-    );
+    //  Cerrar sesión
+    const logout = () => {
+        clearAuthData();
+    };
+
+    //  Memorizar el contexto para evitar renders innecesarios
+    const value = useMemo(() => ({
+        user,
+        accessToken,
+        refreshAccessToken,
+        login,
+        logout,
+        validateAccessToken,
+        authError,
+        setAuthError,
+        loading,
+    }), [accessToken, authError, loading]);
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

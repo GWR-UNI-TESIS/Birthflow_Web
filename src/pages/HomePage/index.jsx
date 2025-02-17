@@ -23,9 +23,11 @@ import {
     AppstoreOutlined,
     TableOutlined
 } from "@ant-design/icons";
-import axios from 'axios';
+import useSWR from "swr";
+import fetcher from "../../utils/fetcher";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth-context';
+import { PARTOGRAPH_ENDPOINTS } from "../../services/partograph-service";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -34,26 +36,13 @@ const { Option } = Select;
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const { isAuthenticated, accessToken, validateAccessToken, refreshAccessToken, logout, loading } = useAuth();
-    const [data, setData] = useState([]);
-    const [viewMode, setViewMode] = useState("table");
-    const [loadingData, setLoadingData] = useState(true);
-    useEffect(() => {
-        fetchData();
-    }, []);
 
-    const fetchData = async () => {
-        try {
-            const response = await axios.get("/api/account/me", {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-            setData(response.data);
-        } catch (error) {
-            console.error("Error al obtener datos:", error.response?.data || error.message);
-        }
-    };
+    const [viewMode, setViewMode] = useState("table");
+
+    const { user } = useAuth();
+    const { data, error } = useSWR(user ? PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPHS(user.id) : null, (url) => fetcher(url, 'GET'));
+
+
 
     const userMenu = (
         <Menu>
@@ -69,22 +58,7 @@ const HomePage = () => {
     };
 
     const dataSource = [
-        {
-            key: "1",
-            name: "Partograma 1",
-            expediente: "EXP001",
-            modified: "2025-01-01",
-            owner: "Usuario 1",
-            activity: "Revisión",
-        },
-        {
-            key: "2",
-            name: "Partograma 2",
-            expediente: "EXP002",
-            modified: "2025-01-02",
-            owner: "Usuario 2",
-            activity: "Edición",
-        },
+    
     ];
 
     const columns = [
@@ -95,26 +69,37 @@ const HomePage = () => {
         },
         {
             title: "Expediente",
-            dataIndex: "expediente",
-            key: "expediente",
+            dataIndex: "recordName",
+            key: "recordName",
+        },
+        {
+            title: "Fecha",
+            dataIndex: "date",
+            key: "date",
         },
         {
             title: "Modificado",
-            dataIndex: "modified",
-            key: "modified",
+            dataIndex: "updateAt",
+            key: "updateAt",
         },
         {
             title: "Propiedad",
-            dataIndex: "owner",
-            key: "owner",
-        },
-        {
-            title: "Actividad",
-            dataIndex: "activity",
-            key: "activity",
+            dataIndex: "createdBy",
+            key: "createdBy",
         },
     ];
 
+    if (error) {
+        return <div>Error al cargar los datos.</div>;
+    }
+
+    if (!data) {
+        return <div>Cargando...</div>; // O mostrar un spinner mientras se carga
+    }
+
+    if (!data.response) {
+        return <div>No se encontraron datos.</div>; // En caso de que `response` sea null
+    }
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
@@ -148,6 +133,7 @@ const HomePage = () => {
 
             {/* Main Content Area */}
             <Content style={{ padding: "16px" }}>
+        
                 <Card title="Partogramas Recientes" style={{ marginBottom: 16 }}>
                     {/* Add recent partograms content here */}
                     <p>Aquí se muestran los partogramas recientes...</p>
@@ -194,14 +180,15 @@ const HomePage = () => {
                         </Space>
                     </Flex >
                     {viewMode === "table" ? (
-                        <Table dataSource={dataSource} columns={columns} />
+                        <Table key="partograph-table" dataSource={data.response} columns={columns} rowKey="partographId"  />
                     ) : (
                         <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                            {dataSource.map((item) => (
+                            {data.response.map((item) => (
                                 <Card key={item.key} title={item.name} style={{ width: 300 }}>
-                                    <p>Expediente: {item.expediente}</p>
+                                    <p>Expediente: {item.recordName}</p>
+                                    <p>Propiedad: {item.c}</p>
                                     <p>Modificado: {item.modified}</p>
-                                    <p>Propiedad: {item.owner}</p>
+                                   
                                     <p>Actividad: {item.activity}</p>
                                 </Card>
                             ))}
@@ -211,6 +198,8 @@ const HomePage = () => {
 
 
             </Content>
+
+            
         </Layout>
     );
 

@@ -32,6 +32,7 @@ const handleApiError = (error) => {
     throw new Error("Error al configurar la solicitud: " + error.message);
   }
 };
+
 // Función para procesar la respuesta de la API
 const processApiResponse = (result) => {
   const { statusCode, message, response } = result.data;

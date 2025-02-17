@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/auth-context';
 import { Form, Input, Button, Alert, Spin, Card } from 'antd';
 
 const LoginPage = () => {
-    const { login, authError, setAuthError, loading } = useAuth();
+    const { login, authError, setAuthError, loading, accessToken} = useAuth();
     const navigate = useNavigate();
 
 
@@ -18,6 +18,11 @@ const LoginPage = () => {
         }
     };
 
+    useEffect(() => {
+        if(accessToken)
+            navigate('/');
+      }, [accessToken]);
+      
     return (
         <Card style={{margin:"100px"}}>
 
@@ -55,7 +60,7 @@ const LoginPage = () => {
                     </Button>
                 </Form.Item>
             </Form>
-        </Card>
+        </Card> 
     );
 };
 
