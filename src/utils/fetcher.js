@@ -2,52 +2,46 @@
 import { useAuth } from "../contexts/auth-context";
 import { api } from "../services/api";
 
-const fetcher = async (url, method = "GET", body = null,) => {
-  let token = localStorage.getItem("accessToken");
-  const options = {
-    method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    data: body, // Axios usa `data` en lugar de `body`
-    url, // Axios requiere `url` en su configuración
+export const useFetcher = () => {
+  const { refreshAccessToken, logout } = useAuth();
+
+  const fetcher = async (url, method = "GET", body = null) => {
+    let token = localStorage.getItem("accessToken");
+
+    const getOptions = (token) => ({
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: body,
+      url,
+    });
+
+    try {
+      const response = await api(getOptions(token));
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        try {
+          console.warn("Token expirado, intentando refrescar...");
+          const newTokens = await refreshAccessToken();
+          if (!newTokens) throw new Error("Tokenes no válido");
+
+          let newToken = localStorage.getItem("accessToken");
+          const retryResponse = await api(getOptions(newToken));
+
+          return retryResponse.data;
+        } catch (refreshError) {
+          console.error("Error al refrescar el token:", refreshError);
+          logout();
+          throw new Error("No se pudo refrescar el token o sesión expirada");
+        }
+      }
+
+      throw new Error(error.response?.data?.message || "Error en la solicitud");
+    }
   };
 
-  try {
-    // Intento inicial
-    const response = await api(options);
-    return response.data;
-  } catch (error) {
-    // Captura el error si no hay respuesta del servidor (error en request)
-    if (error.request) {
-      console.error("Error en el request:", error);
-    }
-
-    // Captura el error si el servidor responde con un código de estado 401
-    if (error.response?.status === 401) {
-      try {
-        console.warn("Token expirado, intentando refrescar...");
-        const { refreshAccessToken, logout } = useAuth();
-        const newToken = await refreshAccessToken();
-        if (!newToken) throw new Error("Token no válido");
-
-        localStorage.setItem("accessToken", newToken);
-
-        // Reintentar la solicitud con el nuevo token
-        options.headers.Authorization = `Bearer ${newToken}`;
-        const retryResponse = await api(options);
-
-        return retryResponse.data;
-      } catch (refreshError) {
-        console.error("Error al refrescar el token:", refreshError);
-        logout();
-        throw new Error("No se pudo refrescar el token o sesión expirada");
-      }
-    }
-
-    throw new Error(error.response?.data?.message || "Error en la solicitud");
-  }
+  return { fetcher };
 };
-
-export default fetcher;

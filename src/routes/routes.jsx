@@ -6,6 +6,7 @@ import Register from '../pages/RegisterPage';
 import Welcome from '../pages/WelcomePage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuth } from '../contexts/auth-context';
+import CreatePartographPage from '../pages/CreatePartographPage/index';
 
 const AppRoutes = () => {
 
@@ -20,6 +21,14 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <Home />
+                        </ProtectedRoute>
+                    }
+                />
+                  <Route
+                    path="/create-partograph"
+                    element={
+                        <ProtectedRoute>
+                            <CreatePartographPage />
                         </ProtectedRoute>
                     }
                 />
