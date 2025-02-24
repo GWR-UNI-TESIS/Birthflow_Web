@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { useFetcher } from "../utils/fetcher";
-import { PARTOGRAPH_ENDPOINTS } from "../services/partograph-service";
+import { PARTOGRAPH_ENDPOINTS } from "../services/partograph-service/endpoints";
 
 const usePartographs = (filters) => {
     const { fetcher } = useFetcher();

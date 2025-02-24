@@ -1,11 +1,10 @@
+import { useNavigate } from "react-router";
 import React, { useState, useEffect } from 'react';
 import { Card, Flex, Tabs, Input, Select, Radio, Table, Spin, Layout } from "antd";
 import { TableOutlined, AppstoreOutlined } from "@ant-design/icons";
 import PartogramCards from "./PartogramCards";
 import { useCatalog } from "../../../contexts/catalog-context";
-import { useAuth } from '../../../contexts/auth-context';
 import usePartographs from "../../../hooks/use-partographs";
-import { Content } from 'antd/es/layout/layout';
 const { TabPane } = Tabs;
 const { Option } = Select;
 
@@ -20,6 +19,7 @@ const formatDate = (dateString) => {
 
 const PartogramTabs = ({ viewMode, setViewMode }) => {
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
+    let navigate = useNavigate();
 
     const [filters, setFilters] = useState({
         name: "",
@@ -110,7 +110,19 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                         dataSource={data?.response || []}
                         columns={columns}
                         rowKey="partographId"
-                        pagination={{ pageSize: 10 }}
+                        pagination={{ pageSize: 15 }}
+                        onRow={(record, rowIndex) => {
+                            return {
+                                onClick: (event) => {
+
+                                 navigate(`/partograph/${record.partographId}`);
+
+                                },
+                                onContextMenu: (event) => {
+                                    console.log(record);
+                                }, // right button click row // click row
+                            };
+                        }}
                     />
                 ) : (
                     <PartogramCards data={data?.response || []} />
