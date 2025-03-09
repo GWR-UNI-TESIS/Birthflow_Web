@@ -16,6 +16,9 @@ const HomePage = () => {
             <Button type="primary" icon={<PlusOutlined />}>
                 <Link to="/create-partograph">Crear Partograma</Link>
             </Button>
+            <Button type="primary" icon={<PlusOutlined />}>
+                <Link to="/create-group">Administración de Grupos </Link>
+            </Button>
             <Divider />
             <RecentPartograms />
             <Divider />

@@ -8,6 +8,7 @@ import PartographPage from '../pages/PartographPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuth } from '../contexts/auth-context';
 import CreatePartographPage from '../pages/CreatePartographPage/index';
+import GroupsApps from '../pages/groups/GroupsApp';
 
 const AppRoutes = () => {
 
@@ -31,6 +32,14 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <CreatePartographPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/create-group"
+                    element={
+                        <ProtectedRoute>
+                            <GroupsApps/>
                         </ProtectedRoute>
                     }
                 />
