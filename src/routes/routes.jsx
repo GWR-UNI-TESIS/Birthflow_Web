@@ -11,6 +11,8 @@ import Dilatacion from "../pages/PartographPage/DilatacionCervical";
 import NotaParto from "../pages/PartographPage/NotaParto";
 import FrecuenCF from "../pages/PartographPage/FrecueCF";
 import VigilanciaM from "../pages/PartographPage/VigilanciaM";
+import FrecuenciaCT from "../pages/PartographPage/FrecuenciaContraccion";
+import Presentacion from "../pages/PartographPage/Presentacion";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +25,8 @@ const AppRoutes = () => {
         <Route path="/notaparto" element={<NotaParto />} />
         <Route path="/frecuenciaCF" element={<FrecuenCF />} />
         <Route path="/vigilanciaM" element={<VigilanciaM />} />
+        <Route path="/frecuenciaCT" element={<FrecuenciaCT />} />
+        <Route path="/presentacion" element={<Presentacion />} />
 
         <Route
           path="/"
@@ -81,6 +85,24 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <VigilanciaM />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/frecuenciaCT"
+          element={
+            <ProtectedRoute>
+              <FrecuenciaCT />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/presentacion"
+          element={
+            <ProtectedRoute>
+              <Presentacion />
             </ProtectedRoute>
           }
         />

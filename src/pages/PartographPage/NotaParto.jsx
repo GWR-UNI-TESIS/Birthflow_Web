@@ -1,5 +1,5 @@
 import { Button, Form } from "antd";
-import Btr from "../HomePage/components/Btr";
+import Btr from "../HomePage/components/Botonregreso";
 import MiFormulario from "../HomePage/components/Formulario";
 
 const formItemLayout = {

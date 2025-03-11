@@ -1,25 +1,24 @@
 import { useState } from "react";
-import { Input, Checkbox, Button, Form } from "antd";
+import { Input, Button, Form } from "antd";
 import Btr from "../HomePage/components/Botonregreso";
+import MiFormulario from "../HomePage/components/Formulario";
 
 const { Item: FormItem } = Form;
 
-const DilatacionCervical = () => {
-  const [dilationValue, setDilationValue] = useState("");
+const FrecuenciaContraccion = () => {
+  const [frecuenciaValue, setFrecuenciaValue] = useState("");
   const [hour, setHour] = useState("");
-  const [ramOrRem, setRamOrRem] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = () => {
     setIsSubmitting(true);
 
-    console.log("Datos guardados:", { dilationValue, hour, ramOrRem });
+    console.log("Datos guardados:", { frecuenciaValue, hour });
 
     setTimeout(() => {
       setIsSubmitting(false);
-      setDilationValue("");
+      setFrecuenciaValue("");
       setHour("");
-      setRamOrRem(false);
     }, 2000);
   };
 
@@ -32,12 +31,12 @@ const DilatacionCervical = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "60vh",
           backgroundColor: "#f0f2f5",
         }}
       >
         <h2 style={{ marginBottom: "20px", color: "#1890ff" }}>
-          Registro de Dilatación Cervical
+          Crear Frecuencia de Contraccion
         </h2>
 
         <Form
@@ -52,29 +51,8 @@ const DilatacionCervical = () => {
             backgroundColor: "#fff",
           }}
         >
-          <FormItem
-            label="Dilatación (cm)"
-            required
-            validateStatus={!dilationValue ? "error" : ""}
-            help={!dilationValue ? "Campo requerido" : ""}
-          >
-            <Input
-              type="number"
-              min="0"
-              max="10"
-              step="0.5"
-              value={dilationValue}
-              onChange={(e) => setDilationValue(e.target.value)}
-              placeholder="Valor de Dilatación"
-              style={{
-                padding: "12px 16px",
-                fontSize: "1.1em",
-                borderRadius: "6px",
-              }}
-            />
-            <p style={{ color: "#666", marginTop: "8px" }}>
-              Valor entre 0 y 10 cm
-            </p>
+          <FormItem>
+            <MiFormulario placeholder="Frecuencia de contracciones" />
           </FormItem>
 
           <FormItem
@@ -96,16 +74,6 @@ const DilatacionCervical = () => {
           </FormItem>
 
           <FormItem>
-            <Checkbox
-              checked={ramOrRem}
-              onChange={(e) => setRamOrRem(e.target.checked)}
-              style={{ fontSize: "1.1em" }}
-            >
-              RAM/REM
-            </Checkbox>
-          </FormItem>
-
-          <FormItem>
             <Button
               type="primary"
               htmlType="submit"
@@ -117,7 +85,7 @@ const DilatacionCervical = () => {
                 borderRadius: "6px",
               }}
             >
-              {isSubmitting ? "Guardando..." : "Guardar Registro"}
+              {isSubmitting ? "Guardando..." : "Guardar"}
             </Button>
           </FormItem>
         </Form>
@@ -126,4 +94,4 @@ const DilatacionCervical = () => {
   );
 };
 
-export default DilatacionCervical;
+export default FrecuenciaContraccion;

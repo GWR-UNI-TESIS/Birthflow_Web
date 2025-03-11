@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Button, Form, Input, Select, Space } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import Btr from "../HomePage/components/Botonregreso";
 
 const { Item: FormItem } = Form;
 const { Option } = Select;
 
-const FrecuenCF = () => {
+const Presentacion = () => {
   const [hour, setHour] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -15,6 +15,7 @@ const FrecuenCF = () => {
     console.log("Datos guardados:", { hour });
 
     setTimeout(() => {
+      setIsSubmitting(false);
       setHour("");
     }, 2000);
   };
@@ -28,7 +29,7 @@ const FrecuenCF = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "60vh",
           backgroundColor: "#f0f2f5",
         }}
       >
@@ -43,54 +44,54 @@ const FrecuenCF = () => {
           }}
         >
           <h2 style={{ marginBottom: "20px", color: "#1890ff" }}>
-            Frecuencia cardiaca fetal
+            Crear Presentacion
           </h2>
-          <Space.Compact>
-            <Input
-              style={{
-                width: "50%",
-                margin: "auto",
-                padding: "12px 16px",
-                fontSize: "1.1em",
-                borderRadius: "6px",
-              }}
-              placeholder=" "
-            />
-            <span
-              style={{
-                fontSize: "1.1em",
-                fontWeight: "bold",
-                color: "black",
-                padding: "8px",
-                marginRight: "2px",
-              }}
-            >
-              X
-            </span>
 
-            <Form.Item
-              name={["minutos", "horas"]}
-              noStyle
-              rules={[{ required: true, message: "Campo requerido" }]}
-            >
-              <Select
-                placeholder="Seleccione"
-                style={{
-                  width: "60%",
-                  margin: "auto",
-                  fontSize: "1.1em",
-                }}
-              >
-                <Option value="minutos">Minutos</Option>
-                <Option value="horas">Horas</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name={["minutos", "horas"]}
-              noStyle
-              rules={[{ required: true, message: "Campo requerido" }]}
-            ></Form.Item>
-          </Space.Compact>
+          <div
+            style={{
+              fontSize: "1.2em",
+              fontWeight: "bold",
+              marginBottom: "10px",
+              color: "#333",
+            }}
+          >
+            Posicion <br />
+          </div>
+          <Form.Item
+            name="dolorLocalizacion"
+            noStyle
+            rules={[{ required: true, message: "Campo requerido" }]}
+            style={{ marginBottom: "20px" }}
+          >
+            <Select placeholder="Seleccione">
+              <Option value="oc">Occipito Posterior</Option>
+              <Option value="pc2">occipito 2</Option>
+              <Option value="oc3">Ocippito 3</Option>
+            </Select>
+          </Form.Item>
+
+          <div
+            style={{
+              fontSize: "1.2em",
+              fontWeight: "bold",
+              marginBottom: "10px",
+              color: "#333",
+            }}
+          >
+            Plano de Hodge <br />
+          </div>
+          <Form.Item
+            name="dolorIntensidad"
+            noStyle
+            rules={[{ required: true, message: "Campo requerido" }]}
+            style={{ marginBottom: "20px" }}
+          >
+            <Select placeholder="Seleccione">
+              <Select.Option value="Plano1">Plano 1</Select.Option>
+              <Select.Option value="Plano2">Plano 2</Select.Option>
+              <Select.Option value="Plano3">Plano 3</Select.Option>
+            </Select>
+          </Form.Item>
 
           <Form
             layout="vertical"
@@ -139,4 +140,4 @@ const FrecuenCF = () => {
   );
 };
 
-export default FrecuenCF;
+export default Presentacion;
