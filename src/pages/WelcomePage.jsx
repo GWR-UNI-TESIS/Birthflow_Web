@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Space, Spin } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/auth-context';
+import { useEffect } from "react";
+import { Button, Space, Spin } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/auth-context";
 
 const Welcome = () => {
-  const { validateAccessToken, refreshAccessToken, loading, tokenCheckRunning, setTokenCheckRunning } = useAuth();
+  const {
+    validateAccessToken,
+    refreshAccessToken,
+    loading,
+    tokenCheckRunning,
+    setTokenCheckRunning,
+  } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,31 +18,36 @@ const Welcome = () => {
       setTokenCheckRunning(true);
       const isValid = await validateAccessToken();
       if (isValid) {
-        navigate('/');
+        navigate("/");
       } else {
         const refreshed = await refreshAccessToken();
         if (refreshed) {
-          navigate('/');
+          navigate("/");
         }
       }
       setTokenCheckRunning(false);
     };
 
-    if (!tokenCheckRunning && localStorage.getItem('accessToken')) {
+    if (!tokenCheckRunning && localStorage.getItem("accessToken")) {
       checkToken();
     }
-  }, [navigate, validateAccessToken, refreshAccessToken, tokenCheckRunning, setTokenCheckRunning]);
-
+  }, [
+    navigate,
+    validateAccessToken,
+    refreshAccessToken,
+    tokenCheckRunning,
+    setTokenCheckRunning,
+  ]);
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '20%' }}>
+    <div style={{ textAlign: "center", marginTop: "20%" }}>
       <Spin spinning={loading} fullscreen></Spin>
       <h1>Welcome to Birthflow</h1>
       <Space direction="vertical" size="large">
-        <Button type="primary" onClick={() => navigate('/login')}>
+        <Button type="primary" onClick={() => navigate("/login")}>
           Login
         </Button>
-        <Button onClick={() => navigate('/register')}>Register</Button>
+        <Button onClick={() => navigate("/register")}>Register</Button>
       </Space>
     </div>
   );
