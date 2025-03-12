@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, theme, Table, Spin, Alert, Descriptions, Divider } from 'antd';
 import { useParams } from "react-router-dom";
 import usePartograh from "../../hooks/use-partograph";
+import PartogramChart from "./components/chart";
 
 const PartographPage = () => {
   const {
@@ -103,18 +104,17 @@ const PartographPage = () => {
         }}
       >
         {/* Área para el gráfico */}
-        <div style={{ marginBottom: '24px' }}>
+        <div style={{ marginBottom: '24px', width:"100%", height:"100%" }}>
           <div
             style={{
               background: '#fafafa',
-              height: '300px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               border: '1px dashed #d9d9d9',
             }}
           >
-            Gráfico Placeholder
+            <PartogramChart partograph={partograph}/>
           </div>
         </div>
 
