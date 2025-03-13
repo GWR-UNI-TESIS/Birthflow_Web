@@ -1,42 +1,42 @@
 import { useState } from "react";
-import { Input, Button, Form } from "antd";
-import Btr from "../HomePage/components/Botonregreso";
-import MiFormulario from "../HomePage/components/Formulario";
+import { Input, Checkbox, Button, Form } from "antd";
+
 
 const { Item: FormItem } = Form;
 
-const FrecuenciaContraccion = () => {
-  const [frecuenciaValue, setFrecuenciaValue] = useState("");
+const CervicalDilationPage = () => {
+  const [dilationValue, setDilationValue] = useState("");
   const [hour, setHour] = useState("");
+  const [ramOrRem, setRamOrRem] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = () => {
     setIsSubmitting(true);
 
-    console.log("Datos guardados:", { frecuenciaValue, hour });
+    console.log("Datos guardados:", { dilationValue, hour, ramOrRem });
 
     setTimeout(() => {
       setIsSubmitting(false);
-      setFrecuenciaValue("");
+      setDilationValue("");
       setHour("");
+      setRamOrRem(false);
     }, 2000);
   };
 
   return (
     <>
-      <Btr />
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "60vh",
+          height: "100vh",
           backgroundColor: "#f0f2f5",
         }}
       >
         <h2 style={{ marginBottom: "20px", color: "#1890ff" }}>
-          Crear Frecuencia de Contraccion
+          Registro de Dilatación Cervical
         </h2>
 
         <Form
@@ -51,8 +51,29 @@ const FrecuenciaContraccion = () => {
             backgroundColor: "#fff",
           }}
         >
-          <FormItem>
-            <MiFormulario placeholder="Frecuencia de contracciones" />
+          <FormItem
+            label="Dilatación (cm)"
+            required
+            validateStatus={!dilationValue ? "error" : ""}
+            help={!dilationValue ? "Campo requerido" : ""}
+          >
+            <Input
+              type="number"
+              min="0"
+              max="10"
+              step="0.5"
+              value={dilationValue}
+              onChange={(e) => setDilationValue(e.target.value)}
+              placeholder="Valor de Dilatación"
+              style={{
+                padding: "12px 16px",
+                fontSize: "1.1em",
+                borderRadius: "6px",
+              }}
+            />
+            <p style={{ color: "#666", marginTop: "8px" }}>
+              Valor entre 0 y 10 cm
+            </p>
           </FormItem>
 
           <FormItem
@@ -74,6 +95,16 @@ const FrecuenciaContraccion = () => {
           </FormItem>
 
           <FormItem>
+            <Checkbox
+              checked={ramOrRem}
+              onChange={(e) => setRamOrRem(e.target.checked)}
+              style={{ fontSize: "1.1em" }}
+            >
+              RAM/REM
+            </Checkbox>
+          </FormItem>
+
+          <FormItem>
             <Button
               type="primary"
               htmlType="submit"
@@ -85,7 +116,7 @@ const FrecuenciaContraccion = () => {
                 borderRadius: "6px",
               }}
             >
-              {isSubmitting ? "Guardando..." : "Guardar"}
+              {isSubmitting ? "Guardando..." : "Guardar Registro"}
             </Button>
           </FormItem>
         </Form>
@@ -94,4 +125,4 @@ const FrecuenciaContraccion = () => {
   );
 };
 
-export default FrecuenciaContraccion;
+export default CervicalDilationPage;

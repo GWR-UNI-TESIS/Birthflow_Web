@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { Button, Form, Input, Select } from "antd";
-import Btr from "../HomePage/components/Botonregreso";
-
 const { Item: FormItem } = Form;
 const { Option } = Select;
 
@@ -22,7 +20,6 @@ const Presentacion = () => {
 
   return (
     <>
-      <Btr />
       <div
         style={{
           display: "flex",

@@ -7,9 +7,7 @@ const MyApp = () => (
   <App>
     <CatalogProvider>
       <AuthProvider>
-        <LayoutGeneral>
           <AppRoutes />
-        </LayoutGeneral>
       </AuthProvider>
     </CatalogProvider>
   </App>

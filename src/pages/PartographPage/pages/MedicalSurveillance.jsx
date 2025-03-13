@@ -1,5 +1,4 @@
 import { Button, Form, Input, Select } from "antd";
-import Btr from "../HomePage/components/Botonregreso";
 import TimeSelector from "../HomePage/components/input";
 
 const formItemLayout = {
@@ -24,7 +23,6 @@ const VigilanciaMaterna = () => {
 
   return (
     <>
-      <Btr />
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Form
           {...formItemLayout}
