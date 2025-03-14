@@ -14,8 +14,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer } from "./CustomSymbols";
-
-import { useCatalog } from "../../../contexts/catalog-context"; // Asegúrate de importar el contexto del catálogo
+import { useCatalog } from "../../../contexts/catalog-context";
 const symbolMap = {
     ODA: OdaSymbolRenderer,
     ODP: OdpSymbolRenderer,
@@ -70,7 +69,7 @@ const PartogramChart = ({ partograph }) => {
         }));
     }
 
-    const formattedMedicalSurveillance = partograph.medicalSurveillanceTable.map((point) => {
+    let formattedMedicalSurveillance = partograph.medicalSurveillanceTable.map((point) => {
         const fetalHeartRate = parseFloat(point.fetalHeartRate.split("x")[0]); // Extraer el número
         const frequencyContractions = parseFloat(point.frequencyContractions);
 
