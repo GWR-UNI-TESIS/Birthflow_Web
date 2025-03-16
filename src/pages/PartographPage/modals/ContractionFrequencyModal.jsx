@@ -1,41 +1,59 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Input, Select, DatePicker } from "antd";
-import FormElement from "../../../components/FormElement";
+import { Modal, Button, Form, Input, Select, DatePicker, message } from "antd";
+import { createContractionsFrequency } from "../../../services/partograph-service/partograph-service";
+import { mutate } from "swr";
+import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 
-const ContractionFrequencyModal = ({ visible, onClose }) => {
+const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
     const [form] = Form.useForm();
-    const handleSubmit = async () => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    const handleClose = () => {
+        form.resetFields(); 
+        onClose();
+    };
+    
+    const handleSubmit = async (values) => {
         try {
-            const values = await form.validateFields();
+            setIsSubmitting(true);
+            await createContractionsFrequency({
+                id: 0,
+                partographId,
+                value: values.frecuenciaContracciones,
+                time: values.tiempo.toISOString(),
+            });
 
-            console.log("Datos enviados:", values);
+            // Mutar para actualizar la UI con los nuevos datos
+            mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId));
 
-
-            // 4️⃣ Cerrar modal y limpiar formulario
-            form.resetFields();
-            onClose();
-
-            // 5️⃣ Mostrar mensaje de éxito
-            message.success("Datos enviados correctamente");
+            message.success("Frecuencia de contracciones registrada exitosamente.");
+            setIsSubmitting(false);
+            handleClose();// Cerrar modal después de guardar
         } catch (error) {
-            console.error("Error en el formulario:", error);
+            setIsSubmitting(false);
+            message.error("Error al registrar la frecuencia.");
         }
     };
     return (
-        <Modal title="Frecuencia Cardiaca Fetal" open={visible} onCancel={onClose} footer={null}>
+        <Modal title="Frecuencia Cardiaca Fetal" open={visible} onCancel={handleClose} footer={null}>
             <div style={{ padding: "10px" }}>
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
                     <Form.Item label="Frec. Contraciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
                         <Input placeholder="Frec. Contracciones" type="number" />
                     </Form.Item>
 
-                    <Form.Item label="Frecuencia Cardiaca Fetal" name="frecuenciaCardiacaFetal" rules={[{ required: true, message: "Campo requerido" }]}>
-                        <FormElement />
+                    <Form.Item label="Hora" name="tiempo" rules={[{ required: true, message: "Campo requerido" }]}>
+                        <DatePicker
+                            placeholder="Seleccionar Fecha"
+                            showTime={{ format: "HH:mm" }} // Habilita la selección de hora
+                            format="YYYY-MM-DD HH:mm" // Formato de fecha y hora
+                            style={{ width: "100%" }}
+                        />
                     </Form.Item>
 
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" block>
-                            Guardar
+                        <Button type="primary" htmlType="submit" block loading={isSubmitting}>
+                            {isSubmitting ? "Guardando..." : "Guardar Registro"}
                         </Button>
                     </Form.Item>
                 </Form>

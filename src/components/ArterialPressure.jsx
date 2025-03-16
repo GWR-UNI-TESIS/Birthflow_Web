@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "antd";
 
-const ArterialPressure = ({ label, width, initialValue = "", onChange }) => {
-  // Extraer los valores iniciales (ejemplo: "120/80")
-  const [systolic, setSystolic] = useState(initialValue.split("/")[0] || "");
-  const [diastolic, setDiastolic] = useState(initialValue.split("/")[1] || "");
+const ArterialPressure = ({ value = "", onChange, label, width }) => {
+  const [systolic, setSystolic] = useState(value.split("/")[0] || "");
+  const [diastolic, setDiastolic] = useState(value.split("/")[1] || "");
 
   useEffect(() => {
     onChange?.(`${systolic}/${diastolic}`);

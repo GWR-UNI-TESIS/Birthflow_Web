@@ -6,12 +6,10 @@ const OPTION_TYPES = [
     { value: "''", label: "segundo" },
 ];
 
-const FormElement = ({ label, width, initialValue = "", onChange }) => {
+const FormElement = ({ value = "", onChange, label, width }) => {
     // Extraemos la parte numérica y la unidad (minuto/segundo)
-    const [textValue, setTextValue] = useState(initialValue.split("x")[0] || "");
-    const [selectedOption, setSelectedOption] = useState(
-        initialValue.split("x")[1] || "'"
-    );
+    const [textValue, setTextValue] = useState(value.split("x")[0] || "");
+    const [selectedOption, setSelectedOption] = useState(value.split("x")[1] || "'");
 
     useEffect(() => {
         onChange?.(`${textValue}x${selectedOption}`);

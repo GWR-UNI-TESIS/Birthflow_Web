@@ -1,63 +1,71 @@
 import { useState } from "react";
-import { Modal, Input, Checkbox, Button, Form, DatePicker } from "antd";
-import moment from "moment"; // Necesario para manejar valores de fecha y hora
+import { Modal, Input, Checkbox, Button, Form, DatePicker, message } from "antd";
+import { createCervicalDilation } from "../../../services/partograph-service/partograph-service";
+import { mutate } from "swr";
+import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 
-const { Item: FormItem } = Form;
-
-const CervicalDilationModal = ({ visible, onClose }) => {
-    const [dilationValue, setDilationValue] = useState("");
-    const [hour, setHour] = useState("");
-    const [ramOrRem, setRamOrRem] = useState(false);
+const CervicalDilationModal = ({ visible, onClose, partographId }) => {
+    const [form] = Form.useForm();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const handleSubmit = () => {
-        setIsSubmitting(true);
-        console.log("Datos guardados:", { dilationValue, hour, ramOrRem });
 
-        setTimeout(() => {
-            setIsSubmitting(false);
-            setDilationValue("");
-            setHour("");
-            setRamOrRem(false);
-            onClose(); // Cerrar modal después de guardar
-        }, 2000);
+    const handleClose = () => {
+        form.resetFields(); 
+        onClose();
     };
+    
 
+    const handleSubmit = async (values) => {
+        try {
+            setIsSubmitting(true);
+            await createCervicalDilation({
+                id: 0,
+                partographId,
+                value: parseFloat(values.dilation),
+                hour: values.hour,
+                remOrRam: values.ramOrRem || false,
+            });
+
+            // Mutar para actualizar el partograma en la UI
+            mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId));
+
+            message.success("Dilatación registrada exitosamente.");
+            setIsSubmitting(false);
+            handleClose();// Cerrar modal después de guardar
+        } catch (error) {
+            message.error("Error al guardar la dilatación cervical.");
+            setIsSubmitting(false);
+        }
+    };
+    
 
     return (
         <Modal
             title="Registro de Dilatación Cervical"
             open={visible}
-            onCancel={onClose}
+            onCancel={handleClose}
             footer={null}
         >
-            <Form layout="vertical" onFinish={handleSubmit}>
-                <Form.Item label="Dilatación (cm)" required>
+            <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                <Form.Item label="Dilatación (cm)" name="dilation" required>
                     <Input
                         type="number"
                         min="0"
                         max="10"
                         step="0.5"
-                        value={dilationValue}
-                        onChange={(e) => setDilationValue(e.target.value)}
                         placeholder="Valor de Dilatación"
                     />
                 </Form.Item>
 
-                <Form.Item label="Hora de medición" required>
+                <Form.Item label="Hora de medición" name="hour" required>
                     <DatePicker
                         showTime={{ format: "HH:mm" }} // Habilita la selección de hora
                         format="YYYY-MM-DD HH:mm" // Formato de fecha y hora
-                        value={hour ? moment(hour) : null} // Convertir a formato de moment.js
-                        onChange={(value) => setHour(value ? value.toISOString() : "")} // Guardar en formato ISO
                         style={{ width: "100%" }}
                     />
                 </Form.Item>
 
-                <Form.Item>
-                    <Checkbox
-                        checked={ramOrRem}
-                        onChange={(e) => setRamOrRem(e.target.checked)}
-                    >
+                <Form.Item label="Ram o Rem" name="ramOrRem" valuePropName="checked">
+                    <Checkbox>
                         RAM/REM
                     </Checkbox>
                 </Form.Item>

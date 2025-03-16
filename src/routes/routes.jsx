@@ -7,8 +7,8 @@ import Welcome from "../pages/WelcomePage";
 import PartographPage from "../pages/PartographPage";
 import ProtectedRoute from "../components/ProtectedRoute";
 import CreatePartographPage from "../pages/CreatePartographPage/index";
-import LayoutGeneral from "../components/LayoutGeneral"; // Importa tu layout
-
+import LayoutGeneral from "../components/LayoutGeneral";
+import CervicalDilationEditPage from "../pages/PartographPage/pages/CervicalDilationEditPage";
 const AppRoutes = () => {
   return (
     <Router>
@@ -45,6 +45,15 @@ const AppRoutes = () => {
                   element={
                     <ProtectedRoute>
                       <PartographPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/partograph/:partographId/cervical-dilation/:dilationId/edit"
+                  element={
+                    <ProtectedRoute>
+                      <CervicalDilationEditPage />
                     </ProtectedRoute>
                   }
                 />

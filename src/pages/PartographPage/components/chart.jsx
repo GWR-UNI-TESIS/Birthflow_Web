@@ -169,7 +169,6 @@ const PartogramChart = ({ partograph }) => {
                         stroke="#4CAF50"
                         strokeWidth={3}
                         name="Nueva Curva de Alerta"
-                        strokeDasharray="5 5" // Línea punteada para diferenciar
                     />
                 )}
 

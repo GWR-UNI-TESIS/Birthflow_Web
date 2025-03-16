@@ -10,8 +10,9 @@ import {
   Divider,
   Breadcrumb,
   Flex,
+  Typography,
 } from "antd";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, NavLink, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
@@ -22,10 +23,14 @@ import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
 import FetalHeartRateModal from "./modals/FetalHeartRateModal";
 import ContractionFrequencyModal from "./modals/ContractionFrequencyModal";
 import PresentationPositionVarietyModal from "./modals/PresentationPositionVarietyModal";
-const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
-  <>
-    <h3>{title}</h3>
-    <Table columns={columns} dataSource={data} pagination={false} rowKey="id" locale={{ emptyText: "Sin datos" }} />
+import ChildbirthNoteView from "./components/ChildbirthNoteView";
+
+const TableSection = ({ title, columns, data, buttonLabel, onButtonClick, onRowClick  }) => (
+  <div style={{ paddingTop: 16 }}>
+    <Typography.Title level={3}>{title}</Typography.Title>
+    <Table columns={columns} dataSource={data} pagination={false} rowKey="id"
+      locale={{ emptyText: "Sin datos" }}
+      onRow={onRowClick ? (record) => ({ onClick: () => onRowClick(record) }) : undefined} />
     {onButtonClick && (
       <Flex align="flex-end" style={{ marginTop: "1rem", marginRight: "1rem" }} vertical>
         <Button icon={<PlusCircleOutlined />} type="primary" onClick={onButtonClick}>
@@ -33,8 +38,7 @@ const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
         </Button>
       </Flex>
     )}
-    <Divider />
-  </>
+  </div>
 );
 
 const PartographPage = () => {
@@ -52,6 +56,7 @@ const PartographPage = () => {
 
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
   const { partographId } = useParams();
+  const navigate = useNavigate();
   const { data, loading, error } = usePartograh(partographId);
 
   if (loading || catalogsLoading) return <Spin fullscreen />;
@@ -73,7 +78,6 @@ const PartographPage = () => {
     { title: "Duración de Contracciones", dataIndex: "contractionsDuration", key: "contractionsDuration" },
     { title: "Frecuencia de Contracciones", dataIndex: "frequencyContractions", key: "frequencyContractions" },
     { title: "Dolor", dataIndex: "pain", key: "pain" },
-    { title: "Letra", dataIndex: "letter", key: "letter" },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
   ];
 
@@ -85,10 +89,12 @@ const PartographPage = () => {
         return <span>{item ? item.description : "Desconocido"}</span>;
       },
     },
-    { title: "Posición", dataIndex: "position", key: "position", render: (_, { position }) => {
-      const item = catalogs.positionCatalog.find((item) => item.id === position);
-      return <span>{item ? item.description : "Desconocido"}</span>;
-    },},
+    {
+      title: "Posición", dataIndex: "position", key: "position", render: (_, { position }) => {
+        const item = catalogs.positionCatalog.find((item) => item.id === position);
+        return <span>{item ? item.description : "Desconocido"}</span>;
+      },
+    },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
   ];
 
@@ -109,34 +115,73 @@ const PartographPage = () => {
         <BackButton />
         <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
       </div>
-      <Layout.Content style={{ margin: "1rem" }}>
+      <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
         <div style={{ background: colorBgContainer, minHeight: 280, padding: 24, borderRadius: borderRadiusLG }}>
           <PartogramChart partograph={partograph} />
-          <TableSection title="Dilataciones Cervicales" columns={cervicalColumns} data={partograph.cervicalDilations} buttonLabel="Agregar Dilatación Cervical" onButtonClick={() => setIsCervicalDilationModalVisible(true)} />
+
+          <div style={{ marginBottom: "24px" }}>
+            <Typography.Title level={3}>Informacion General</Typography.Title>
+            <Descriptions bordered column={1}>
+              <Descriptions.Item label="Nombre">
+                {partograph.name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Registro">
+                {partograph.recordName}
+              </Descriptions.Item>
+              <Descriptions.Item label="Fecha">
+                {new Date(partograph.date).toLocaleString()}
+              </Descriptions.Item>
+              <Descriptions.Item label="Turno">
+                {partograph.workTime}
+              </Descriptions.Item>
+              <Descriptions.Item label="Observación">
+                {partograph.observation || "Sin observaciones"}
+              </Descriptions.Item>
+            </Descriptions>
+          </div>
+          <Divider />
+          <TableSection title="Dilataciones Cervicales" columns={cervicalColumns} data={partograph.cervicalDilations} 
+          buttonLabel="Agregar Dilatación Cervical" 
+          onButtonClick={() => setIsCervicalDilationModalVisible(true)}
+          onRowClick={(record) => navigate(`/partograph/${partographId}/cervical-dilation/${record.id}/edit`)}  />
+          <Divider />
           <TableSection title="Vigilancia Médica" columns={medicalColumns} data={partograph.medicalSurveillanceTable} buttonLabel="Agregar elemento a tabla" onButtonClick={() => setIsMedicalSurveillanceModalVisible(true)} />
+          <Divider />
           <TableSection title="Variaciones de Posición de Presentación" columns={presentationColumns} data={partograph.presentationPositionVarieties} buttonLabel="Agregar altura de la presentación" onButtonClick={() => setIsPresentationPositionVarietyModalVisible(true)} />
+          <Divider />
           <TableSection title="Frecuencia de Contracciones" columns={contractionColumns} data={partograph.contractionFrequencies} buttonLabel="Agregar Frecuencia de Contracciones" onButtonClick={() => setIsContractionFrequencyModalVisible(true)} />
+          <Divider />
           <TableSection title="Frecuencia Cardíaca Fetal" columns={fetalColumns} data={partograph.fetalHeartRates} buttonLabel="Agregar Frecuencia Cardíaca Fetal" onButtonClick={() => setIsFetalHeartRateModalVisible(true)} />
+          <ChildbirthNoteView childbirthNote={partograph.childbirthNote} partographId={partographId} />
         </div>
         <CervicalDilationModal
           visible={isCervicalDilationModalVisible}
           onClose={() => setIsCervicalDilationModalVisible(false)}
+          partographId={partographId}
         />
         <MedicalSurveillanceModal
           visible={isMedicalSurveillanceModalVisible}
-          onClose={() => setIsMedicalSurveillanceModalVisible(false)} />
+          onClose={() => setIsMedicalSurveillanceModalVisible(false)}
+          partographId={partographId}
+        />
 
         <PresentationPositionVarietyModal
           visible={isPresentationPositionVarietyModalVisible}
-          onClose={() => setIsPresentationPositionVarietyModalVisible(false)} />
+          onClose={() => setIsPresentationPositionVarietyModalVisible(false)}
+          partographId={partographId}
+        />
 
         <ContractionFrequencyModal
           visible={isContractionFrequencyModalVisible}
-          onClose={() => setIsContractionFrequencyModalVisible(false)} />
+          onClose={() => setIsContractionFrequencyModalVisible(false)}
+          partographId={partographId}
+        />
 
         <FetalHeartRateModal
           visible={isFetalHeartRateModalVisible}
-          onClose={() => setIsFetalHeartRateModalVisible(false)} />
+          onClose={() => setIsFetalHeartRateModalVisible(false)}
+          partographId={partographId}
+        />
       </Layout.Content>
     </>
   );
