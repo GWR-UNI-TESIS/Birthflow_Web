@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { plainAxios } from '../services/api';
-
+import { Spin } from 'antd';
 const CatalogContext = createContext();
 
 export const useCatalog = () => useContext(CatalogContext);
@@ -25,6 +25,10 @@ export const CatalogProvider = ({ children }) => {
 
         fetchCatalogs();
     }, []);
+
+    if (loading) {
+        return <Spin fullscreen></Spin>; // Puedes personalizar el mensaje o agregar un spinner
+    }
 
     return (
         <CatalogContext.Provider value={{ catalogs, loading, error }}>

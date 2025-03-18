@@ -6,6 +6,7 @@ import UnifiedDropdown from "../../../components/UnifiedDropdown";
 import { createMedicalSurveillance } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
+import dayjs from "dayjs";
 
 const POSICION_MATERNA_OPTIONS = [
     { value: "Lat.Derecho", label: "Lat. Derecho" },
@@ -51,7 +52,7 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                 frequencyContractions: values.frecuenciaContracciones.toString(),
                 pain: values.Dolor ? values.Dolor.toString() : "",
                 letter: 'A', // Se envía vacío si no hay valor
-                time: values.tiempo.toISOString(), // Convertimos fecha a ISO
+                time: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
             };
 
             await createMedicalSurveillance(payload);
@@ -70,7 +71,7 @@ const DOLOR_INTENSIDAD_OPTIONS = [
     return (
         <Modal title="Vigilancia Materna" open={visible} onCancel={handleClose} footer={null}>
             <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                <Form.Item label="Hora" name="tiempo" rules={[{ required: true, message: "Campo requerido" }]}>
+                <Form.Item label="Hora" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
                     <DatePicker showTime={{ format: "HH:mm" }} format="YYYY-MM-DD HH:mm" style={{ width: "100%" }} />
                 </Form.Item>
 

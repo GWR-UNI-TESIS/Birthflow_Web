@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, NavLink } from "react-router-dom";
-import { Form, Input, Checkbox, Button, DatePicker, message, Breadcrumb, Layout, theme, Typography } from "antd";
+import { Form, Input, Checkbox, Button, DatePicker, message, Breadcrumb, Layout, theme, Typography, Spin } from "antd";
 import { getCervicalDilation, updateCervicalDilation } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import BackButton from "../../../components/ReturnButton";
@@ -41,7 +41,7 @@ const CervicalDilationEditPage = () => {
                 id: dilationId,
                 partographId,
                 value: parseFloat(values.dilation),
-                hour: values.hour.toISOString(),
+                hour: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
                 remOrRam: values.ramOrRem || false,
             });
 
@@ -59,6 +59,7 @@ const CervicalDilationEditPage = () => {
 
     return (
         <>
+            <Spin spinning={isLoading} fullscreen />
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
                 <BackButton />
                 <Breadcrumb items={[

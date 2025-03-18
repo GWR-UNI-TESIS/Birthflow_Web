@@ -3,6 +3,7 @@ import { Modal, Button, Form, Input, Select, DatePicker, message } from "antd";
 import { createContractionsFrequency } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
+import dayjs from "dayjs";
 
 const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
     const [form] = Form.useForm();
@@ -20,7 +21,7 @@ const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
                 id: 0,
                 partographId,
                 value: values.frecuenciaContracciones,
-                time: values.tiempo.toISOString(),
+                time: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
             });
 
             // Mutar para actualizar la UI con los nuevos datos
@@ -42,7 +43,7 @@ const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
                         <Input placeholder="Frec. Contracciones" type="number" />
                     </Form.Item>
 
-                    <Form.Item label="Hora" name="tiempo" rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item label="Hora" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
                         <DatePicker
                             placeholder="Seleccionar Fecha"
                             showTime={{ format: "HH:mm" }} // Habilita la selección de hora

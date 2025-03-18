@@ -12,8 +12,19 @@ const FormElement = ({ value = "", onChange, label, width }) => {
     const [selectedOption, setSelectedOption] = useState(value.split("x")[1] || "'");
 
     useEffect(() => {
-        onChange?.(`${textValue}x${selectedOption}`);
-    }, [textValue, selectedOption, onChange]);
+        if (value) {
+          const [num, unit] = value.split("x");
+          setTextValue(num || "");
+          setSelectedOption(unit || "'");
+        }
+      }, [value]); 
+
+  useEffect(() => {
+    const newValue = `${textValue}x${selectedOption}`;
+    if (value !== newValue) {
+      onChange?.(newValue);
+    }
+  }, [textValue, selectedOption]); // Solo ejecuta onChange si hay cambios
 
     return (
         <div style={{ width }}>

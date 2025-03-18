@@ -25,7 +25,7 @@ import ContractionFrequencyModal from "./modals/ContractionFrequencyModal";
 import PresentationPositionVarietyModal from "./modals/PresentationPositionVarietyModal";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
 
-const TableSection = ({ title, columns, data, buttonLabel, onButtonClick, onRowClick  }) => (
+const TableSection = ({ title, columns, data, buttonLabel, onButtonClick, onRowClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
     <Table columns={columns} dataSource={data} pagination={false} rowKey="id"
@@ -82,7 +82,6 @@ const PartographPage = () => {
   ];
 
   const presentationColumns = [
-    { title: "ID", dataIndex: "id", key: "id" },
     {
       title: "Plano de Hodge", dataIndex: "hodgePlane", key: "hodgePlane", render: (_, { hodgePlane }) => {
         const item = catalogs.hodgePlanesCatalog.find((item) => item.id === hodgePlane);
@@ -99,7 +98,6 @@ const PartographPage = () => {
   ];
 
   const contractionColumns = [
-    { title: "ID", dataIndex: "id", key: "id" },
     { title: "Valor", dataIndex: "value", key: "value" },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
   ];
@@ -140,18 +138,35 @@ const PartographPage = () => {
             </Descriptions>
           </div>
           <Divider />
-          <TableSection title="Dilataciones Cervicales" columns={cervicalColumns} data={partograph.cervicalDilations} 
-          buttonLabel="Agregar Dilatación Cervical" 
-          onButtonClick={() => setIsCervicalDilationModalVisible(true)}
-          onRowClick={(record) => navigate(`/partograph/${partographId}/cervical-dilation/${record.id}/edit`)}  />
+          <TableSection title="Dilataciones Cervicales" columns={cervicalColumns} 
+            data={partograph.cervicalDilations}
+            buttonLabel="Agregar Dilatación Cervical"
+            onButtonClick={() => setIsCervicalDilationModalVisible(true)}
+            onRowClick={(record) => navigate(`/partograph/${partographId}/cervical-dilation/${record.id}/edit`)} />
           <Divider />
-          <TableSection title="Vigilancia Médica" columns={medicalColumns} data={partograph.medicalSurveillanceTable} buttonLabel="Agregar elemento a tabla" onButtonClick={() => setIsMedicalSurveillanceModalVisible(true)} />
+          <TableSection title="Vigilancia Médica" columns={medicalColumns} 
+            data={partograph.medicalSurveillanceTable}
+            buttonLabel="Agregar elemento a tabla"
+            onButtonClick={() => setIsMedicalSurveillanceModalVisible(true)}
+            onRowClick={(record) => navigate(`/partograph/${partographId}/medical-surveillance/${record.id}/edit`)} />
           <Divider />
-          <TableSection title="Variaciones de Posición de Presentación" columns={presentationColumns} data={partograph.presentationPositionVarieties} buttonLabel="Agregar altura de la presentación" onButtonClick={() => setIsPresentationPositionVarietyModalVisible(true)} />
+          <TableSection title="Variaciones de Posición de Presentación" columns={presentationColumns}
+            data={partograph.presentationPositionVarieties} 
+            buttonLabel="Agregar altura de la presentación" 
+            onButtonClick={() => setIsPresentationPositionVarietyModalVisible(true)}   
+            onRowClick={(record) => navigate(`/partograph/${partographId}/presentation-position-variety/${record.id}/edit`)} />
           <Divider />
-          <TableSection title="Frecuencia de Contracciones" columns={contractionColumns} data={partograph.contractionFrequencies} buttonLabel="Agregar Frecuencia de Contracciones" onButtonClick={() => setIsContractionFrequencyModalVisible(true)} />
+          <TableSection title="Frecuencia de Contracciones" columns={contractionColumns}
+            data={partograph.contractionFrequencies}
+            buttonLabel="Agregar Frecuencia de Contracciones"
+            onButtonClick={() => setIsContractionFrequencyModalVisible(true)}
+            onRowClick={(record) => navigate(`/partograph/${partographId}/contraction-frequency/${record.id}/edit`)} />
           <Divider />
-          <TableSection title="Frecuencia Cardíaca Fetal" columns={fetalColumns} data={partograph.fetalHeartRates} buttonLabel="Agregar Frecuencia Cardíaca Fetal" onButtonClick={() => setIsFetalHeartRateModalVisible(true)} />
+          <TableSection title="Frecuencia Cardíaca Fetal" columns={fetalColumns} 
+            data={partograph.fetalHeartRates} 
+            buttonLabel="Agregar Frecuencia Cardíaca Fetal" 
+            onButtonClick={() => setIsFetalHeartRateModalVisible(true)}
+            onRowClick={(record) => navigate(`/partograph/${partographId}/fetal-heart-rate/${record.id}/edit`)} />
           <ChildbirthNoteView childbirthNote={partograph.childbirthNote} partographId={partographId} />
         </div>
         <CervicalDilationModal

@@ -5,9 +5,22 @@ const ArterialPressure = ({ value = "", onChange, label, width }) => {
   const [systolic, setSystolic] = useState(value.split("/")[0] || "");
   const [diastolic, setDiastolic] = useState(value.split("/")[1] || "");
 
+
   useEffect(() => {
-    onChange?.(`${systolic}/${diastolic}`);
-  }, [systolic, diastolic, onChange]);
+    if (value) {
+      const [sys, dia] = value.split("/");
+      setSystolic(sys || "");
+      setDiastolic(dia || "");
+    }
+  }, [value]); // Se actualiza si `value` cambia
+
+
+ useEffect(() => {
+    const newValue = `${systolic}/${diastolic}`;
+    if (value !== newValue) {
+      onChange?.(newValue);
+    }
+  }, [systolic, diastolic]); // Solo ejecuta onChange si realmente hay cambios
 
   return (
     <div style={{ width }}>

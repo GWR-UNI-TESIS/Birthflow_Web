@@ -9,6 +9,11 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import CreatePartographPage from "../pages/CreatePartographPage/index";
 import LayoutGeneral from "../components/LayoutGeneral";
 import CervicalDilationEditPage from "../pages/PartographPage/pages/CervicalDilationEditPage";
+import MedicalSurveillanceEditPage from "../pages/PartographPage/pages/MedicalSurveillanceEditPage";
+import ContractionFrequencyEditPage from "../pages/PartographPage/pages/ContractionFrequencyEditpage";
+import FetalHeartRateEditPage from "../pages/PartographPage/pages/FetalHeartRateEditPage";
+import PresentationPositionVarietyEditPage from "../pages/PartographPage/pages/PresentationPositionVarietyEditPage";
+
 const AppRoutes = () => {
   return (
     <Router>
@@ -54,6 +59,42 @@ const AppRoutes = () => {
                   element={
                     <ProtectedRoute>
                       <CervicalDilationEditPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/partograph/:partographId/medical-surveillance/:medicalId/edit"
+                  element={
+                    <ProtectedRoute>
+                      <MedicalSurveillanceEditPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/partograph/:partographId/contraction-frequency/:contractionId/edit"
+                  element={
+                    <ProtectedRoute>
+                      <ContractionFrequencyEditPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/partograph/:partographId/fetal-heart-rate/:heartRateId/edit"
+                  element={
+                    <ProtectedRoute>
+                      <FetalHeartRateEditPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
+                  path="/partograph/:partographId/presentation-position-variety/:positionVarietyId/edit"
+                  element={
+                    <ProtectedRoute>
+                      <PresentationPositionVarietyEditPage />
                     </ProtectedRoute>
                   }
                 />

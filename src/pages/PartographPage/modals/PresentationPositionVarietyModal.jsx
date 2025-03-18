@@ -4,6 +4,7 @@ import { useCatalog } from "../../../contexts/catalog-context";
 import { createPresentationPositionVariety } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
+import dayjs from "dayjs";
 
 const PresentationPositionVarietyModal = ({ visible, onClose, partographId  }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);    
@@ -27,7 +28,7 @@ const PresentationPositionVarietyModal = ({ visible, onClose, partographId  }) =
                 partographId,
                 position: values.posicion,
                 hodgePlane: values.planoHodge,
-                time: values.tiempo.toISOString(),
+                time: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
             });
 
             // Mutar para actualizar la UI con el nuevo dato
@@ -64,7 +65,7 @@ const PresentationPositionVarietyModal = ({ visible, onClose, partographId  }) =
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Hora" name="tiempo" rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item label="Hora" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
                         <DatePicker
                             placeholder="Seleccionar Fecha"
                             showTime={{ format: "HH:mm" }} // Habilita la selección de hora

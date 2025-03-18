@@ -17,6 +17,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import { useCatalog } from "../../contexts/catalog-context";
 import { createPartograph } from "../../services/partograph-service/partograph-service";
+import dayjs from "dayjs";
 
 const { Content } = Layout;
 const CreatePartographPage = () => {
@@ -167,7 +168,7 @@ const CreatePartographPage = () => {
         partographId: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Este valor se puede generar o asignar según convenga
         name: values.Name,
         recordName: values.RecordName,
-        date: values.date.toISOString(),
+        date: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
         observation: values.observation || "", // Si agregas un campo observation en el formulario
         workTime: effectiveColumn,
       };

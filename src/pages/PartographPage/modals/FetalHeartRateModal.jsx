@@ -4,6 +4,7 @@ import FormElement from "../../../components/FormElement";
 import { createFetalHeartRate } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
+import dayjs from "dayjs";
 
 const FetalHeartRateModal = ({ visible, onClose, partographId }) => {
     const [form] = Form.useForm();
@@ -21,7 +22,7 @@ const FetalHeartRateModal = ({ visible, onClose, partographId }) => {
             await createFetalHeartRate({
                 id: 0,
                 partographId,
-                time: values.tiempo.toISOString(), // Guardar en formato ISO
+                time: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
                 value: values.frecuenciaCardiacaFetal, // Convertir a número
             });
 
@@ -41,7 +42,7 @@ const FetalHeartRateModal = ({ visible, onClose, partographId }) => {
         <Modal title="Frecuencia Cardiaca Fetal" open={visible} onCancel={handleClose} footer={null}>
             <div style={{ padding: "10px" }}>
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                    <Form.Item label="Hora" name="tiempo" rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item label="Hora" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
                         <DatePicker
                             placeholder="Seleccionar Fecha"
                             showTime={{ format: "HH:mm" }} // Habilita la selección de hora

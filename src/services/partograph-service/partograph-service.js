@@ -148,6 +148,19 @@ export const deleteCervicalDilation = async (payload) => {
   }
 };
 
+
+export const getMedicalSurveillance = async (id) => {
+  try {
+    const response = await api.get(
+      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_MEDICAL_SURVEILLANCE(id),
+      { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
 export const createMedicalSurveillance = async (payload) => {
   try {
     const response = await api.post(
@@ -189,6 +202,19 @@ export const deleteMedicalSurveillance = async (payload) => {
     handleApiError(error);
   }
 };
+
+export const getPresentationPositionVariety = async (id) => {
+  try {
+    const response = await api.get(
+      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PRESENTATION_POSITION_VARIETY(id),
+      { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
 
 export const createPresentationPositionVariety = async (payload) => {
   try {
@@ -232,6 +258,18 @@ export const deletePresentationPositionVariety = async (payload) => {
   }
 };
 
+export const getFetalHeartRate = async (id) => {
+  try {
+    const response = await api.get(
+      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_FETAL_HEART_RATE(id),
+      { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
 export const createFetalHeartRate = async (payload) => {
   try {
     const response = await api.post(
@@ -255,6 +293,18 @@ export const updateFetalHeartRate = async (payload) => {
     );
     mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(payload.partographId));
 
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const getContractionsFrequency = async (id) => {
+  try {
+    const response = await api.get(
+      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_CONTRACTIONS_FREQUENCY(id),
+      { headers: getCommonHeaders() }
+    );
     return processApiResponse(response);
   } catch (error) {
     handleApiError(error);
