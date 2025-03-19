@@ -16,12 +16,12 @@ import {
 import { OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer } from "./CustomSymbols";
 import { useCatalog } from "../../../contexts/catalog-context";
 const symbolMap = {
-    ODA: OdaSymbolRenderer,
-    ODP: OdpSymbolRenderer,
-    ODT: OdtSymbolRenderer,
-    OIA: OiaSymbolRenderer,
-    OIP: OipSymbolRenderer,
-    OIT: OitSymbolRenderer,
+    OIDA: OdaSymbolRenderer,
+    OIDP: OdpSymbolRenderer,
+    OIDT: OdtSymbolRenderer,
+    OIIA: OiaSymbolRenderer,
+    OIIP: OipSymbolRenderer,
+    OIIT: OitSymbolRenderer,
     OS: OsSymbolRenderer,
     OP: OpSymbolRenderer
 };
@@ -135,7 +135,13 @@ const PartogramChart = ({ partograph }) => {
                     tickCount={12}
                     label={{ value: "Dilatación Cervical (cm)", angle: -90, position: "insideLeft" }}
                 />
-                <Tooltip labelFormatter={(label) => formatXAxis(label)} />
+                <Tooltip
+                    content={({ label }) => (
+                        <div style={{ background: "white", color:"black", padding: "5px", border: "1px solid black" }}>
+                            <strong>{formatXAxis(label)}</strong>
+                        </div>
+                    )}
+                />
                 <Legend />
 
 

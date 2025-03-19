@@ -42,7 +42,7 @@ const PresentationPositionVarietyEditPage = () => {
         try {
             setIsSubmitting(true);
             await updatePresentationPositionVariety({
-                id: positionVarietyId,
+                id:  parseInt(positionVarietyId),
                 partographId,
                 position: values.posicion,
                 hodgePlane: values.planoHodge,

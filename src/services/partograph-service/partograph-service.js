@@ -52,6 +52,20 @@ const processApiResponse = (result) => {
 };
 
 // Función para crear un nuevo partograph
+export const getPartograph = async (partographId) => {
+  try {
+    const response = await api.get(
+      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId),
+      { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+
+// Función para crear un nuevo partograph
 export const createPartograph = async (payload) => {
   try {
     const response = await api.post(
@@ -233,7 +247,7 @@ export const createPresentationPositionVariety = async (payload) => {
 export const updatePresentationPositionVariety = async (payload) => {
   try {
     const response = await api.patch(
-      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_PRESENTATION_POSITION_VARIETY,
+      PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_PRESENTATION_POSITION_VARIETY,
       payload,
       { headers: getCommonHeaders() }
     );
