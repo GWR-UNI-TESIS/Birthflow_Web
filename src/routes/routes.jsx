@@ -2,7 +2,6 @@ import "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/LoginPage";
 import Home from "../pages/HomePage/index";
-import Register from "../pages/RegisterPage";
 import Welcome from "../pages/WelcomePage";
 import PartographPage from "../pages/PartographPage";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -20,7 +19,6 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/dilatacion" element={<Dilatacion />} />
         <Route path="/notaparto" element={<NotaParto />} />
         <Route path="/frecuenciaCF" element={<FrecuenCF />} />
