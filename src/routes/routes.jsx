@@ -13,6 +13,7 @@ import ContractionFrequencyEditPage from "../pages/PartographPage/pages/Contract
 import FetalHeartRateEditPage from "../pages/PartographPage/pages/FetalHeartRateEditPage";
 import PresentationPositionVarietyEditPage from "../pages/PartographPage/pages/PresentationPositionVarietyEditPage";
 import EditPartographPage from "../pages/PartographPage/pages/EditPartographPage";
+import PartographHistoryPage from "../pages/PartographHistoryPage";
 
 const AppRoutes = () => {
   return (
@@ -54,6 +55,16 @@ const AppRoutes = () => {
                     </ProtectedRoute>
                   }
                 />
+
+                <Route
+                  path="/partograph/:partographId/history"
+                  element={
+                    <ProtectedRoute>
+                      <PartographHistoryPage />
+                    </ProtectedRoute>
+                  }
+                />
+
                 <Route
                   path="/partograph/:partographId/edit"
                   element={

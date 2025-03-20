@@ -3,3 +3,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
 }
+
+.selected-row {
+    background-color: #e6f7ff !important; /* Azul claro para resaltar */
+}

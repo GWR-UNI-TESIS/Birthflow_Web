@@ -17,7 +17,7 @@ import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
 import usePartograh from "../../hooks/use-partograph";
-import PartogramChart from "./components/Chart";
+import PartogramChart from "./components/chart";
 import CervicalDilationModal from "./modals/CervicalDilationModal";
 import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
 import FetalHeartRateModal from "./modals/FetalHeartRateModal";
@@ -154,7 +154,7 @@ const PartographPage = () => {
           <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Button>Historial</Button>
+        <Button onClick={ () => navigate(`/partograph/${partographId}/history`)}>Historial</Button>
           <Button>Generar PDF</Button>
           <Button>Notificaciones</Button>
           <Button>Estado del partograma</Button>
