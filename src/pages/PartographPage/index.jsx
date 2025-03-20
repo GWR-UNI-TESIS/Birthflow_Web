@@ -148,11 +148,17 @@ const PartographPage = () => {
 
   return (
     <>
-      <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-        <BackButton />
-        <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
-        <Button>Historial</Button>
-        <Button>Generar PDF</Button>
+      <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <BackButton />
+          <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
+        </div>
+        <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
+          <Button>Historial</Button>
+          <Button>Generar PDF</Button>
+          <Button>Notificaciones</Button>
+          <Button>Estado del partograma</Button>
+        </div>
       </div>
       <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
         <div style={{ background: colorBgContainer, minHeight: 280, padding: 24, borderRadius: borderRadiusLG }}>
@@ -177,7 +183,9 @@ const PartographPage = () => {
                 {partograph.observation || "Sin observaciones"}
               </Descriptions.Item>
             </Descriptions>
-            <Button type="link"  onClick={() => navigate(`/partograph/${partographId}/edit`)}>Editar</Button>
+            <Flex align="flex-end" style={{ marginTop: "1rem", marginRight: "1rem" }} vertical>
+              <Button type="primary" onClick={() => navigate(`/partograph/${partographId}/edit`)}>Editar</Button>
+            </Flex>
           </div>
           <Divider />
           <TableSection title="Dilataciones Cervicales" columns={cervicalColumns}

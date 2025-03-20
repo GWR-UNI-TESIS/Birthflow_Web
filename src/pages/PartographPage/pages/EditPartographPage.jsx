@@ -120,7 +120,7 @@ const EditPartographPage = () => {
         }
     };
 
-    if (loading || catalogsLoading) return <Spin />;
+    if (loading || catalogsLoading) return <Spin fullscreen/>;
 
     return (
         <>

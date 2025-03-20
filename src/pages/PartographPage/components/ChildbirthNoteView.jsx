@@ -39,8 +39,9 @@ const ChildbirthNoteView = ({ childbirthNote, partographId }) => {
                     </div>
                 </>
             ) : (
-                <div style={{ textAlign: "center" }}>
-                    <p>No hay nota de parto registrada.</p>
+                <div style={{ textAlign: "center", margin:10,}}>
+                    <Typography.Title level={5} style={{marginBottom:25}}>No hay nota de parto registrada.</  Typography.Title>
+                 
                     <Button type="primary" onClick={() => setModalVisible(true)}>
                         Crear Nota de Parto
                     </Button>
