@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/LoginPage";
 import Home from "../pages/HomePage/index";
-import Register from "../pages/RegisterPage";
 import Welcome from "../pages/WelcomePage";
 import PartographPage from "../pages/PartographPage";
 import ProtectedRoute from "../components/ProtectedRoute";
