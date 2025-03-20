@@ -21,7 +21,6 @@ const AppRoutes = () => {
         {/* Rutas sin LayoutGeneral */}
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
         {/* Rutas con LayoutGeneral */}
         <Route
