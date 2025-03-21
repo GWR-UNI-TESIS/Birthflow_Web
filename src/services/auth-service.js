@@ -13,10 +13,12 @@ const HEADERS = {
 };
 
 // Función auxiliar para agregar los headers comunes
-const getCommonHeaders = () => ({
-  [HEADERS.DEVICE_INFO]: getDeviceInfo(),
-});
-
+const getCommonHeaders = async () => {
+  const deviceId = await getDeviceInfo();
+  return {
+    [HEADERS.DEVICE_INFO]: deviceId,
+  };
+};
 // Función para manejar errores de la API
 const handleApiError = (error) => {
   if (error.response) {
@@ -49,7 +51,7 @@ const processApiResponse = (result) => {
 export const login = async (credentials) => {
   try {
     const response = await plainAxios.post(AUTH_URLS.LOGIN, credentials, {
-      headers: getCommonHeaders(),
+      headers: await getCommonHeaders(),
     });
     return processApiResponse(response); // Devuelve solo la propiedad Response
   } catch (error) {
@@ -63,7 +65,7 @@ export const refreshToken = async (accessToken, refreshToken) => {
       AUTH_URLS.REFRESH,
       { accessToken, refreshToken },
       {
-        headers: getCommonHeaders(),
+        headers: await getCommonHeaders(),
       }
     );
     return processApiResponse(response); // Devuelve solo la propiedad Response
@@ -78,7 +80,7 @@ export const validateAccessToken = async (accessToken) => {
       AUTH_URLS.VALIDATE_TOKEN,
       { accessToken },
       {
-        headers: getCommonHeaders(),
+        headers: await getCommonHeaders(),
       }
     );
     return processApiResponse(response); // Devuelve solo la propiedad Response

@@ -153,6 +153,7 @@ const PartographHistoryPage = () => {
             </div>
             <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
                 <div style={{ background: colorBgContainer, minHeight: 280, padding: 24, borderRadius: borderRadiusLG }}>
+  
                     <PartogramChart partograph={partograph} />
 
                     <div style={{ marginBottom: "24px" }}>

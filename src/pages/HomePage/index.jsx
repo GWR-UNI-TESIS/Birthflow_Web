@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Divider, Layout } from "antd";
 
-import RecentPartograms from "./components/RecentPartograms";
+import RecentPartograms from "./components/FavoritesPartograms";
 import PartogramTabs from "./components/PartogramTabs";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";

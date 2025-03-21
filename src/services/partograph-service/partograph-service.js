@@ -389,6 +389,7 @@ export const updatePartographState = async (payload) => {
       payload,
       { headers: getCommonHeaders() }
     );
+    mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPHS);
     mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(payload.partographId));
     return processApiResponse(response);
   } catch (error) {

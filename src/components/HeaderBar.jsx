@@ -6,7 +6,7 @@ const { Header } = Layout;
 const { Title } = Typography;
 
 const HeaderBar = ({ onNotificationDrawerToggle }) => {
-  const {logout } = useAuth();
+  const { logout } = useAuth();
 
     const userMenu = (
         <Menu>

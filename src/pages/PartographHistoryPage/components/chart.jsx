@@ -13,6 +13,7 @@ import {
     Legend,
     ResponsiveContainer
 } from "recharts";
+import { Typography } from "antd";
 import { OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer } from "./CustomSymbols";
 import { useCatalog } from "../../../contexts/catalog-context";
 const symbolMap = {
@@ -39,8 +40,12 @@ const PartogramChart = ({ partograph }) => {
 
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
 
-    if (!partograph || !partograph.curves || !partograph.curves.AlertCurve) {
-        return <p>No hay datos de curvas disponibles.</p>;
+    if (!partograph) {
+        return (
+            <div style={{ width: "100%", height: "200px", display: "flex", alignItems: "center", justifyContent: "center", borderColor: "gainsboro", borderStyle: 'dotted' }}>
+                <Typography.Title level={3}>No hay datos de curvas disponibles.</Typography.Title>
+            </div>
+        );
     }
     // Obtener el tiempo de inicio para normalizar el eje X
     const startTime = new Date(partograph.curves.AlertCurve[0].Time).getTime();
@@ -70,8 +75,8 @@ const PartogramChart = ({ partograph }) => {
     }
 
     let formattedMedicalSurveillance = partograph.medicalSurveillanceTableLog.map((point) => {
-        const fetalHeartRate = parseFloat(point.fetalHeartRate.split("x")[0]); // Extraer el número
-        const frequencyContractions = parseFloat(point.frequencyContractions);
+        const fetalHeartRate = parseFloat(point.FetalHeartRate.split("x")[0]); // Extraer el número
+        const frequencyContractions = parseFloat(point.ContractionsDuration);
 
         return {
             timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000),
@@ -137,7 +142,7 @@ const PartogramChart = ({ partograph }) => {
                 />
                 <Tooltip
                     content={({ label }) => (
-                        <div style={{ background: "white", color:"black", padding: "5px", border: "1px solid black" }}>
+                        <div style={{ background: "white", color: "black", padding: "5px", border: "1px solid black" }}>
                             <strong>{formatXAxis(label)}</strong>
                         </div>
                     )}
