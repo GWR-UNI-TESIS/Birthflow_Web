@@ -14,6 +14,7 @@ const usePartograh = (partographId) => {
         data,
         error,
         loading: isLoading,
+        mutate: () => mutate(PARTOGRAPH_ENDPOINTS.GET_PARTOGRAPH(partographId)),
     };
 };
 

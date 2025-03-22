@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import React, { useState, useEffect } from 'react';
-import { Card, Flex, Tabs, Input, Select, Radio, Table, Spin, Layout } from "antd";
+import { Card, Flex, Tabs, Input, Select, Radio, Table, Spin, Layout, message } from "antd";
 import { TableOutlined, AppstoreOutlined } from "@ant-design/icons";
 import PartogramCards from "./PartogramCards";
 import { useCatalog } from "../../../contexts/catalog-context";

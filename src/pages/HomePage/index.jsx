@@ -1,30 +1,31 @@
-import React, { useState } from 'react';
-import { Button, Divider, Layout, Spin } from "antd";
+import { useState } from "react";
+import { Button, Divider, Layout } from "antd";
 
 import RecentPartograms from "./components/RecentPartograms";
 import PartogramTabs from "./components/PartogramTabs";
-import { PlusOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { PlusOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
+// eslint-disable-next-line no-unused-vars
 const { Content } = Layout;
 
 const HomePage = () => {
-    const [viewMode, setViewMode] = useState("table");
+  const [viewMode, setViewMode] = useState("table");
 
-    return (
-        <div>
-            <Button type="primary" icon={<PlusOutlined />}>
-                <Link to="/create-partograph">Crear Partograma</Link>
-            </Button>
+  return (
+    <div>
+      <Button type="primary" icon={<PlusOutlined />}>
+        <Link to="/create-partograph">Crear Partogramas</Link>
+      </Button>
             <Button type="primary" icon={<PlusOutlined />}>
                 <Link to="/create-group">Administración de Grupos </Link>
             </Button>
-            <Divider />
-            <RecentPartograms />
-            <Divider />
-            <PartogramTabs viewMode={viewMode} setViewMode={setViewMode} />
-        </div>
-    );
+      <Divider />
+      <RecentPartograms />
+      <Divider />
+      <PartogramTabs viewMode={viewMode} setViewMode={setViewMode} />
+    </div>
+  );
 };
 
 export default HomePage;
