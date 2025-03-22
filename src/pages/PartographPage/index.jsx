@@ -11,12 +11,16 @@ import {
   Breadcrumb,
   Flex,
   Typography,
+  List,
+  Skeleton,
+  Drawer
 } from "antd";
 import { useParams, NavLink, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
 import usePartograh from "../../hooks/use-partograph";
+import usePartographNotifications from "../../hooks/use-partograph-notifications";
 import PartogramChart from "./components/chart";
 import CervicalDilationModal from "./modals/CervicalDilationModal";
 import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
@@ -25,6 +29,7 @@ import ContractionFrequencyModal from "./modals/ContractionFrequencyModal";
 import PresentationPositionVarietyModal from "./modals/PresentationPositionVarietyModal";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
 
+import { formatDateTime } from "../../utils/datetime-format";
 const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
@@ -40,12 +45,40 @@ const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   </div>
 );
 
+const NotificationList = ({ partographId }) => {
+  const { data, error, loading } = usePartographNotifications(partographId);
+
+  if (loading) return <Spin tip="Cargando notificaciones..." />;
+  if (error) return <p>Error al cargar notificaciones.</p>;
+
+  if (!data || data.length === 0) return <p>No hay notificaciones disponibles.</p>;
+
+  return (
+    <List
+      className="demo-loadmore-list"
+      loading={loading}
+      itemLayout="vertical"
+      dataSource={data?.response}
+      renderItem={(item) => (
+        <List.Item key={item.notificationId}>
+          <Skeleton avatar title={false} loading={item.loading} active>
+            <List.Item.Meta title={<a>{item.title}</a>} description={item.message} />
+            <div>{formatDateTime(item.scheduledFor)}</div>
+          </Skeleton>
+        </List.Item>
+      )}
+    />
+  );
+};
+
 const PartographPage = () => {
   const [isCervicalDilationModalVisible, setIsCervicalDilationModalVisible] = useState(false);
   const [isMedicalSurveillanceModalVisible, setIsMedicalSurveillanceModalVisible] = useState(false);
   const [isFetalHeartRateModalVisible, setIsFetalHeartRateModalVisible] = useState(false);
   const [isContractionFrequencyModalVisible, setIsContractionFrequencyModalVisible] = useState(false);
   const [isPresentationPositionVarietyModalVisible, setIsPresentationPositionVarietyModalVisible] = useState(false);
+  const [isNotificationDrawerVisible, setNotificationDrawerVisible] = useState(false);
+  const [selectedPartographId, setSelectedPartographId] = useState(null);
 
   const {
     catalogs,
@@ -154,9 +187,14 @@ const PartographPage = () => {
           <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-        <Button onClick={ () => navigate(`/partograph/${partographId}/history`)}>Historial</Button>
+          <Button onClick={() => navigate(`/partograph/${partographId}/history`)}>Historial</Button>
           <Button>Generar PDF</Button>
-          <Button>Notificaciones</Button>
+          <Button onClick={() => {
+            setSelectedPartographId(partographId);
+            setNotificationDrawerVisible(true);
+          }}>
+            Notificaciones
+          </Button>
           <Button>Estado del partograma</Button>
         </div>
       </div>
@@ -245,9 +283,25 @@ const PartographPage = () => {
           onClose={() => setIsFetalHeartRateModalVisible(false)}
           partographId={partographId}
         />
+
+        <Drawer
+          title="Notificaciones del Partograma"
+          placement="right"
+          width={400}
+          onClose={() => setNotificationDrawerVisible(false)}
+          open={isNotificationDrawerVisible}
+        >
+          {selectedPartographId ? (
+            <NotificationList partographId={selectedPartographId} />
+          ) : (
+            <p>No se ha seleccionado un partograma.</p>
+          )}
+        </Drawer>
       </Layout.Content>
     </>
   );
+
 };
+
 
 export default PartographPage;

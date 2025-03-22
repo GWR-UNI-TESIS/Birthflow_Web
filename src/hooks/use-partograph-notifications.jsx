@@ -2,11 +2,11 @@ import useSWR from "swr";
 import { useNotificationFetcher } from "../utils/notification-fetcher";
 import { NOTIFICATION_ENDPOINTS } from "../services/notification-service/notification-endpoints";
 
-const useNotifications = () => {
+const usePartographNotifications = (partographId) => {
     const { fetcher } = useNotificationFetcher();
 
     const { data, error, isLoading } = useSWR(
-        NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_NOTIFICATIONS,
+        NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_PARTOGRAPH_NOTIFICATIONS(partographId),
         (url) => fetcher(url, 'GET')
     );
 
@@ -17,4 +17,4 @@ const useNotifications = () => {
     };
 };
 
-export default useNotifications;
+export default usePartographNotifications;

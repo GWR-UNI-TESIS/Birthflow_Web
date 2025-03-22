@@ -1,7 +1,7 @@
 import useSWR, { mutate } from "swr";
 import { useNavigate } from "react-router";
 import React, { useState, useEffect } from 'react';
-import { Flex, Tabs, Input, Select, Radio, Table, Spin, Layout, message, Menu, Dropdown, Button } from "antd";
+import { Flex, Tabs, Input, Select, Radio, Table, Spin, Layout, message, Modal, Dropdown, Button } from "antd";
 import { TableOutlined, AppstoreOutlined, ShareAltOutlined, StarFilled, StarOutlined, InboxOutlined, MoreOutlined, BellFilled, BellOutlined, PushpinOutlined, DeleteOutlined } from "@ant-design/icons";
 import PartogramCards from "./PartogramCards";
 import { useCatalog } from "../../../contexts/catalog-context";
@@ -24,6 +24,7 @@ const formatDate = (dateString) => {
 
 
 const PartogramTabs = ({ viewMode, setViewMode }) => {
+    
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
     let navigate = useNavigate();
     const { user } = useAuth();
@@ -167,7 +168,7 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                         icon: record.favorite ? <StarFilled /> : <StarOutlined />,
                     },
                     {
-                        label: record.isArchived ? "Desarchivar" : "Archivar",
+                        label: record.isAchived ? "Desarchivar" : "Archivar",
                         key: "archive",
                         icon: <InboxOutlined />,
                     },
@@ -177,7 +178,7 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                         icon: record.silenced ? <BellOutlined /> : <BellFilled />,
                     },
                     {
-                        label: record.pinned ? "Desanclar" : "Anclar",
+                        label: record.set ? "Desanclar" : "Anclar",
                         key: "pin",
                         icon: <PushpinOutlined />,
                     },
