@@ -14,6 +14,7 @@ import FetalHeartRateEditPage from "../pages/PartographPage/pages/FetalHeartRate
 import PresentationPositionVarietyEditPage from "../pages/PartographPage/pages/PresentationPositionVarietyEditPage";
 import EditPartographPage from "../pages/PartographPage/pages/EditPartographPage";
 import PartographHistoryPage from "../pages/PartographHistoryPage";
+import GroupsApps from '../pages/groups/GroupsApp';
 
 const AppRoutes = () => {
   return (
@@ -44,6 +45,14 @@ const AppRoutes = () => {
                       <CreatePartographPage />
                     </ProtectedRoute>
                   }
+                />
+                <Route
+                    path="/create-group"
+                    element={
+                        <ProtectedRoute>
+                            <GroupsApps/>
+                        </ProtectedRoute>
+                    }
                 />
 
 
