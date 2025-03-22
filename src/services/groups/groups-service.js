@@ -76,3 +76,16 @@ export const createGroup = async (payload) => {
     handleApiError(error);
   }
 };
+
+export const updateGroup = async (payload) => {
+  try {
+    const response = await api.patch(
+      GROUPS_ENDPOINTS.GROUPS.UPDATE_GROUPS,
+      payload,
+      { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};

@@ -25,7 +25,7 @@ const GroupForm = ({ onRefresh, editingGroup, setEditingGroup }) => {
       const values = await form.validateFields();
       const payload = {
         Id: editingGroup ? editingGroup.id : 0, // Usa el ID si es edición
-        name: values.name,
+        groupName: values.groupName,
       };
 
       console.log("Guardando datos:", payload);
