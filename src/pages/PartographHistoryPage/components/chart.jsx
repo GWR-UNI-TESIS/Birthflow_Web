@@ -40,22 +40,29 @@ const PartogramChart = ({ partograph }) => {
 
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
 
-    if (!partograph) {
+    if (!partograph || partograph.cervicalDilations.length === 0) {
         return (
             <div style={{ width: "100%", height: "200px", display: "flex", alignItems: "center", justifyContent: "center", borderColor: "gainsboro", borderStyle: 'dotted' }}>
                 <Typography.Title level={3}>No hay datos de curvas disponibles.</Typography.Title>
             </div>
         );
     }
-    // Obtener el tiempo de inicio para normalizar el eje X
-    const startTime = new Date(partograph.curves.AlertCurve[0].Time).getTime();
 
-    // Transformar `AlertCurve`
-    const formattedAlertCurve = partograph.curves.AlertCurve.map((point) => ({
-        cervicalDilation: point.CervicalDilation,
-        timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000), // Convertimos a horas relativas
-        realTime: new Date(point.Time)
-    }));
+    let startTime;
+    // Obtener el tiempo de inicio para normalizar el eje X
+    if (partograph.cervicalDilations.length > 0) {
+        startTime = new Date(partograph.cervicalDilations[0].hour).getTime();
+    }
+    
+    let formattedAlertCurve;
+    // Transformar `alertCurve`
+    if (partograph.curves.newAlertCurve && partograph.curves.alertCurve.length > 0) {
+        formattedAlertCurve = partograph.curves.alertCurve.map((point) => ({
+            cervicalDilation: point.cervicalDilation,
+            timeRelative: (new Date(point.time).getTime() - startTime) / (60 * 60 * 1000), // Convertimos a horas relativas
+            realTime: new Date(point.time)
+        }));
+    }
 
     // Transformar `cervicalDilations` para la Curva Real
     const formattedRealCurve = partograph.cervicalDilationLog.map((point) => ({
