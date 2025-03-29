@@ -13,7 +13,8 @@ import {
   Typography,
   List,
   Skeleton,
-  Drawer
+  Drawer,
+  Modal
 } from "antd";
 import { useParams, NavLink, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
@@ -21,6 +22,7 @@ import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
 import usePartograh from "../../hooks/use-partograph";
 import usePartographNotifications from "../../hooks/use-partograph-notifications";
+import {getPartographPdf} from '../../services/report-service/report-service';
 import PartogramChart from "./components/chart";
 import CervicalDilationModal from "./modals/CervicalDilationModal";
 import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
@@ -79,7 +81,9 @@ const PartographPage = () => {
   const [isPresentationPositionVarietyModalVisible, setIsPresentationPositionVarietyModalVisible] = useState(false);
   const [isNotificationDrawerVisible, setNotificationDrawerVisible] = useState(false);
   const [selectedPartographId, setSelectedPartographId] = useState(null);
-
+  const [pdfVisible, setPdfVisible] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const {
     catalogs,
     loading: catalogsLoading,
@@ -91,9 +95,23 @@ const PartographPage = () => {
   const navigate = useNavigate();
   const { data, loading, error } = usePartograh(partographId);
 
-  if (loading || catalogsLoading) return <Spin fullscreen />;
+  if (loading || catalogsLoading || pdfLoading ) return <Spin fullscreen />;
   if (error) return <Alert message="Error al cargar los datos" type="error" />;
 
+
+  const mostrarPDF = async () => {
+    try {
+      setPdfLoading(true);
+      const blob = await getPartographPdf(partographId);
+      const url = URL.createObjectURL(blob);
+      setPdfUrl(url);
+      setPdfVisible(true);
+      setPdfLoading(false);
+    } catch (error) {
+      console.error("Error mostrando PDF:", error);
+      setPdfLoading(false);
+    }
+  };
   const partograph = data.response || data;
 
   const cervicalColumns = [
@@ -188,7 +206,7 @@ const PartographPage = () => {
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
           <Button onClick={() => navigate(`/partograph/${partographId}/history`)}>Historial</Button>
-          <Button>Generar PDF</Button>
+          <Button onClick={mostrarPDF}>Generar PDF</Button>
           <Button onClick={() => {
             setSelectedPartographId(partographId);
             setNotificationDrawerVisible(true);
@@ -297,6 +315,31 @@ const PartographPage = () => {
             <p>No se ha seleccionado un partograma.</p>
           )}
         </Drawer>
+
+        <Modal
+          open={pdfVisible}
+          onCancel={() => setPdfVisible(false)}
+          footer={[
+            <Button key="close" onClick={() => setPdfVisible(false)}>
+              Cerrar
+            </Button>,
+          ]}
+          width="80%"
+          style={{ top: 20 }}
+          title="Vista previa del PDF"
+        >
+          {pdfUrl ? (
+            <iframe
+              src={pdfUrl}
+              title="PDF Preview"
+              width="100%"
+              height="600px"
+              style={{ border: "none" }}
+            />
+          ) : (
+            <p>Cargando PDF...</p>
+          )}
+        </Modal>
       </Layout.Content>
     </>
   );
