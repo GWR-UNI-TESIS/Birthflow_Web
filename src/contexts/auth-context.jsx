@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
 import { login as loginService, refreshToken as refreshService, validateAccessToken as validateAccessTokenService } from "../services/auth-service";
+import { updateUserInfo } from "../services/account-services/account-service";
 
 const AuthContext = createContext();
 
@@ -9,6 +10,8 @@ export const AuthProvider = ({ children }) => {
     const [authError, setAuthError] = useState(null);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
     const [loading, setLoading] = useState(false);
+
+
 
     useEffect(() => {
         if (accessToken) {
@@ -92,6 +95,20 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    // Función para actualizar el usuario en la API y en el contexto
+    const updateUser = async (updatedUserData) => {
+        try {
+
+            console.log("Antes de editar", user);            
+            const updatedUser = await updateUserInfo(updatedUserData);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+            setUser(prev => ({ ...prev, ...updatedUser }));          
+            console.log("despues de editar", updatedUser);
+        } catch (error) {
+            console.error("Error al actualizar el usuario:", error);
+        }
+    };
+
     //  Cerrar sesión
     const logout = () => {
         clearAuthData();
@@ -100,6 +117,8 @@ export const AuthProvider = ({ children }) => {
     //  Memorizar el contexto para evitar renders innecesarios
     const value = useMemo(() => ({
         user,
+        setUser,
+        updateUser,
         accessToken,
         refreshAccessToken,
         login,
@@ -108,7 +127,7 @@ export const AuthProvider = ({ children }) => {
         authError,
         setAuthError,
         loading,
-    }), [accessToken, authError, loading]);
+    }), [accessToken, authError, loading, user]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

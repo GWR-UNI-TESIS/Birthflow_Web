@@ -9,7 +9,7 @@ export default ({ mode }) => {
   return defineConfig({
     plugins: [react()],
     server: {
-      port: 2999, // Cambiar al puerto 3000
+      port: 3000, 
     },
   });
 }

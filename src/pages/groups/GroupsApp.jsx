@@ -3,7 +3,7 @@ import { getListGroups } from "../../services/groups/groups-service";
 import GroupForm from "./components/Form/GroupForm";
 import GroupTable from "./components/table/TableListGroup";
 
-function GroupsApps() {
+function GroupsApp() {
   const [listData, setListData] = useState([]);
   const [editingGroup, setEditingGroup] = useState(null); // Estado para el grupo en edición
 
@@ -29,4 +29,4 @@ function GroupsApps() {
   );
 }
 
-export default GroupsApps;
+export default GroupsApp;
