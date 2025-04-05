@@ -18,15 +18,15 @@ import PartographHistoryPage from "../pages/PartographHistoryPage";
 import GroupsApps from '../pages/groups/GroupsApp';
 import ConfigurationApp from "../pages/Configuration/ConfigurationApp";
 import UpdateUser from "../pages/Configuration/components/Form/UserInfoUpdateForm";
-
+import PATH from './path';
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
         {/* Rutas sin LayoutGeneral */}
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/config/userEdit" element={<UpdateUser/>}/>
+        <Route path={PATH.WELCOME} element={<Welcome />} />
+        <Route path={PATH.LOGIN} element={<Login />} />
+        <Route path={PATH.USER_EDIT} element={<UpdateUser />} />
         {/* Rutas con LayoutGeneral */}
         <Route
           path="/*"
@@ -34,7 +34,7 @@ const AppRoutes = () => {
             <LayoutGeneral>
               <Routes>
                 <Route
-                  path="/"
+                  path={PATH.HOME}
                   element={
                     <ProtectedRoute>
                       <Home />
@@ -42,7 +42,7 @@ const AppRoutes = () => {
                   }
                 />
                 <Route
-                  path="/create-partograph"
+                  path={PATH.CREATE_PARTOGRAPH}
                   element={
                     <ProtectedRoute>
                       <CreatePartographPage />
@@ -50,25 +50,25 @@ const AppRoutes = () => {
                   }
                 />
                 <Route
-                    path="/create-group"
-                    element={
-                        <ProtectedRoute>
-                            <GroupsApps/>
-                        </ProtectedRoute>
-                    }
+                  path={PATH.CREATE_GROUP}
+                  element={
+                    <ProtectedRoute>
+                      <GroupsApps />
+                    </ProtectedRoute>
+                  }
                 />
                 <Route
-                    path="/config"
-                    element={
-                        <ProtectedRoute>
-                            <ConfigurationApp/>
-                        </ProtectedRoute>
-                    }
+                  path={PATH.CONFIG}
+                  element={
+                    <ProtectedRoute>
+                      <ConfigurationApp />
+                    </ProtectedRoute>
+                  }
                 />
 
 
                 <Route
-                  path="/partograph/:partographId"
+                  path={PATH.TEMPLATE.PARTOGRAPH}
                   element={
                     <ProtectedRoute>
                       <PartographPage />
@@ -77,7 +77,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/history"
+                  path={PATH.TEMPLATE.PARTOGRAPH_HISTORY}
                   element={
                     <ProtectedRoute>
                       <PartographHistoryPage />
@@ -86,7 +86,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/edit"
+                  path={PATH.TEMPLATE.PARTOGRAPH_EDIT}
                   element={
                     <ProtectedRoute>
                       <EditPartographPage />
@@ -95,7 +95,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/cervical-dilation/:dilationId/edit"
+                  path={PATH.TEMPLATE.CERVICAL_DILATION_EDIT}
                   element={
                     <ProtectedRoute>
                       <CervicalDilationEditPage />
@@ -104,7 +104,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/medical-surveillance/:medicalId/edit"
+                  path={PATH.TEMPLATE.MEDICAL_SURVEILLANCE_EDIT}
                   element={
                     <ProtectedRoute>
                       <MedicalSurveillanceEditPage />
@@ -113,7 +113,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/contraction-frequency/:contractionId/edit"
+                  path={PATH.TEMPLATE.CONTRACTION_FREQUENCY_EDIT}
                   element={
                     <ProtectedRoute>
                       <ContractionFrequencyEditPage />
@@ -122,7 +122,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/fetal-heart-rate/:heartRateId/edit"
+                  path={PATH.TEMPLATE.FETAL_HEART_RATE_EDIT}
                   element={
                     <ProtectedRoute>
                       <FetalHeartRateEditPage />
@@ -131,7 +131,7 @@ const AppRoutes = () => {
                 />
 
                 <Route
-                  path="/partograph/:partographId/presentation-position-variety/:positionVarietyId/edit"
+                  path={PATH.TEMPLATE.PRESENTATION_POSITION_VARIETY_EDIT}
                   element={
                     <ProtectedRoute>
                       <PresentationPositionVarietyEditPage />

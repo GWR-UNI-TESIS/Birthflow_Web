@@ -19,6 +19,7 @@ import { getPartograph, updatePartograph } from "../../../services/partograph-se
 import BackButton from '../../../components/ReturnButton';
 import WorkTimeTable from "../../../components/WorkTimeTable";
 import dayjs from "dayjs";
+import PATH from "../../../routes/path";
 
 const { Content } = Layout;
 
@@ -125,7 +126,7 @@ const EditPartographPage = () => {
     return (
         <>
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                <BackButton />
+            <BackButton to={PATH.PARTOGRAPH(partographId)}/>
                 <Breadcrumb
                     items={[
                         {

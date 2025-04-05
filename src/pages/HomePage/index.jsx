@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { Button, Divider, Layout } from "antd";
+import { Button, Divider } from "antd";
 
-import RecentPartograms from "./components/FavoritesPartograms";
+import RecentPartograms from "./components/PinPartograms";
 import PartogramTabs from "./components/PartogramTabs";
 import { PlusOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-
-// eslint-disable-next-line no-unused-vars
-const { Content } = Layout;
 
 const HomePage = () => {
   const [viewMode, setViewMode] = useState("table");

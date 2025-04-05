@@ -6,6 +6,7 @@ import { mutate } from "swr";
 import BackButton from "../../../components/ReturnButton";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 import dayjs from "dayjs";
+import PATH from "../../../routes/path";
 
 const CervicalDilationEditPage = () => {
     const { partographId, dilationId } = useParams();
@@ -61,7 +62,7 @@ const CervicalDilationEditPage = () => {
         <>
             <Spin spinning={isLoading} fullscreen />
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-                <BackButton />
+                <BackButton to={PATH.PARTOGRAPH(partographId)}/>
                 <Breadcrumb items={[
                     { title: <NavLink to="/">Home</NavLink> },
                     { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },

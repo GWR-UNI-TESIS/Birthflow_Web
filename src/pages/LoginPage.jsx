@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/auth-context";
 import { Form, Input, Button, Alert, Spin, Card } from "antd";
 import { v4 as uuidv4 } from "uuid";
+import PATH from "../routes/path";
 
 const AuthPage = () => {
   const { login, register, authError, setAuthError, loading, accessToken } = useAuth();
@@ -31,14 +32,14 @@ const AuthPage = () => {
         phoneNumber: values.phoneNumber,
       };
       await register(userData);
-      navigate("/");
+      navigate(PATH.HOME);
     } catch (error) {
       setAuthError(error.message);
     }
   };
 
   useEffect(() => {
-    if (accessToken) navigate("/");
+    if (accessToken) navigate(PATH.HOME);
   }, [accessToken, navigate]);
 
   return (

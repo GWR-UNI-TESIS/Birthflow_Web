@@ -18,6 +18,7 @@ import BackButton from "../../components/ReturnButton";
 import { getPartographHistory } from "../../services/partograph-history/partograph-history-service";
 import PartogramChart from "./components/chart";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
+import PATH from "../../routes/path";
 
 const TableSection = ({ title, columns, data }) => (
     <div style={{ paddingTop: 16 }}>
@@ -38,7 +39,7 @@ const PartographHistoryPage = () => {
     } = useCatalog();
 
     const { partographId } = useParams();
-   const [data, setData] = useState(null);
+    const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [historyVisible, setHistoryVisible] = useState(false);
@@ -55,8 +56,8 @@ const PartographHistoryPage = () => {
                 setHistoryData(response.map(item => ({
                     ...item,
                     key: item.id // Asegurar que cada elemento tenga un key único
-                }))); 
-                
+                })));
+
                 if (response?.length > 0) {
                     const latestVersion = response.reduce((latest, current) =>
                         new Date(current.changedAt) > new Date(latest.changedAt) ? current : latest, response[0]);
@@ -144,7 +145,7 @@ const PartographHistoryPage = () => {
         <>
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                    <BackButton />
+                    <BackButton to={PATH.PARTOGRAPH(partographId)} />
                     <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
                 </div>
                 <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
@@ -153,7 +154,7 @@ const PartographHistoryPage = () => {
             </div>
             <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
                 <div style={{ background: colorBgContainer, minHeight: 280, padding: 24, borderRadius: borderRadiusLG }}>
-  
+
                     <PartogramChart partograph={partograph} />
 
                     <div style={{ marginBottom: "24px" }}>
@@ -200,9 +201,9 @@ const PartographHistoryPage = () => {
 
             </Layout.Content>
             <Drawer title="Historial de Cambios" placement="right" onClose={hideHistory} open={historyVisible}>
-                <Table columns={historyColumns} dataSource={historyData} rowKey="id" pagination={false} 
-                  rowClassName={(record) => (record.id === selectedRowKey ? "selected-row" : "")} 
-                   />
+                <Table columns={historyColumns} dataSource={historyData} rowKey="id" pagination={false}
+                    rowClassName={(record) => (record.id === selectedRowKey ? "selected-row" : "")}
+                />
             </Drawer>
         </>
     );

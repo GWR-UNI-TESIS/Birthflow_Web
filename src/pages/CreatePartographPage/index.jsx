@@ -19,6 +19,7 @@ import { useCatalog } from "../../contexts/catalog-context";
 import { createPartograph } from "../../services/partograph-service/partograph-service";
 import BackButton from '../../components/ReturnButton';
 import dayjs from "dayjs";
+import PATH from "../../routes/path";
 
 const { Content } = Layout;
 const CreatePartographPage = () => {
@@ -79,6 +80,7 @@ const CreatePartographPage = () => {
       const result = await createPartograph(payload);
       console.log("Respuesta de la API:", result);
       message.success("Datos guardados con éxito!");
+      NAB
       // Aquí podrías redirigir o actualizar el estado según la respuesta
     } catch (error) {
       console.error("Validation or API error:", error);
@@ -91,7 +93,7 @@ const CreatePartographPage = () => {
   return (
     <>
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        <BackButton />
+        <BackButton to={PATH.HOME} />
 
         <Breadcrumb
           items={[

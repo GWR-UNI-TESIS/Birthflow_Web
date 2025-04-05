@@ -32,6 +32,7 @@ import PresentationPositionVarietyModal from "./modals/PresentationPositionVarie
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
 
 import { formatDateTime } from "../../utils/datetime-format";
+import PATH from "../../routes/path";
 const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
@@ -123,7 +124,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/cervical-dilation/${record.id}/edit`)} />
+          onClick={() => navigate( PATH.CERVICAL_DILATION_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -142,7 +143,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/medical-surveillance/${record.id}/edit`)} />
+          onClick={() => navigate(PATH.MEDICAL_SURVEILLANCE_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -166,7 +167,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/presentation-position-variety/${record.id}/edit`)} />
+          onClick={() => navigate( PATH.PRESENTATION_POSITION_VARIETY_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -179,7 +180,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/contraction-frequency/${record.id}/edit`)} />
+          onClick={() => navigate(PATH.CONTRACTION_FREQUENCY_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -192,7 +193,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/fetal-heart-rate/${record.id}/edit`)} />
+          onClick={() => navigate(PATH.FETAL_HEART_RATE_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -201,11 +202,11 @@ const PartographPage = () => {
     <>
       <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <BackButton />
+          <BackButton to={PATH.HOME} />
           <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Button onClick={() => navigate(`/partograph/${partographId}/history`)}>Historial</Button>
+          <Button onClick={() => navigate( PATH.PARTOGRAPH_HISTORY(partographId))}>Historial</Button>
           <Button onClick={mostrarPDF}>Generar PDF</Button>
           <Button onClick={() => {
             setSelectedPartographId(partographId);
@@ -240,7 +241,7 @@ const PartographPage = () => {
               </Descriptions.Item>
             </Descriptions>
             <Flex align="flex-end" style={{ marginTop: "1rem", marginRight: "1rem" }} vertical>
-              <Button type="primary" onClick={() => navigate(`/partograph/${partographId}/edit`)}>Editar</Button>
+              <Button type="primary" onClick={() => navigate(PATH.PARTOGRAPH_EDIT(partographId,))}>Editar</Button>
             </Flex>
           </div>
           <Divider />

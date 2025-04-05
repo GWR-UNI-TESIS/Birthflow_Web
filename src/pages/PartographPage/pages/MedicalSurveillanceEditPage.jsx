@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import FormElement from "../../../components/FormElement";
 import ArterialPressure from "../../../components/ArterialPressure";
 import UnifiedDropdown from "../../../components/UnifiedDropdown";
+import PATH from "../../../routes/path";
 
 const POSICION_MATERNA_OPTIONS = [
     { value: "Lat.Derecho", label: "Lat. Derecho" },
@@ -92,7 +93,7 @@ const MedicalSurveillanceEditPage = () => {
         <>
             <Spin spinning={isLoading} fullscreen />
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-                <BackButton />
+            <BackButton to={PATH.PARTOGRAPH(partographId)} />
                 <Breadcrumb
                     items={[
                         { title: <NavLink to="/">Home</NavLink> },
