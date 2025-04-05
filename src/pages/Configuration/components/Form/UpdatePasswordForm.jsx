@@ -21,6 +21,7 @@ const UserForm = () => {
       await updateUserPassword(payload);
       message.success("Contraseña actualizada exitosamente");
       form.resetFields();
+      window.location.reload();
     } catch (error) {
       console.error('Error en handleClick:', error);
       if (error?.errorFields) {
