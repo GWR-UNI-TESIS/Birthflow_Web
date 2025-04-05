@@ -73,8 +73,8 @@ const PartogramChart = ({ partograph }) => {
 
 
     let formattedNewAlertCurve = [];
-    if (partograph.curves.NewAlertCurve && partograph.curves.NewAlertCurve.length > 0) {
-        formattedNewAlertCurve = partograph.curves.NewAlertCurve.map((point) => ({
+    if (partograph.curves.newAlertCurve && partograph.curves.newAlertCurve.length > 0) {
+        formattedNewAlertCurve = partograph.curves.newAlertCurve.map((point) => ({
             cervicalDilation: point.CervicalDilation,
             timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000),
             realTime: new Date(point.Time)
@@ -83,7 +83,7 @@ const PartogramChart = ({ partograph }) => {
 
     let formattedMedicalSurveillance = partograph.medicalSurveillanceTableLog.map((point) => {
         const fetalHeartRate = parseFloat(point.FetalHeartRate.split("x")[0]); // Extraer el número
-        const frequencyContractions = parseFloat(point.ContractionsDuration);
+        const frequencyContractions = parseFloat(point.frequencyContractions);
 
         return {
             timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000),
@@ -137,7 +137,7 @@ const PartogramChart = ({ partograph }) => {
                 <XAxis
                     dataKey="timeRelative"
                     type="number"
-                    domain={[0, 11]} // Asegurar que el eje X vaya de 0 a 11
+                    domain={[0, 10]} // Asegurar que el eje X vaya de 0 a 11
                     tickCount={13} // Para que muestre de 0 a 11
                     tickFormatter={formatXAxis} // Muestra las horas reales
                     label={{ value: "Hora", position: "insideBottom", offset: -5 }}

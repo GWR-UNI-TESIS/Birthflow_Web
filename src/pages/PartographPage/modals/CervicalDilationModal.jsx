@@ -3,16 +3,17 @@ import { Modal, Input, Checkbox, Button, Form, DatePicker, message } from "antd"
 import { createCervicalDilation } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
+import dayjs from "dayjs";
 
 const CervicalDilationModal = ({ visible, onClose, partographId }) => {
     const [form] = Form.useForm();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleClose = () => {
-        form.resetFields(); 
+        form.resetFields();
         onClose();
     };
-    
+
 
     const handleSubmit = async (values) => {
         try {
@@ -21,7 +22,7 @@ const CervicalDilationModal = ({ visible, onClose, partographId }) => {
                 id: 0,
                 partographId,
                 value: parseFloat(values.dilation),
-                hour: values.hour,
+                hour: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
                 remOrRam: values.ramOrRem || false,
             });
 
@@ -36,7 +37,7 @@ const CervicalDilationModal = ({ visible, onClose, partographId }) => {
             setIsSubmitting(false);
         }
     };
-    
+
 
     return (
         <Modal

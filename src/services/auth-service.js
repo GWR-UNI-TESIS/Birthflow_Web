@@ -49,12 +49,24 @@ const processApiResponse = (result) => {
   }
 };
 
+const processLoginApiResponse = (result) => {
+  const { statusCode, message, response } = result.data;
+
+  if (statusCode >= 200 && statusCode < 300) {
+    // Si el código de estado es exitoso, devolver la respuesta
+    return {response, message};
+  } else {
+    // Si el código de estado indica un error, lanzar un error con el mensaje
+    throw new Error(`${message}`);
+  }
+};
+
 export const login = async (credentials) => {
   try {
     const response = await plainAxios.post(AUTH_URLS.LOGIN, credentials, {
       headers: await getCommonHeaders(),
     });
-    return processApiResponse(response); // Devuelve solo la propiedad Response
+    return processLoginApiResponse(response); // Devuelve solo la propiedad Response
   } catch (error) {
     handleApiError(error); // Maneja el error y propaga el mensaje
   }

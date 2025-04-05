@@ -1,9 +1,10 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
-import { login as loginService, 
-    refreshToken as refreshService, 
+import {
+    login as loginService,
+    refreshToken as refreshService,
     validateAccessToken as validateAccessTokenService,
     register as registerService
- } from "../services/auth-service";
+} from "../services/auth-service";
 import { updateUserInfo } from "../services/account-services/account-service";
 
 const AuthContext = createContext();
@@ -14,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     const [authError, setAuthError] = useState(null);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
     const [loading, setLoading] = useState(false);
-
+    const [isTemporalPassword, setIsTemporalPassword] = useState(false);
     useEffect(() => {
         if (accessToken) {
             handleTokenValidation();
@@ -84,7 +85,8 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await loginService({ email, password });
-            updateTokens(response);
+            updateTokens(response.response);
+            setIsTemporalPassword(response.message.includes('Temporal'));
             setAuthError(null);
             return { success: true, message: response.message };
         } catch (error) {
@@ -116,10 +118,10 @@ export const AuthProvider = ({ children }) => {
 
     // Función para actualizar el usuario en la API y en el contexto
     const updateUser = async (updatedUserData) => {
-        try {       
+        try {
             const updatedUser = await updateUserInfo(updatedUserData);
             localStorage.setItem("user", JSON.stringify(updatedUser));
-            setUser(prev => ({ ...prev, ...updatedUser }));          
+            setUser(prev => ({ ...prev, ...updatedUser }));
         } catch (error) {
             console.error("Error al actualizar el usuario:", error);
         }
@@ -136,6 +138,7 @@ export const AuthProvider = ({ children }) => {
         setUser,
         register,
         updateUser,
+        isTemporalPassword,
         accessToken,
         refreshAccessToken,
         login,

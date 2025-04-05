@@ -24,7 +24,7 @@ const ContractionFrequencyEditPage = () => {
 
                 form.setFieldsValue({
                     frecuenciaContracciones: response.value, // Debe ser un número
-                    tiempo: dayjs(response.time), // Convertir fecha a formato válido para DatePicker
+                    hour: dayjs(response.time), // Convertir fecha a formato válido para DatePicker
                 });
 
                 setIsLoading(false);
