@@ -1,4 +1,4 @@
-import { plainAxios } from "./api";
+import { plainAxios, api } from "./api";
 import { getDeviceInfo } from "../utils/device-id";
 
 // Constantes para URLs y headers

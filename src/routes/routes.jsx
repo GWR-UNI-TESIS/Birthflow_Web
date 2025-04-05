@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/LoginPage";
+import Configuration from "../pages/Configuration/ConfigurationApp"
 import Home from "../pages/HomePage/index";
 import Welcome from "../pages/WelcomePage";
 import PartographPage from "../pages/PartographPage";
@@ -15,6 +16,8 @@ import PresentationPositionVarietyEditPage from "../pages/PartographPage/pages/P
 import EditPartographPage from "../pages/PartographPage/pages/EditPartographPage";
 import PartographHistoryPage from "../pages/PartographHistoryPage";
 import GroupsApps from '../pages/groups/GroupsApp';
+import ConfigurationApp from "../pages/Configuration/ConfigurationApp";
+import UpdateUser from "../pages/Configuration/components/Form/UserInfoUpdateForm";
 
 const AppRoutes = () => {
   return (
@@ -23,7 +26,7 @@ const AppRoutes = () => {
         {/* Rutas sin LayoutGeneral */}
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
-
+        <Route path="/config/userEdit" element={<UpdateUser/>}/>
         {/* Rutas con LayoutGeneral */}
         <Route
           path="/*"
@@ -51,6 +54,14 @@ const AppRoutes = () => {
                     element={
                         <ProtectedRoute>
                             <GroupsApps/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/config"
+                    element={
+                        <ProtectedRoute>
+                            <ConfigurationApp/>
                         </ProtectedRoute>
                     }
                 />

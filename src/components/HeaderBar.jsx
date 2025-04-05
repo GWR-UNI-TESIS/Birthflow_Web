@@ -1,17 +1,28 @@
 import React from 'react';
 import { Layout, Typography, Space, Button, Dropdown, Menu, Result } from "antd";
-import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, UsergroupAddOutlined, FolderOutlined } from "@ant-design/icons";
+import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, UsergroupAddOutlined, FolderOutlined, GroupOutlined } from "@ant-design/icons";
 import {useAuth} from "../contexts/auth-context";
+import { useNavigate } from "react-router-dom";
 const { Header } = Layout;
 const { Title } = Typography;
 
 const HeaderBar = ({ onNotificationDrawerToggle }) => {
   const { logout } = useAuth();
 
-    const userMenu = (
+    const navigate = useNavigate(); // Hook para redirigir
+  
+    const handleGroupsClick = () => {
+      navigate("/create-group"); 
+    };
+
+    const handleConfigurationClick = () => {
+        navigate("/config");
+      };
+       
+      const userMenu = (
         <Menu>
-            <Menu.Item key="1" icon={<SettingOutlined />}>Configuracion</Menu.Item>
-            <Menu.Item key="2" icon={<UsergroupAddOutlined />}>Grupos</Menu.Item>
+            <Menu.Item key="1" icon={<SettingOutlined />} onClick={handleConfigurationClick}>Configuracion</Menu.Item>
+            <Menu.Item key="2" icon={<UsergroupAddOutlined />} onClick={handleGroupsClick}>Grupos</Menu.Item>
             <Menu.Item key="3" icon={<FolderOutlined />}>Archivados</Menu.Item>
             <Menu.Item key="4" icon={<LogoutOutlined />} onClick={logout}>Cerrar Sesion</Menu.Item>
         </Menu >
