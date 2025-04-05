@@ -54,9 +54,9 @@ const PresentationPositionVarietyEditPage = () => {
 
             message.success("Variedad de posición actualizada exitosamente.");
             setIsSubmitting(false);
-            navigate(`/partograph/${partographId}`);
+            navigate(PATH.PARTOGRAPH(partographId));
         } catch (error) {
-            message.error("Error al actualizar la variedad de posición.");
+            message.error("Error al actualizar la variedad de posición. Vuelva a probar mas tarde.");
             setIsSubmitting(false);
         }
     };
@@ -71,7 +71,7 @@ const PresentationPositionVarietyEditPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <NavLink to="/">Home</NavLink> },
-                        { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },
+                        { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Editar Variedad de Posición" },
                     ]}
                 />

@@ -51,9 +51,9 @@ const FetalHeartRateEditPage = () => {
 
             message.success("Frecuencia Cardíaca Fetal actualizada exitosamente.");
             setIsSubmitting(false);
-            navigate(`/partograph/${partographId}`);
+            navigate(PATH.PARTOGRAPH(partographId));
         } catch (error) {
-            message.error("Error al actualizar la frecuencia cardíaca fetal.");
+            message.error("Error al actualizar la frecuencia cardíaca fetal. Vuelva a probar mas tarde.");
             setIsSubmitting(false);
         }
     };
@@ -66,7 +66,7 @@ const FetalHeartRateEditPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <NavLink to="/">Home</NavLink> },
-                        { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },
+                        { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Editar Frecuencia Cardíaca Fetal" },
                     ]}
                 />

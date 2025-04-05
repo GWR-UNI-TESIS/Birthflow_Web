@@ -82,9 +82,9 @@ const MedicalSurveillanceEditPage = () => {
 
             message.success("Vigilancia médica actualizada exitosamente.");
             setIsSubmitting(false);
-            navigate(`/partograph/${partographId}`);
+            navigate(PATH.PARTOGRAPH(partographId));
         } catch (error) {
-            message.error("Error al actualizar la vigilancia médica.");
+            message.error("Error al actualizar la vigilancia médica. Vuelva a probar mas tarde.");
             setIsSubmitting(false);
         }
     };
@@ -97,7 +97,7 @@ const MedicalSurveillanceEditPage = () => {
                 <Breadcrumb
                     items={[
                         { title: <NavLink to="/">Home</NavLink> },
-                        { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },
+                        { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Editar Vigilancia Médica" },
                     ]}
                 />

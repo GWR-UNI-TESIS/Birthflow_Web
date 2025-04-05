@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/auth-context";
-import { Form, Input, Button, Alert, Spin, Card } from "antd";
+import { Form, Input, Button, Alert, Spin, Card, message } from "antd";
 import { v4 as uuidv4 } from "uuid";
 import PATH from "../routes/path";
 
@@ -14,7 +14,7 @@ const AuthPage = () => {
     try {
       setAuthError(null);
       await login(values);
-      navigate("/");
+      navigate(PATH.HOME);
     } catch (error) {
       setAuthError(error.message);
     }
@@ -31,10 +31,15 @@ const AuthPage = () => {
         email: values.email,
         phoneNumber: values.phoneNumber,
       };
-      await register(userData);
-      navigate(PATH.HOME);
+      var result = await register(userData);
+      if (result.success) {
+        message.success("Tu solicitud será revisada por un administrador. Te llegará un correo con la resolución.", 5);
+      } else {
+        setAuthError(result.message || "Error en el registro.");
+      }
     } catch (error) {
       setAuthError(error.message);
+
     }
   };
 
@@ -96,26 +101,26 @@ const AuthPage = () => {
               />
             )}
             <Form name="register" onFinish={handleRegister} layout="vertical">
-              <Form.Item label="Nombre" name="name" rules={[{ required: true, message: "Por favor ingresa tu nombre!" }]}> 
+              <Form.Item label="Nombre" name="name" rules={[{ required: true, message: "Por favor ingresa tu nombre!" }]}>
                 <Input placeholder="Ingresa tu nombre" />
               </Form.Item>
-              
-              <Form.Item label="Segundo Nombre" name="secondName" rules={[{ required: true, message: "Por favor ingresa tu segundo nombre!" }]}> 
-                <Input placeholder="Ingresa tu segundo nombre" />
+
+              <Form.Item label="Apellido" name="secondName" rules={[{ required: true, message: "Por favor ingresa tu apellido!" }]}>
+                <Input placeholder="Ingresa tu apellido" />
               </Form.Item>
-              
-              <Form.Item label="Email" name="email" rules={[{ required: true, message: "Por favor ingresa tu email!" }]}> 
+
+              <Form.Item label="Email" name="email" rules={[{ required: true, message: "Por favor ingresa tu email!" }]}>
                 <Input placeholder="Ingresa tu email" />
               </Form.Item>
 
-              <Form.Item label="Nombre de Usuario" name="username" rules={[{ required: true, message: "Por favor ingresa tu nombre de usuario!" }]}> 
+              <Form.Item label="Nombre de Usuario" name="username" rules={[{ required: true, message: "Por favor ingresa tu nombre de usuario!" }]}>
                 <Input placeholder="Ingresa tu nombre de usuario" />
               </Form.Item>
-              
-              <Form.Item label="Número de Teléfono" name="phoneNumber" rules={[{ required: true, message: "Por favor ingresa tu número de teléfono!" }]}> 
+
+              <Form.Item label="Número de Teléfono" name="phoneNumber" rules={[{ required: true, message: "Por favor ingresa tu número de teléfono!" }]}>
                 <Input type="number" placeholder="Ingresa tu número de teléfono" />
               </Form.Item>
-              
+
               <Form.Item>
                 <Button type="primary" htmlType="submit" block loading={loading}>
                   Registrarse

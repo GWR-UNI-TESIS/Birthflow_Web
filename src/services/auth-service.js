@@ -4,6 +4,7 @@ import { getDeviceInfo } from "../utils/device-id";
 // Constantes para URLs y headers
 const AUTH_URLS = {
   LOGIN: "/api/auth/login",
+  REGISTER: "/api/auth/create/user",
   REFRESH: "/api/auth/refresh",
   VALIDATE_TOKEN: "/api/auth/validate-token",
 };
@@ -58,6 +59,18 @@ export const login = async (credentials) => {
     handleApiError(error); // Maneja el error y propaga el mensaje
   }
 };
+
+export const register = async (credentials) => {
+  try {
+    const response = await plainAxios.post(AUTH_URLS.REGISTER, credentials, {
+      headers: await getCommonHeaders(),
+    });
+    return processApiResponse(response); // Devuelve solo la propiedad Response
+  } catch (error) {
+    handleApiError(error); // Maneja el error y propaga el mensaje
+  }
+};
+
 
 export const refreshToken = async (accessToken, refreshToken) => {
   try {

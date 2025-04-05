@@ -1,5 +1,9 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
-import { login as loginService, refreshToken as refreshService, validateAccessToken as validateAccessTokenService } from "../services/auth-service";
+import { login as loginService, 
+    refreshToken as refreshService, 
+    validateAccessToken as validateAccessTokenService,
+    register as registerService
+ } from "../services/auth-service";
 import { updateUserInfo } from "../services/account-services/account-service";
 
 const AuthContext = createContext();
@@ -10,8 +14,6 @@ export const AuthProvider = ({ children }) => {
     const [authError, setAuthError] = useState(null);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
     const [loading, setLoading] = useState(false);
-
-
 
     useEffect(() => {
         if (accessToken) {
@@ -95,15 +97,29 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const register = async ({ id, name, secondName, userName, email, phoneNumber }) => {
+        setLoading(true);
+        try {
+            const response = await registerService({ id, name, secondName, userName, email, phoneNumber });
+            setAuthError(null);
+            return { success: true, message: response.message };
+        } catch (error) {
+            const errorMessage = error.message || "Error al registar el usuario, vuelva a intentarlo mas tarde";
+            setAuthError(errorMessage);
+            clearAuthData();
+            return { success: false, message: errorMessage };
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     // Función para actualizar el usuario en la API y en el contexto
     const updateUser = async (updatedUserData) => {
-        try {
-
-            console.log("Antes de editar", user);            
+        try {       
             const updatedUser = await updateUserInfo(updatedUserData);
             localStorage.setItem("user", JSON.stringify(updatedUser));
             setUser(prev => ({ ...prev, ...updatedUser }));          
-            console.log("despues de editar", updatedUser);
         } catch (error) {
             console.error("Error al actualizar el usuario:", error);
         }
@@ -118,6 +134,7 @@ export const AuthProvider = ({ children }) => {
     const value = useMemo(() => ({
         user,
         setUser,
+        register,
         updateUser,
         accessToken,
         refreshAccessToken,

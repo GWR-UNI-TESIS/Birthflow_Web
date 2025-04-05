@@ -214,7 +214,6 @@ const PartographPage = () => {
           }}>
             Notificaciones
           </Button>
-          <Button>Estado del partograma</Button>
         </div>
       </div>
       <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>

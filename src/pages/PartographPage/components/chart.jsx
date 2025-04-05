@@ -40,7 +40,7 @@ const PartogramChart = ({ partograph }) => {
 
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
 
-    if (!partograph || partograph.cervicalDilations.length === 0) {
+    if (!partograph || !Array.isArray(partograph.cervicalDilations) || partograph.cervicalDilations.length === 0) {
         return (
             <div style={{ width: "100%", height: "200px", display: "flex", alignItems: "center", justifyContent: "center", borderColor: "gainsboro", borderStyle: 'dotted' }}>
                 <Typography.Title level={3}>No hay datos de curvas disponibles.</Typography.Title>
@@ -191,7 +191,6 @@ const PartogramChart = ({ partograph }) => {
 
                 <Scatter data={formattedMedicalSurveillance} dataKey="fetalHeartRate" fill="blue" shape="square" name="Frecuencia Cardíaca Fetal" />
 
-                {/* 🔥 Puntos de Frequency Contractions (Triángulos) */}
                 <Scatter data={formattedMedicalSurveillance} dataKey="frequencyContractions" fill="orange" shape="triangle" name="Frecuencia de Contracciones" />
                 <Scatter
                     data={formattedPresentationVarieties}

@@ -24,7 +24,7 @@ const formatDate = (dateString) => {
 
 
 const PartogramTabs = ({ viewMode, setViewMode }) => {
-    
+
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
     let navigate = useNavigate();
     const { user } = useAuth();
@@ -68,7 +68,7 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
             key: "actions",
             render: (_, record) => {
                 const isCreator = record.createdBy === user.id;
-        
+
                 const patchPayloadBase = {
                     partographId: record.partographId,
                     isAchived: record.isAchived,
@@ -76,10 +76,10 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                     silenced: record.silenced,
                     favorite: record.favorite,
                 };
-        
+
                 const onClick = async ({ key }) => {
                     const patchPayload = { ...patchPayloadBase };
-        
+
                     switch (key) {
                         case "share":
                             if (!isCreator) {
@@ -88,23 +88,23 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                             }
                             message.info(`Compartir ${record.partographId}`);
                             return;
-        
+
                         case "favorite":
                             patchPayload.favorite = !record.favorite;
                             break;
-        
+
                         case "archive":
                             patchPayload.isAchived = !record.isAchived;
                             break;
-        
+
                         case "silence":
                             patchPayload.silenced = !record.silenced;
                             break;
-        
+
                         case "pin":
                             patchPayload.set = !record.set;
                             break;
-        
+
                         case "delete":
                             if (!isCreator) {
                                 message.warning("Solo el creador puede eliminar el partograma");
@@ -131,15 +131,15 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                                 },
                             });
                             return;
-        
+
                         default:
                             return;
                     }
-        
+
                     try {
                         await updatePartographState(patchPayload);
                         message.success("Estado actualizado");
-        
+
                         mutate(
                             PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_ALL,
                             (data) => ({
@@ -152,13 +152,13 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                             }),
                             false
                         );
-        
+
                         mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(record.partographId));
                     } catch (error) {
                         message.error("Error al actualizar el estado");
                     }
                 };
-        
+
                 const items = [
                     { label: "Compartir", key: "share", disabled: !isCreator, icon: <ShareAltOutlined /> },
                     { type: "divider" },
@@ -190,7 +190,7 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                         disabled: !isCreator,
                     },
                 ];
-        
+
                 return (
                     <Dropdown menu={{ items, onClick }} trigger={["click"]}>
                         <Button icon={<MoreOutlined />} />
@@ -202,80 +202,82 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
 
 
     return (
-        <Layout.Content>
-            <Spin spinning={catalogsLoading || dataLoading} tip="Cargando datos...">
-                <Flex justify="space-between" style={{ marginBottom: 16 }}>
-                    <Tabs
-                        defaultActiveKey={filters.filterId || "1"}
-                        onChange={(key) => handleFilterChange("filterId", key)}
-                    >
-                        {catalogs?.filterCatalog?.map((item) => (
-                            <TabPane tab={item.description} key={item.id} />
-                        ))}
-                    </Tabs>
-                    <Flex align="center" gap="8px">
-                        <Input
-                            placeholder="Buscar..."
-                            style={{ width: 200 }}
-                            value={filters.name}
-                            onChange={(e) => handleFilterChange("name", e.target.value)}
-                        />
-                        <Select
-                            placeholder="Actividad"
-                            style={{ width: 150 }}
-                            value={filters.activityId}
-                            onChange={(value) => handleFilterChange("activityId", value)}
+        <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
+            <div style={{ background: "#fff", minHeight: 280, padding: 30, borderRadius: "8px" }}>
+                <Spin spinning={catalogsLoading || dataLoading} tip="Cargando datos...">
+                    <Flex justify="space-between" style={{ marginBottom: 16 }}>
+                        <Tabs
+                            defaultActiveKey={filters.filterId || "1"}
+                            onChange={(key) => handleFilterChange("filterId", key)}
                         >
-                            {catalogs?.activityCatalog?.map((item) => (
-                                <Option key={item.id} value={item.id}>{item.description}</Option>
+                            {catalogs?.filterCatalog?.map((item) => (
+                                <TabPane tab={item.description} key={item.id} />
                             ))}
-                        </Select>
-                        <Select
-                            placeholder="Hora"
-                            style={{ width: 150 }}
-                            value={filters.hourFilterId}
-                            onChange={(value) => handleFilterChange("hourFilterId", value)}
-                        >
-                            {catalogs?.hourFilterCatalog?.map((item) => (
-                                <Option key={item.id} value={item.id}>{item.description}</Option>
-                            ))}
-                        </Select>
-                        <Radio.Group value={viewMode} onChange={(e) => setViewMode(e.target.value)}>
-                            <Radio.Button value="table"><TableOutlined /></Radio.Button>
-                            <Radio.Button value="cards"><AppstoreOutlined /></Radio.Button>
-                        </Radio.Group>
+                        </Tabs>
+                        <Flex align="center" gap="8px">
+                            <Input
+                                placeholder="Buscar..."
+                                style={{ width: 200 }}
+                                value={filters.name}
+                                onChange={(e) => handleFilterChange("name", e.target.value)}
+                            />
+                            <Select
+                                placeholder="Actividad"
+                                style={{ width: 150 }}
+                                value={filters.activityId}
+                                onChange={(value) => handleFilterChange("activityId", value)}
+                            >
+                                {catalogs?.activityCatalog?.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.description}</Option>
+                                ))}
+                            </Select>
+                            <Select
+                                placeholder="Hora"
+                                style={{ width: 150 }}
+                                value={filters.hourFilterId}
+                                onChange={(value) => handleFilterChange("hourFilterId", value)}
+                            >
+                                {catalogs?.hourFilterCatalog?.map((item) => (
+                                    <Option key={item.id} value={item.id}>{item.description}</Option>
+                                ))}
+                            </Select>
+                            <Radio.Group value={viewMode} onChange={(e) => setViewMode(e.target.value)}>
+                                <Radio.Button value="table"><TableOutlined /></Radio.Button>
+                                <Radio.Button value="cards"><AppstoreOutlined /></Radio.Button>
+                            </Radio.Group>
+                        </Flex>
                     </Flex>
-                </Flex>
 
-                {viewMode === "table" ? (
-                    <Table
-                        key="partograph-table"
-                        dataSource={data?.response || []}
-                        columns={columns}
-                        rowKey="partographId"
-                        pagination={{ pageSize: 15 }}
-                        onRow={(record,) => {
-                            return {
-                                onClick: (event) => {
-                                    // Evita navegación si se hace clic en el botón de acciones
-                                    const target = event.target;
-                                    if (
-                                        target.closest(".ant-dropdown") || // botón o menú
-                                        target.closest(".ant-dropdown-menu") ||
-                                        target.closest(".ant-btn") // botón antd
-                                    ) {
-                                        return;
-                                    }
-                            
-                                    navigate(`/partograph/${record.partographId}`);
-                                },
-                            };
-                        }}
-                    />
-                ) : (
-                    <PartogramCards data={data?.response || []} />
-                )}
-            </Spin>
+                    {viewMode === "table" ? (
+                        <Table
+                            key="partograph-table"
+                            dataSource={data?.response || []}
+                            columns={columns}
+                            rowKey="partographId"
+                            pagination={{ pageSize: 15 }}
+                            onRow={(record,) => {
+                                return {
+                                    onClick: (event) => {
+                                        // Evita navegación si se hace clic en el botón de acciones
+                                        const target = event.target;
+                                        if (
+                                            target.closest(".ant-dropdown") || // botón o menú
+                                            target.closest(".ant-dropdown-menu") ||
+                                            target.closest(".ant-btn") // botón antd
+                                        ) {
+                                            return;
+                                        }
+
+                                        navigate(`/partograph/${record.partographId}`);
+                                    },
+                                };
+                            }}
+                        />
+                    ) : (
+                        <PartogramCards data={data?.response || []} />
+                    )}
+                </Spin>
+            </div>
         </Layout.Content>
     );
 };

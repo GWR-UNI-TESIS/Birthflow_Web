@@ -51,9 +51,9 @@ const CervicalDilationEditPage = () => {
 
             message.success("Dilatación actualizada exitosamente.");
             setIsSubmitting(false);
-            navigate(`/partograph/${partographId}`); // Redirigir de vuelta al partograma
+            navigate(PATH.PARTOGRAPH(partographId)); // Redirigir de vuelta al partograma
         } catch (error) {
-            message.error("Error al actualizar la dilatación cervical.");
+            message.error("Error al actualizar la dilatación cervical. Vuelva a probar mas tarde.");
             setIsSubmitting(false);
         }
     };
@@ -65,7 +65,7 @@ const CervicalDilationEditPage = () => {
                 <BackButton to={PATH.PARTOGRAPH(partographId)}/>
                 <Breadcrumb items={[
                     { title: <NavLink to="/">Home</NavLink> },
-                    { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },
+                    { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                     { title: "Editar Dilatacion Cervical" }
                 ]} />
             </div>

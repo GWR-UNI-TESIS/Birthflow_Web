@@ -146,7 +146,9 @@ const PartographHistoryPage = () => {
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
                 <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                     <BackButton to={PATH.PARTOGRAPH(partographId)} />
-                    <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
+                    <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> },
+                    { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
+                    { title: "Historial" }]} />
                 </div>
                 <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
                     <Button onClick={showHistory}>Historial</Button>

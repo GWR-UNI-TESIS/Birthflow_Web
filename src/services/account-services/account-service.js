@@ -64,7 +64,3 @@ export const updateUserInfo = async (payload) => {
     handleApiError(error);
   }
 };
-
-
-
-

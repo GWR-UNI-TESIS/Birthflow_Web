@@ -117,7 +117,7 @@ const EditPartographPage = () => {
             await updatePartograph(payload);
             message.success("Partograma actualizado con éxito!");
         } catch (error) {
-            message.error("Error al actualizar el partograma");
+            message.error("Error al actualizar el partograma. Vuelva a probar mas tarde.");
         }
     };
 
@@ -132,7 +132,7 @@ const EditPartographPage = () => {
                         {
                             title: <NavLink to="/">Home</NavLink>,
                         },
-                        { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },
+                        { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Edición de Partograma" },
                     ]}
                 />

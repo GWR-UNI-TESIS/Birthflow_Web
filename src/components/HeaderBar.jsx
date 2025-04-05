@@ -1,25 +1,27 @@
 import React from 'react';
 import { Layout, Typography, Space, Button, Dropdown, Menu, Result } from "antd";
 import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined, UsergroupAddOutlined, FolderOutlined, GroupOutlined } from "@ant-design/icons";
-import {useAuth} from "../contexts/auth-context";
+import { useAuth } from "../contexts/auth-context";
 import { useNavigate } from "react-router-dom";
+import PATH from '../routes/path';
 const { Header } = Layout;
 const { Title } = Typography;
 
 const HeaderBar = ({ onNotificationDrawerToggle }) => {
-  const { logout } = useAuth();
+    const { logout } = useAuth();
 
     const navigate = useNavigate(); // Hook para redirigir
-  
+
     const handleGroupsClick = () => {
-      navigate("/create-group"); 
+
+        navigate(PATH.CREATE_GROUP);
     };
 
     const handleConfigurationClick = () => {
-        navigate("/config");
-      };
-       
-      const userMenu = (
+        navigate(PATH.CONFIG);
+    };
+
+    const userMenu = (
         <Menu>
             <Menu.Item key="1" icon={<SettingOutlined />} onClick={handleConfigurationClick}>Configuracion</Menu.Item>
             <Menu.Item key="2" icon={<UsergroupAddOutlined />} onClick={handleGroupsClick}>Grupos</Menu.Item>
@@ -28,19 +30,19 @@ const HeaderBar = ({ onNotificationDrawerToggle }) => {
         </Menu >
     );
 
-return (
-    <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#001529", padding: "0 16px" }}>
-        <Title level={3} style={{ color: "white", margin: 0 }}>Birthflow</Title>
-        <Space size="large">
-            <Button type="text" onClick={onNotificationDrawerToggle} icon={<BellOutlined />} style={{ color: "white" }} />
-            <Dropdown overlay={userMenu} placement="bottomRight">
-                <Button type="text" icon={<UserOutlined />} style={{ color: "white" }} />
-            </Dropdown>
-        </Space>
+    return (
+        <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#001529", padding: "0 16px" }}>
+            <Title level={3} style={{ color: "white", margin: 0 }}>Birthflow</Title>
+            <Space size="large">
+                <Button type="text" onClick={onNotificationDrawerToggle} icon={<BellOutlined />} style={{ color: "white" }} />
+                <Dropdown overlay={userMenu} placement="bottomRight">
+                    <Button type="text" icon={<UserOutlined />} style={{ color: "white" }} />
+                </Dropdown>
+            </Space>
 
 
-    </Header>
-);
+        </Header>
+    );
 };
 
 export default HeaderBar;

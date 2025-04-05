@@ -14,9 +14,6 @@ const HomePage = () => {
       <Button type="primary" icon={<PlusOutlined />}>
         <Link to="/create-partograph">Crear Partogramas</Link>
       </Button>
-      <Divider />
-      <RecentPartograms />
-      <Divider />
       <PartogramTabs viewMode={viewMode} setViewMode={setViewMode} />
     </div>
   );
