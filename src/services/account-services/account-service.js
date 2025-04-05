@@ -65,6 +65,20 @@ export const updateUserInfo = async (payload) => {
   }
 };
 
+export const updateUserPassword = async (payload) => {
+  try {
+    const response = await api.post(
+      ACCOUNT_ENDPOINTS.ACCOUNT.UPDATE_USER_PASSWORD,
+      payload,
+      { headers: getCommonHeaders() }
+    );
+
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
 
 
 
