@@ -27,7 +27,7 @@ export const CatalogProvider = ({ children }) => {
     }, []);
 
     if (loading) {
-        return <Spin fullscreen></Spin>; // Puedes personalizar el mensaje o agregar un spinner
+        return <Spin fullscreen tip="Cargando ..."></Spin>; // Puedes personalizar el mensaje o agregar un spinner
     }
 
     return (

@@ -16,11 +16,28 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
     const [loading, setLoading] = useState(false);
     const [isTemporalPassword, setIsTemporalPassword] = useState(false);
+
+    
     useEffect(() => {
-        if (accessToken) {
-            handleTokenValidation();
-        }
-    }, [accessToken]); //  Solo ejecuta cuando `accessToken` cambia
+        const init = async () => {
+          setLoading(true); // 🔥 Aquí activamos loading desde el inicio
+          try {
+            if (accessToken) {
+              const isValid = await validateAccessTokenService(accessToken);
+              if (!isValid) {
+                const newTokens = await refreshAccessToken();
+                if (!newTokens) throw new Error("Token inválido");
+              }
+            }
+          } catch (err) {
+            logout();
+          } finally {
+            setLoading(false); // 🔥 Lo bajamos cuando ya terminó todo
+          }
+        };
+      
+        init();
+      }, []); //  Solo ejecuta cuando `accessToken` cambia
 
     //  Función para actualizar tokens en el estado y localStorage
     const updateTokens = ({ accessToken, refreshToken, user }) => {

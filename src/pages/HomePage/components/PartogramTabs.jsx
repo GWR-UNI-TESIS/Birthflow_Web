@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Tabs, Input, Select, Radio, Table, Spin, Layout, message, Modal, Dropdown, Button } from "antd";
 import { TableOutlined, AppstoreOutlined, ShareAltOutlined, StarFilled, StarOutlined, InboxOutlined, MoreOutlined, BellFilled, BellOutlined, PushpinOutlined, DeleteOutlined } from "@ant-design/icons";
 import PartogramCards from "./PartogramCards";
-import { useCatalog } from "../../../contexts/catalog-context";
 import usePartographs from "../../../hooks/use-partographs";
 import { updatePartographState } from "../../../services/partograph-service/partograph-service";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
@@ -23,9 +22,7 @@ const formatDate = (dateString) => {
 };
 
 
-const PartogramTabs = ({ viewMode, setViewMode }) => {
-
-    const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
+const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
     let navigate = useNavigate();
     const { user } = useAuth();
     const [filters, setFilters] = useState({
@@ -39,9 +36,9 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
 
 
     useEffect(() => {
-        if (catalogsError) message.error("Error al cargar los catálogos.");
+
         if (dataError) message.error("Error al cargar los partogramas.");
-    }, [catalogsError, dataError]);
+    }, [dataError]);
 
     const handleFilterChange = (field, value) => {
         setFilters((prev) => ({ ...prev, [field]: value }));
@@ -204,26 +201,32 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
     return (
         <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
             <div style={{ background: "#fff", minHeight: 280, padding: 30, borderRadius: "8px" }}>
-                <Spin spinning={catalogsLoading || dataLoading} tip="Cargando datos...">
-                    <Flex justify="space-between" style={{ marginBottom: 16 }}>
+                <Spin spinning={dataLoading} tip="Cargando datos...">
+                    <Flex
+                        justify="space-between"
+                        wrap="wrap"
+                        style={{ marginBottom: 16, gap: "1rem" }}
+                    >
                         <Tabs
                             defaultActiveKey={filters.filterId || "1"}
                             onChange={(key) => handleFilterChange("filterId", key)}
+                            style={{ flexShrink: 0 }}
                         >
                             {catalogs?.filterCatalog?.map((item) => (
                                 <TabPane tab={item.description} key={item.id} />
                             ))}
                         </Tabs>
-                        <Flex align="center" gap="8px">
+
+                        <Flex wrap="wrap" align="center" gap="8px" style={{ flexGrow: 1, justifyContent: "flex-end" }}>
                             <Input
                                 placeholder="Buscar..."
-                                style={{ width: 200 }}
+                                style={{ width: "200px", minWidth: "150px" }}
                                 value={filters.name}
                                 onChange={(e) => handleFilterChange("name", e.target.value)}
                             />
                             <Select
                                 placeholder="Actividad"
-                                style={{ width: 150 }}
+                                style={{ width: "150px", minWidth: "120px" }}
                                 value={filters.activityId}
                                 onChange={(value) => handleFilterChange("activityId", value)}
                             >
@@ -233,7 +236,7 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                             </Select>
                             <Select
                                 placeholder="Hora"
-                                style={{ width: 150 }}
+                                style={{ width: "150px", minWidth: "120px" }}
                                 value={filters.hourFilterId}
                                 onChange={(value) => handleFilterChange("hourFilterId", value)}
                             >
@@ -255,6 +258,7 @@ const PartogramTabs = ({ viewMode, setViewMode }) => {
                             columns={columns}
                             rowKey="partographId"
                             pagination={{ pageSize: 15 }}
+                            scroll={{ x: "max-content" }} // <-- Esto es lo importante
                             onRow={(record,) => {
                                 return {
                                     onClick: (event) => {
