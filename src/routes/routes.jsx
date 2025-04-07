@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "../pages/LoginPage";
 import Home from "../pages/HomePage/index";
 import Welcome from "../pages/WelcomePage";
 import PartographPage from "../pages/PartographPage";
@@ -13,111 +12,111 @@ import ContractionFrequencyEditPage from "../pages/PartographPage/pages/Contract
 import FetalHeartRateEditPage from "../pages/PartographPage/pages/FetalHeartRateEditPage";
 import PresentationPositionVarietyEditPage from "../pages/PartographPage/pages/PresentationPositionVarietyEditPage";
 import EditPartographPage from "../pages/PartographPage/pages/EditPartographPage";
+import PartographHistoryPage from "../pages/PartographHistoryPage";
 import GroupsApps from '../pages/groups/GroupsApp';
+import ConfigurationApp from "../pages/Configuration/ConfigurationApp";
+import UpdateUser from "../pages/Configuration/components/Form/UserInfoUpdateForm";
+import PATH from './path';
+import AuthPage from "../pages/Auth/Index";
 
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
         {/* Rutas sin LayoutGeneral */}
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-
+        <Route path={PATH.WELCOME} element={<Welcome />} />
+        <Route path={PATH.LOGIN} element={<AuthPage />} />
+        <Route path={PATH.USER_EDIT} element={<UpdateUser />} />
         {/* Rutas con LayoutGeneral */}
         <Route
           path="/*"
           element={
-            <LayoutGeneral>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Home />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/create-partograph"
-                  element={
-                    <ProtectedRoute>
-                      <CreatePartographPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                    path="/create-group"
+            <ProtectedRoute>
+              <LayoutGeneral>
+                <Routes>
+                  <Route
+                    path={PATH.HOME}
                     element={
-                        <ProtectedRoute>
-                            <GroupsApps/>
-                        </ProtectedRoute>
+                      <Home />
                     }
-                />
+                  />
+                  <Route
+                    path={PATH.CREATE_PARTOGRAPH}
+                    element={
+                      <CreatePartographPage />
+                    }
+                  />
+                  <Route
+                    path={PATH.CREATE_GROUP}
+                    element={
+                      <GroupsApps />
+                    }
+                  />
+                  <Route
+                    path={PATH.CONFIG}
+                    element={
+                      <ConfigurationApp />
+                    }
+                  />
 
-
-                <Route
-                  path="/partograph/:partographId"
-                  element={
-                    <ProtectedRoute>
+                  <Route
+                    path={PATH.TEMPLATE.PARTOGRAPH}
+                    element={
                       <PartographPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/partograph/:partographId/edit"
-                  element={
-                    <ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path={PATH.TEMPLATE.PARTOGRAPH_HISTORY}
+                    element={
+                      <PartographHistoryPage />
+                    }
+                  />
+
+                  <Route
+                    path={PATH.TEMPLATE.PARTOGRAPH_EDIT}
+                    element={
                       <EditPartographPage />
-                    </ProtectedRoute>
-                  }
-                />
+                    }
+                  />
 
-                <Route
-                  path="/partograph/:partographId/cervical-dilation/:dilationId/edit"
-                  element={
-                    <ProtectedRoute>
+                  <Route
+                    path={PATH.TEMPLATE.CERVICAL_DILATION_EDIT}
+                    element={
                       <CervicalDilationEditPage />
-                    </ProtectedRoute>
-                  }
-                />
+                    }
+                  />
 
-                <Route
-                  path="/partograph/:partographId/medical-surveillance/:medicalId/edit"
-                  element={
-                    <ProtectedRoute>
+                  <Route
+                    path={PATH.TEMPLATE.MEDICAL_SURVEILLANCE_EDIT}
+                    element={
                       <MedicalSurveillanceEditPage />
-                    </ProtectedRoute>
-                  }
-                />
+                    }
+                  />
 
-                <Route
-                  path="/partograph/:partographId/contraction-frequency/:contractionId/edit"
-                  element={
-                    <ProtectedRoute>
+                  <Route
+                    path={PATH.TEMPLATE.CONTRACTION_FREQUENCY_EDIT}
+                    element={
                       <ContractionFrequencyEditPage />
-                    </ProtectedRoute>
-                  }
-                />
+                    }
+                  />
 
-                <Route
-                  path="/partograph/:partographId/fetal-heart-rate/:heartRateId/edit"
-                  element={
-                    <ProtectedRoute>
+                  <Route
+                    path={PATH.TEMPLATE.FETAL_HEART_RATE_EDIT}
+                    element={
                       <FetalHeartRateEditPage />
-                    </ProtectedRoute>
-                  }
-                />
+                    }
+                  />
 
-                <Route
-                  path="/partograph/:partographId/presentation-position-variety/:positionVarietyId/edit"
-                  element={
-                    <ProtectedRoute>
+                  <Route
+                    path={PATH.TEMPLATE.PRESENTATION_POSITION_VARIETY_EDIT}
+                    element={
                       <PresentationPositionVarietyEditPage />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </LayoutGeneral>
+                    }
+                  />
+                </Routes>
+              </LayoutGeneral>
+            </ProtectedRoute>
           }
         />
       </Routes>

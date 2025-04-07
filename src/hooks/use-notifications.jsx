@@ -1,9 +1,9 @@
 import useSWR from "swr";
-import { useFetcher } from "../utils/fetcher";
-import { NOTIFICATION_ENDPOINTS } from "../services/notification-service";
+import { useNotificationFetcher } from "../utils/notification-fetcher";
+import { NOTIFICATION_ENDPOINTS } from "../services/notification-service/notification-endpoints";
 
 const useNotifications = () => {
-    const { fetcher } = useFetcher();
+    const { fetcher } = useNotificationFetcher();
 
     const { data, error, isLoading } = useSWR(
         NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_NOTIFICATIONS,

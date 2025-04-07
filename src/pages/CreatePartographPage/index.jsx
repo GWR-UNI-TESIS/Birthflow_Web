@@ -14,17 +14,22 @@ import {
   theme,
 } from "antd";
 import WorkTimeTable from "../../components/WorkTimeTable";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useCatalog } from "../../contexts/catalog-context";
 import { createPartograph } from "../../services/partograph-service/partograph-service";
+
 import BackButton from '../../components/ReturnButton';
 import dayjs from "dayjs";
+import PATH from "../../routes/path";
 
 const { Content } = Layout;
 const CreatePartographPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+
+  const navigate = useNavigate();
 
   const [form] = Form.useForm();
 
@@ -47,9 +52,6 @@ const CreatePartographPage = () => {
 
   if (catalogsLoading) return <Spin />;
 
-
-
-  // Método para guardar la información del form y la selección de la tabla
   // Método para guardar la información del formulario y la selección de la tabla
   const handleSave = async () => {
     try {
@@ -75,13 +77,12 @@ const CreatePartographPage = () => {
         workTime: effectiveColumn,
       };
 
-      console.log("Guardando datos:", payload);
       const result = await createPartograph(payload);
-      console.log("Respuesta de la API:", result);
-      message.success("Datos guardados con éxito!");
+      message.success("Partograma creado con exito con éxito!");
+      navigate(PATH.PARTOGRAPH(result.partographId));
+
       // Aquí podrías redirigir o actualizar el estado según la respuesta
     } catch (error) {
-      console.error("Validation or API error:", error);
       message.error(
         error.message || "Error en la validación o al guardar el partograma"
       );
@@ -91,7 +92,7 @@ const CreatePartographPage = () => {
   return (
     <>
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        <BackButton />
+        <BackButton to={PATH.HOME} />
 
         <Breadcrumb
           items={[

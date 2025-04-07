@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Button, Space, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/auth-context";
-
+import PATH from "../routes/path";
 const Welcome = () => {
   const {
     validateAccessToken,
@@ -44,10 +44,10 @@ const Welcome = () => {
       <Spin spinning={loading} fullscreen></Spin>
       <h1>Welcome to Birthflow</h1>
       <Space direction="vertical" size="large">
-        <Button type="primary" onClick={() => navigate("/login")}>
+        <Button type="primary" onClick={() => navigate(PATH.LOGIN)}>
           Login
         </Button>
-        <Button onClick={() => navigate("/register")}>Register</Button>
+        <Button onClick={() => navigate(PATH.LOGIN)}>Register</Button>
       </Space>
     </div>
   );

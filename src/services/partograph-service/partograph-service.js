@@ -1,4 +1,4 @@
-import { api } from "../api";
+import { PARTOGRAPH_API } from "../api";
 import { getDeviceInfo } from "../../utils/device-id";
 import { PARTOGRAPH_ENDPOINTS } from "./endpoints";
 import useSWR, { mutate } from "swr";
@@ -24,7 +24,7 @@ const getCommonHeaders = () => {
   };
 };
 
-// Función para manejar errores de la API
+// Función para manejar errores de la PARTOGRAPH_API
 const handleApiError = (error) => {
   if (error.response) {
     // El servidor respondió con un código de estado fuera del rango 2xx
@@ -40,7 +40,7 @@ const handleApiError = (error) => {
   }
 };
 
-// Función para procesar la respuesta de la API
+// Función para procesar la respuesta de la PARTOGRAPH_API
 const processApiResponse = (result) => {
   // Se asume que la respuesta tiene la forma: { statusCode, message, response }
   const { statusCode, message, response } = result.data;
@@ -54,7 +54,7 @@ const processApiResponse = (result) => {
 // Función para crear un nuevo partograph
 export const getPartograph = async (partographId) => {
   try {
-    const response = await api.get(
+    const response = await PARTOGRAPH_API.get(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId),
       { headers: getCommonHeaders() }
     );
@@ -68,7 +68,7 @@ export const getPartograph = async (partographId) => {
 // Función para crear un nuevo partograph
 export const createPartograph = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_PARTOGRAPH,
       payload,
       { headers: getCommonHeaders() }
@@ -81,7 +81,7 @@ export const createPartograph = async (payload) => {
 
 export const updatePartograph = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_PARTOGRAPH,
       payload,
       { headers: getCommonHeaders() }
@@ -96,7 +96,7 @@ export const updatePartograph = async (payload) => {
 
 export const deletePartograph = async (partographId) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.DELETE_PARTOGRAPH(partographId),
       { headers: getCommonHeaders() }
     );
@@ -110,7 +110,7 @@ export const deletePartograph = async (partographId) => {
 
 export const getCervicalDilation = async (id) => {
   try {
-    const response = await api.get(
+    const response = await PARTOGRAPH_API.get(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_CERVICAL_DILATION(id),
       { headers: getCommonHeaders() }
     );
@@ -122,7 +122,7 @@ export const getCervicalDilation = async (id) => {
 
 export const createCervicalDilation = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_CERVICAL_DILATION,
       payload,
       { headers: getCommonHeaders() }
@@ -136,7 +136,7 @@ export const createCervicalDilation = async (payload) => {
 
 export const updateCervicalDilation = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_CERVICAL_DILATION,
       payload,
       { headers: getCommonHeaders() }
@@ -150,7 +150,7 @@ export const updateCervicalDilation = async (payload) => {
 
 export const deleteCervicalDilation = async (payload) => {
   try {
-    const response = await api.delete(
+    const response = await PARTOGRAPH_API.delete(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.DELETE_CERVICAL_DILATION,
       payload,
       { headers: getCommonHeaders() }
@@ -165,7 +165,7 @@ export const deleteCervicalDilation = async (payload) => {
 
 export const getMedicalSurveillance = async (id) => {
   try {
-    const response = await api.get(
+    const response = await PARTOGRAPH_API.get(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_MEDICAL_SURVEILLANCE(id),
       { headers: getCommonHeaders() }
     );
@@ -177,7 +177,7 @@ export const getMedicalSurveillance = async (id) => {
 
 export const createMedicalSurveillance = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_MEDICAL_SURVEILLANCE,
       payload,
       { headers: getCommonHeaders() }
@@ -191,7 +191,7 @@ export const createMedicalSurveillance = async (payload) => {
 
 export const updateMedicalSurveillance = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_MEDICAL_SURVEILLANCE,
       payload,
       { headers: getCommonHeaders() }
@@ -205,7 +205,7 @@ export const updateMedicalSurveillance = async (payload) => {
 
 export const deleteMedicalSurveillance = async (payload) => {
   try {
-    const response = await api.delete(
+    const response = await PARTOGRAPH_API.delete(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.DELETE_MEDICAL_SURVEILLANCE,
       payload,
       { headers: getCommonHeaders() }
@@ -219,7 +219,7 @@ export const deleteMedicalSurveillance = async (payload) => {
 
 export const getPresentationPositionVariety = async (id) => {
   try {
-    const response = await api.get(
+    const response = await PARTOGRAPH_API.get(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PRESENTATION_POSITION_VARIETY(id),
       { headers: getCommonHeaders() }
     );
@@ -232,7 +232,7 @@ export const getPresentationPositionVariety = async (id) => {
 
 export const createPresentationPositionVariety = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_PRESENTATION_POSITION_VARIETY,
       payload,
       { headers: getCommonHeaders() }
@@ -246,7 +246,7 @@ export const createPresentationPositionVariety = async (payload) => {
 
 export const updatePresentationPositionVariety = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_PRESENTATION_POSITION_VARIETY,
       payload,
       { headers: getCommonHeaders() }
@@ -260,7 +260,7 @@ export const updatePresentationPositionVariety = async (payload) => {
 
 export const deletePresentationPositionVariety = async (payload) => {
   try {
-    const response = await api.delete(
+    const response = await PARTOGRAPH_API.delete(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.DELETE_PRESENTATION_POSITION_VARIETY,
       payload,
       { headers: getCommonHeaders() }
@@ -274,7 +274,7 @@ export const deletePresentationPositionVariety = async (payload) => {
 
 export const getFetalHeartRate = async (id) => {
   try {
-    const response = await api.get(
+    const response = await PARTOGRAPH_API.get(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_FETAL_HEART_RATE(id),
       { headers: getCommonHeaders() }
     );
@@ -286,7 +286,7 @@ export const getFetalHeartRate = async (id) => {
 
 export const createFetalHeartRate = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_FETAL_HEART_RATE,
       payload,
       { headers: getCommonHeaders() }
@@ -300,7 +300,7 @@ export const createFetalHeartRate = async (payload) => {
 
 export const updateFetalHeartRate = async (payload) => {
   try {
-    const response = await api.delete(
+    const response = await PARTOGRAPH_API.delete(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_FETAL_HEART_RATE,
       payload,
       { headers: getCommonHeaders() }
@@ -315,7 +315,7 @@ export const updateFetalHeartRate = async (payload) => {
 
 export const getContractionsFrequency = async (id) => {
   try {
-    const response = await api.get(
+    const response = await PARTOGRAPH_API.get(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_CONTRACTIONS_FREQUENCY(id),
       { headers: getCommonHeaders() }
     );
@@ -327,7 +327,7 @@ export const getContractionsFrequency = async (id) => {
 
 export const createContractionsFrequency = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_CONTRACTIONS_FREQUENCY,
       payload,
       { headers: getCommonHeaders() }
@@ -341,7 +341,7 @@ export const createContractionsFrequency = async (payload) => {
 
 export const updateContractionsFrequency = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_CONTRACTIONS_FREQUENCY,
       payload,
       { headers: getCommonHeaders() }
@@ -355,7 +355,7 @@ export const updateContractionsFrequency = async (payload) => {
 
 export const createBirthNote = async (payload) => {
   try {
-    const response = await api.post(
+    const response = await PARTOGRAPH_API.post(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.CREATE_BIRTH_NOTE,
       payload,
       { headers: getCommonHeaders() }
@@ -369,7 +369,7 @@ export const createBirthNote = async (payload) => {
 
 export const updateBirthNote = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_BIRTH_NOTE,
       payload,
       { headers: getCommonHeaders() }
@@ -384,11 +384,12 @@ export const updateBirthNote = async (payload) => {
 
 export const updatePartographState = async (payload) => {
   try {
-    const response = await api.patch(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_PARTOGRAPH_STATE,
       payload,
       { headers: getCommonHeaders() }
     );
+    mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPHS);
     mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(payload.partographId));
     return processApiResponse(response);
   } catch (error) {

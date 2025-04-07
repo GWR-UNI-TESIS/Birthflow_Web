@@ -6,6 +6,7 @@ import { mutate } from "swr";
 import BackButton from "../../../components/ReturnButton";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 import dayjs from "dayjs";
+import PATH from "../../../routes/path";
 
 const ContractionFrequencyEditPage = () => {
     const { partographId, contractionId } = useParams();
@@ -23,7 +24,7 @@ const ContractionFrequencyEditPage = () => {
 
                 form.setFieldsValue({
                     frecuenciaContracciones: response.value, // Debe ser un número
-                    tiempo: dayjs(response.time), // Convertir fecha a formato válido para DatePicker
+                    hour: dayjs(response.time), // Convertir fecha a formato válido para DatePicker
                 });
 
                 setIsLoading(false);
@@ -49,9 +50,9 @@ const ContractionFrequencyEditPage = () => {
 
             message.success("Frecuencia de contracciones actualizada exitosamente.");
             setIsSubmitting(false);
-            navigate(`/partograph/${partographId}`);
+            navigate(PATH.PARTOGRAPH(partographId));
         } catch (error) {
-            message.error("Error al actualizar la frecuencia de contracciones.");
+            message.error("Error al actualizar la frecuencia de contracciones. Vuelva a probar mas tarde.");
             setIsSubmitting(false);
         }
     };
@@ -60,11 +61,11 @@ const ContractionFrequencyEditPage = () => {
         <>
             <Spin spinning={isLoading} fullscreen />
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-                <BackButton />
+                <BackButton to={PATH.PARTOGRAPH(partographId)} />
                 <Breadcrumb
                     items={[
                         { title: <NavLink to="/">Home</NavLink> },
-                        { title: <NavLink to={`/partograph/${partographId}`}>Partograma</NavLink> },
+                        { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Editar Frecuencia de Contracciones" },
                     ]}
                 />

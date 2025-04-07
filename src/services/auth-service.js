@@ -1,9 +1,10 @@
-import { plainAxios } from "./api";
+import { plainAxios, api } from "./api";
 import { getDeviceInfo } from "../utils/device-id";
 
 // Constantes para URLs y headers
 const AUTH_URLS = {
   LOGIN: "/api/auth/login",
+  REGISTER: "/api/auth/create/user",
   REFRESH: "/api/auth/refresh",
   VALIDATE_TOKEN: "/api/auth/validate-token",
 };
@@ -13,10 +14,12 @@ const HEADERS = {
 };
 
 // Función auxiliar para agregar los headers comunes
-const getCommonHeaders = () => ({
-  [HEADERS.DEVICE_INFO]: getDeviceInfo(),
-});
-
+const getCommonHeaders = async () => {
+  const deviceId = await getDeviceInfo();
+  return {
+    [HEADERS.DEVICE_INFO]: deviceId,
+  };
+};
 // Función para manejar errores de la API
 const handleApiError = (error) => {
   if (error.response) {
@@ -46,10 +49,33 @@ const processApiResponse = (result) => {
   }
 };
 
+const processLoginApiResponse = (result) => {
+  const { statusCode, message, response } = result.data;
+
+  if (statusCode >= 200 && statusCode < 300) {
+    // Si el código de estado es exitoso, devolver la respuesta
+    return {response, message};
+  } else {
+    // Si el código de estado indica un error, lanzar un error con el mensaje
+    throw new Error(`${message}`);
+  }
+};
+
 export const login = async (credentials) => {
   try {
     const response = await plainAxios.post(AUTH_URLS.LOGIN, credentials, {
-      headers: getCommonHeaders(),
+      headers: await getCommonHeaders(),
+    });
+    return processLoginApiResponse(response); // Devuelve solo la propiedad Response
+  } catch (error) {
+    handleApiError(error); // Maneja el error y propaga el mensaje
+  }
+};
+
+export const register = async (credentials) => {
+  try {
+    const response = await plainAxios.post(AUTH_URLS.REGISTER, credentials, {
+      headers: await getCommonHeaders(),
     });
     return processApiResponse(response); // Devuelve solo la propiedad Response
   } catch (error) {
@@ -57,13 +83,14 @@ export const login = async (credentials) => {
   }
 };
 
+
 export const refreshToken = async (accessToken, refreshToken) => {
   try {
     const response = await plainAxios.post(
       AUTH_URLS.REFRESH,
       { accessToken, refreshToken },
       {
-        headers: getCommonHeaders(),
+        headers: await getCommonHeaders(),
       }
     );
     return processApiResponse(response); // Devuelve solo la propiedad Response
@@ -78,7 +105,7 @@ export const validateAccessToken = async (accessToken) => {
       AUTH_URLS.VALIDATE_TOKEN,
       { accessToken },
       {
-        headers: getCommonHeaders(),
+        headers: await getCommonHeaders(),
       }
     );
     return processApiResponse(response); // Devuelve solo la propiedad Response

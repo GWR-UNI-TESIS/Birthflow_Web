@@ -11,13 +11,19 @@ import {
   Breadcrumb,
   Flex,
   Typography,
+  List,
+  Skeleton,
+  Drawer,
+  Modal
 } from "antd";
 import { useParams, NavLink, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
 import usePartograh from "../../hooks/use-partograph";
-import PartogramChart from "./components/Chart";
+import usePartographNotifications from "../../hooks/use-partograph-notifications";
+import {getPartographPdf} from '../../services/report-service/report-service';
+import PartogramChart from "./components/chart";
 import CervicalDilationModal from "./modals/CervicalDilationModal";
 import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
 import FetalHeartRateModal from "./modals/FetalHeartRateModal";
@@ -25,6 +31,8 @@ import ContractionFrequencyModal from "./modals/ContractionFrequencyModal";
 import PresentationPositionVarietyModal from "./modals/PresentationPositionVarietyModal";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
 
+import { formatDateTime } from "../../utils/datetime-format";
+import PATH from "../../routes/path";
 const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
@@ -40,13 +48,43 @@ const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   </div>
 );
 
+const NotificationList = ({ partographId }) => {
+  const { data, error, loading } = usePartographNotifications(partographId);
+
+  if (loading) return <Spin tip="Cargando notificaciones..." />;
+  if (error) return <p>Error al cargar notificaciones.</p>;
+
+  if (!data || data.length === 0) return <p>No hay notificaciones disponibles.</p>;
+
+  return (
+    <List
+      className="demo-loadmore-list"
+      loading={loading}
+      itemLayout="vertical"
+      dataSource={data?.response}
+      renderItem={(item) => (
+        <List.Item key={item.notificationId}>
+          <Skeleton avatar title={false} loading={item.loading} active>
+            <List.Item.Meta title={<a>{item.title}</a>} description={item.message} />
+            <div>{formatDateTime(item.scheduledFor)}</div>
+          </Skeleton>
+        </List.Item>
+      )}
+    />
+  );
+};
+
 const PartographPage = () => {
   const [isCervicalDilationModalVisible, setIsCervicalDilationModalVisible] = useState(false);
   const [isMedicalSurveillanceModalVisible, setIsMedicalSurveillanceModalVisible] = useState(false);
   const [isFetalHeartRateModalVisible, setIsFetalHeartRateModalVisible] = useState(false);
   const [isContractionFrequencyModalVisible, setIsContractionFrequencyModalVisible] = useState(false);
   const [isPresentationPositionVarietyModalVisible, setIsPresentationPositionVarietyModalVisible] = useState(false);
-
+  const [isNotificationDrawerVisible, setNotificationDrawerVisible] = useState(false);
+  const [selectedPartographId, setSelectedPartographId] = useState(null);
+  const [pdfVisible, setPdfVisible] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const {
     catalogs,
     loading: catalogsLoading,
@@ -58,9 +96,23 @@ const PartographPage = () => {
   const navigate = useNavigate();
   const { data, loading, error } = usePartograh(partographId);
 
-  if (loading || catalogsLoading) return <Spin fullscreen />;
+  if (loading || catalogsLoading || pdfLoading ) return <Spin fullscreen />;
   if (error) return <Alert message="Error al cargar los datos" type="error" />;
 
+
+  const mostrarPDF = async () => {
+    try {
+      setPdfLoading(true);
+      const blob = await getPartographPdf(partographId);
+      const url = URL.createObjectURL(blob);
+      setPdfUrl(url);
+      setPdfVisible(true);
+      setPdfLoading(false);
+    } catch (error) {
+      console.error("Error mostrando PDF:", error);
+      setPdfLoading(false);
+    }
+  };
   const partograph = data.response || data;
 
   const cervicalColumns = [
@@ -72,7 +124,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/cervical-dilation/${record.id}/edit`)} />
+          onClick={() => navigate( PATH.CERVICAL_DILATION_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -91,7 +143,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/medical-surveillance/${record.id}/edit`)} />
+          onClick={() => navigate(PATH.MEDICAL_SURVEILLANCE_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -115,7 +167,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/presentation-position-variety/${record.id}/edit`)} />
+          onClick={() => navigate( PATH.PRESENTATION_POSITION_VARIETY_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -128,7 +180,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/contraction-frequency/${record.id}/edit`)} />
+          onClick={() => navigate(PATH.CONTRACTION_FREQUENCY_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -141,7 +193,7 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate(`/partograph/${partographId}/fetal-heart-rate/${record.id}/edit`)} />
+          onClick={() => navigate(PATH.FETAL_HEART_RATE_EDIT(partographId, record.id))} />
       ),
     },
   ];
@@ -150,14 +202,18 @@ const PartographPage = () => {
     <>
       <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <BackButton />
+          <BackButton to={PATH.HOME} />
           <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Button>Historial</Button>
-          <Button>Generar PDF</Button>
-          <Button>Notificaciones</Button>
-          <Button>Estado del partograma</Button>
+          <Button onClick={() => navigate( PATH.PARTOGRAPH_HISTORY(partographId))}>Historial</Button>
+          <Button onClick={mostrarPDF}>Generar PDF</Button>
+          <Button onClick={() => {
+            setSelectedPartographId(partographId);
+            setNotificationDrawerVisible(true);
+          }}>
+            Notificaciones
+          </Button>
         </div>
       </div>
       <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
@@ -184,7 +240,7 @@ const PartographPage = () => {
               </Descriptions.Item>
             </Descriptions>
             <Flex align="flex-end" style={{ marginTop: "1rem", marginRight: "1rem" }} vertical>
-              <Button type="primary" onClick={() => navigate(`/partograph/${partographId}/edit`)}>Editar</Button>
+              <Button type="primary" onClick={() => navigate(PATH.PARTOGRAPH_EDIT(partographId,))}>Editar</Button>
             </Flex>
           </div>
           <Divider />
@@ -245,9 +301,50 @@ const PartographPage = () => {
           onClose={() => setIsFetalHeartRateModalVisible(false)}
           partographId={partographId}
         />
+
+        <Drawer
+          title="Notificaciones del Partograma"
+          placement="right"
+          width={400}
+          onClose={() => setNotificationDrawerVisible(false)}
+          open={isNotificationDrawerVisible}
+        >
+          {selectedPartographId ? (
+            <NotificationList partographId={selectedPartographId} />
+          ) : (
+            <p>No se ha seleccionado un partograma.</p>
+          )}
+        </Drawer>
+
+        <Modal
+          open={pdfVisible}
+          onCancel={() => setPdfVisible(false)}
+          footer={[
+            <Button key="close" onClick={() => setPdfVisible(false)}>
+              Cerrar
+            </Button>,
+          ]}
+          width="80%"
+          style={{ top: 20 }}
+          title="Vista previa del PDF"
+        >
+          {pdfUrl ? (
+            <iframe
+              src={pdfUrl}
+              title="PDF Preview"
+              width="100%"
+              height="600px"
+              style={{ border: "none" }}
+            />
+          ) : (
+            <p>Cargando PDF...</p>
+          )}
+        </Modal>
       </Layout.Content>
     </>
   );
+
 };
+
 
 export default PartographPage;
