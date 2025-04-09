@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Divider, Modal } from "antd";
-import PartogramTabs from "./Components/PartogramTabs";
+import PartogramTabs from "./components/PartogramTabs";
 import { useCatalog } from "../../contexts/catalog-context";
 import usePartographs from "../../hooks/use-partographs";
 import { PlusOutlined } from "@ant-design/icons";
