@@ -17,4 +17,7 @@ const useNotifications = () => {
     };
 };
 
+export const mutateNotifications = () =>
+    globalMutate(NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_NOTIFICATIONS);
+
 export default useNotifications;
