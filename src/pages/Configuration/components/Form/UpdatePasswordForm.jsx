@@ -1,12 +1,13 @@
 import React from 'react';
 import { Form, Button, Input, message } from 'antd';
 import { updateUserPassword } from "../../../../services/account-services/account-service";
+import { useAuth } from '../../../../contexts/auth-context';
 
 const UserForm = () => {
   const [form] = Form.useForm();
+  const { setIsTemporalPassword } = useAuth();
 
   const handleClick = async () => {
-    console.log('handleClick ejecutado');
 
     try {
       const values = await form.validateFields();
@@ -21,12 +22,9 @@ const UserForm = () => {
       await updateUserPassword(payload);
       message.success("Contraseña actualizada exitosamente");
       form.resetFields();
-      window.location.reload();
+      setIsTemporalPassword(false);
+
     } catch (error) {
-      console.error('Error en handleClick:', error);
-      if (error?.errorFields) {
-        return;
-      }
       message.error(error.message || "Error al actualizar la contraseña");
     }
   };

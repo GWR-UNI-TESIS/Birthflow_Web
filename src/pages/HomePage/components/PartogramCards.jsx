@@ -1,12 +1,22 @@
 import React from 'react';
 import { Card, Descriptions } from "antd";
 import { SettingOutlined, EditOutlined, EllipsisOutlined } from "@ant-design/icons";
-import {formatTimeNumeric} from '../../../utils/datetime-format';
+import { formatTimeNumeric } from '../../../utils/datetime-format';
 
 const PartogramCards = ({ data }) => (
-    <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+    <div
+        style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+            gap: "16px",
+        }}
+    >
         {data.map((item) => (
-            <Card key={item.key} title={item.name}
+            <Card
+                key={item.key}
+                title={item.name}
+                style={{ maxWidth: "100%", width: "100%" }}
+
                 actions={[
                     <SettingOutlined key="setting" />,
                     <EditOutlined key="edit" />,
