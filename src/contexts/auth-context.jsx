@@ -32,7 +32,8 @@ export const AuthProvider = ({ children }) => {
                     console.warn("Permiso de notificaciones no otorgado:", permission);
                     return;
                 }
-
+                const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+                
                 const currentToken = await getToken(messaging, {
                     vapidKey: "BBu8qPdD8eeWSzl8yJaGXr5xBb8FJjAuscbxgQKOpDyz0hmuYPR_aBPBZaKWJH0r-6Fqlp5ENJGjj_OueQRnLFM",
                     serviceWorkerRegistration: registration,
