@@ -7,7 +7,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth-context";
 import PATH from "../../routes/path";
-import PinPartograms from "./Components/PinPartograms";
+import PinPartograms from "./components/PinPartograms";
 
 const HomePage = () => {
   const [viewMode, setViewMode] = useState("table");
