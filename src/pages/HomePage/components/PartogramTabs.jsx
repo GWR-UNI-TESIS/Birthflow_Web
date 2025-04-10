@@ -8,6 +8,7 @@ import usePartographs from "../../../hooks/use-partographs";
 import { updatePartographState } from "../../../services/partograph-service/partograph-service";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 import { useAuth } from "../../../contexts/auth-context";
+import { label } from "framer-motion/client";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -211,10 +212,11 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                             defaultActiveKey={filters.filterId || "1"}
                             onChange={(key) => handleFilterChange("filterId", key)}
                             style={{ flexShrink: 0 }}
+                            items={catalogs?.filterCatalog?.map((item) => {return {
+                                label: item.description,
+                                key: item.id, 
+                            }})}
                         >
-                            {catalogs?.filterCatalog?.map((item) => (
-                                <TabPane tab={item.description} key={item.id} />
-                            ))}
                         </Tabs>
 
                         <Flex wrap="wrap" align="center" gap="8px" style={{ flexGrow: 1, justifyContent: "flex-end" }}>
