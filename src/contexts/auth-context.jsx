@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
+import { notification } from "antd";
 import {
     login as loginService,
     refreshToken as refreshService,
@@ -6,6 +7,9 @@ import {
     register as registerService
 } from "../services/auth-service";
 import { updateUserInfo } from "../services/account-services/account-service";
+
+import { messaging, getToken, onMessage } from "../utils/firebase";
+import { registerNotificationToken } from "../services/notification-service/notification-service";
 
 const AuthContext = createContext();
 
@@ -17,27 +21,70 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [isTemporalPassword, setIsTemporalPassword] = useState(false);
 
-    
+    useEffect(() => {
+        const setupNotifications = async () => {
+            if (!user) return;
+
+            try {
+                const permission = await Notification.requestPermission();
+
+                if (permission !== "granted") {
+                    console.warn("Permiso de notificaciones no otorgado:", permission);
+                    return;
+                }
+                const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+
+                const currentToken = await getToken(messaging, {
+                    vapidKey: "BBu8qPdD8eeWSzl8yJaGXr5xBb8FJjAuscbxgQKOpDyz0hmuYPR_aBPBZaKWJH0r-6Fqlp5ENJGjj_OueQRnLFM",
+                    serviceWorkerRegistration: registration,
+                });
+
+                if (currentToken) {
+                    // 🔄 Siempre registrar el token actual al backend
+                    await registerNotificationToken({
+                        userId: user.id,
+                        token: currentToken,
+                        deviceInfo: "WEB",
+                    });
+
+                    // 🔔 Escuchar notificaciones en primer plano
+                    onMessage(messaging, (payload) => {
+                        const { title, body } = payload.notification || {};
+                        console.log("Notificación recibida:", payload);
+
+                        notification.open({
+                            message: title ?? "Nueva notificación",
+                            description: body ?? "",
+                            placement: "bottomRight",
+                        });
+
+                        // Opcional: recargar datos relacionados
+                        // mutateNotifications();
+                    });
+                }
+            } catch (err) {
+                console.error("Error configurando notificaciones FCM:", err);
+            }
+        };
+
+        setupNotifications();
+    }, [user]);
+
+
     useEffect(() => {
         const init = async () => {
-          setLoading(true); // 🔥 Aquí activamos loading desde el inicio
-          try {
-            if (accessToken) {
-              const isValid = await validateAccessTokenService(accessToken);
-              if (!isValid) {
-                const newTokens = await refreshAccessToken();
-                if (!newTokens) throw new Error("Token inválido");
-              }
+            setLoading(true); // 🔥 Aquí activamos loading desde el inicio
+            try {
+                handleTokenValidation();
+            } catch (err) {
+                logout();
+            } finally {
+                setLoading(false); // 🔥 Lo bajamos cuando ya terminó todo
             }
-          } catch (err) {
-            logout();
-          } finally {
-            setLoading(false); // 🔥 Lo bajamos cuando ya terminó todo
-          }
         };
-      
+
         init();
-      }, []); //  Solo ejecuta cuando `accessToken` cambia
+    }, []); //  Solo ejecuta cuando `accessToken` cambia
 
     //  Función para actualizar tokens en el estado y localStorage
     const updateTokens = ({ accessToken, refreshToken, user }) => {
@@ -54,6 +101,7 @@ export const AuthProvider = ({ children }) => {
         setAccessToken(null);
         setRefreshToken(null);
         setUser(null);
+        localStorage.removeItem("device_token");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
@@ -65,7 +113,8 @@ export const AuthProvider = ({ children }) => {
             const isValid = await validateAccessToken();
             if (!isValid) {
                 const newToken = await refreshAccessToken();
-                if (!newToken) throw new Error("No se pudo refrescar el token");
+                if (!newToken)
+                    logout();;
             }
         } catch (error) {
             console.error("Error en la validación del token:", error);

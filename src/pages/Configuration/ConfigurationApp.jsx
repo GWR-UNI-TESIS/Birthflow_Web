@@ -20,9 +20,7 @@ function Settings() {
 
 
   useEffect(() => {
-    if (user) {
-      
-    }
+
   }, [user])
 
   return (

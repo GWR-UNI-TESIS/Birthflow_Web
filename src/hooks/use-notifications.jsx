@@ -7,7 +7,12 @@ const useNotifications = () => {
 
     const { data, error, isLoading } = useSWR(
         NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_NOTIFICATIONS,
-        (url) => fetcher(url, 'GET')
+        (url) => fetcher(url, 'GET'),
+        {
+            revalidateOnFocus: false,
+            revalidateIfStale: false,
+            shouldRetryOnError: false,
+        }
     );
 
     return {
@@ -16,5 +21,8 @@ const useNotifications = () => {
         loading: isLoading,
     };
 };
+
+export const mutateNotifications = () =>
+    globalMutate(NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_NOTIFICATIONS);
 
 export default useNotifications;
