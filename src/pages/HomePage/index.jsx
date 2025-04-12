@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Divider, Modal, Typography } from "antd";
 import PartogramTabs from "./components/PartogramTabs";
 import { useCatalog } from "../../contexts/catalog-context";
-import usePartographs from "../../hooks/use-partographs";
+
 import { PlusOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth-context";

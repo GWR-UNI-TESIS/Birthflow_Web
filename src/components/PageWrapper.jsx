@@ -2,9 +2,9 @@
 import { motion } from "framer-motion";
 
 const variants = {
-  initial: { opacity: 0, x: 20 },
+  initial: { opacity: 0, x: 15 },
   animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 },
+  exit: { opacity: 0, x: -15 },
 };
 
 export default function PageWrapper({ children }) {

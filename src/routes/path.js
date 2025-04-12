@@ -4,6 +4,7 @@ const PATH = {
     LOGIN: '/login',
     USER_EDIT: '/config/userEdit',
     HOME: '/',
+    ARCHIVED: '/partographs/archived',
     CONFIG: '/config',
     CREATE_PARTOGRAPH: '/create-partograph',
     CREATE_GROUP: '/create-group',

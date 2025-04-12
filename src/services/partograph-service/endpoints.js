@@ -2,6 +2,7 @@ const PARTOGRAPH_ENDPOINTS = {
     PARTOGRAPHS: {
         GET_PARTOGRAPHS: (id) => `/api/partograph/partographs/${id}`,
         GET_PARTOGRAPHS_PIN: (id) => `/api/partograph/partographs/pin/${id}`,
+        GET_PARTOGRAPHS_ARCHIVED: (id) => `/api/partograph/partographs/archived/${id}`,
         SEARCH: `/api/partograph/search`,
         GET_PARTOGRAPH: (partographId) => `/api/partograph/partograph/${partographId}`,
         CREATE_PARTOGRAPH: '/api/partograph/create',

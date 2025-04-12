@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
     const [authError, setAuthError] = useState(null);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
+    //const [isAuthComplete, setIsAuthComplete] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isTemporalPassword, setIsTemporalPassword] = useState(false);
 
@@ -40,14 +41,16 @@ export const AuthProvider = ({ children }) => {
                 });
 
                 if (currentToken) {
-                    // 🔄 Siempre registrar el token actual al backend
+                    // Siempre registrar el token actual al backend
                     await registerNotificationToken({
                         userId: user.id,
                         token: currentToken,
                         deviceInfo: "WEB",
                     });
 
-                    // 🔔 Escuchar notificaciones en primer plano
+                    localStorage.setItem("device_token", currentToken ) ;
+
+                    //  Escuchar notificaciones en primer plano
                     onMessage(messaging, (payload) => {
                         const { title, body } = payload.notification || {};
                         console.log("Notificación recibida:", payload);

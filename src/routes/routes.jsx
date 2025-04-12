@@ -20,6 +20,7 @@ import UpdateUser from "../pages/Configuration/components/Form/UserInfoUpdateFor
 import PATH from './path';
 import AuthPage from "../pages/Auth/Index";
 import { AnimatePresence } from "framer-motion";
+import ArchivePartographsPage from "../pages/ArchivePage/index";
 
 
 const InnerRoutes = () => {
@@ -32,6 +33,7 @@ const InnerRoutes = () => {
         <Route path={PATH.WELCOME} element={<PageWrapper><Welcome /></PageWrapper>} />
         <Route path={PATH.LOGIN} element={<PageWrapper><AuthPage /></PageWrapper>} />
         <Route path={PATH.USER_EDIT} element={<PageWrapper><UpdateUser /></PageWrapper>} />
+
         {/* Rutas con LayoutGeneral */}
         <Route
           path="/*"
@@ -39,6 +41,7 @@ const InnerRoutes = () => {
             <ProtectedRoute>
               <LayoutGeneral>
                 <Routes location={location} key={location.pathname}>
+                  <Route path={PATH.ARCHIVED} element={<PageWrapper><ArchivePartographsPage /></PageWrapper>} />
                   <Route path={PATH.HOME} element={<PageWrapper><Home /></PageWrapper>} />
                   <Route path={PATH.CREATE_PARTOGRAPH} element={<PageWrapper><CreatePartographPage /></PageWrapper>} />
                   <Route path={PATH.CREATE_GROUP} element={<PageWrapper><GroupsApps /></PageWrapper>} />

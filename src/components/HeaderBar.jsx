@@ -21,6 +21,11 @@ const HeaderBar = ({ onNotificationDrawerToggle }) => {
         navigate(PATH.CONFIG);
     };
 
+
+    const handleArchivedClick = () => {
+        navigate(PATH.ARCHIVED);
+    };
+
     const items = [
         {
             key: '1',
@@ -44,7 +49,7 @@ const HeaderBar = ({ onNotificationDrawerToggle }) => {
             key: '3',
             icon: <FolderOutlined />,
             label: (
-                <a>
+                <a onClick={handleArchivedClick}>
                     Archivados
                 </a>
             ),

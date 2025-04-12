@@ -8,7 +8,7 @@ import usePartographs from "../../../hooks/use-partographs";
 import { updatePartographState } from "../../../services/partograph-service/partograph-service";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 import { useAuth } from "../../../contexts/auth-context";
-import { label } from "framer-motion/client";
+
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -33,7 +33,7 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
         hourFilterId: 1,
     });
 
-    const { data, loading: dataLoading, error: dataError } = usePartographs(filters);
+    const { data, loading: partographLoading, error: dataError } = usePartographs(filters);
 
 
     useEffect(() => {
@@ -200,9 +200,10 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
 
 
     return (
-        <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
-            <div style={{ background: "#fff", minHeight: 280, padding: 30, borderRadius: "8px" }}>
-                <Spin spinning={dataLoading} tip="Cargando datos...">
+        <Spin spinning={partographLoading} tip="Cargando partogramas...">
+            <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
+                <div style={{ background: "#fff", minHeight: 280, padding: 30, borderRadius: "8px" }}>
+
                     <Flex
                         justify="space-between"
                         wrap="wrap"
@@ -212,10 +213,12 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                             defaultActiveKey={filters.filterId || "1"}
                             onChange={(key) => handleFilterChange("filterId", key)}
                             style={{ flexShrink: 0 }}
-                            items={catalogs?.filterCatalog?.map((item) => {return {
-                                label: item.description,
-                                key: item.id, 
-                            }})}
+                            items={catalogs?.filterCatalog?.map((item) => {
+                                return {
+                                    label: item.description,
+                                    key: item.id,
+                                }
+                            })}
                         >
                         </Tabs>
 
@@ -282,9 +285,9 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                     ) : (
                         <PartogramCards data={data?.response || []} />
                     )}
-                </Spin>
-            </div>
-        </Layout.Content>
+                </div>
+            </Layout.Content>
+        </Spin>
     );
 };
 

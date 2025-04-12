@@ -44,3 +44,27 @@ export const registerNotificationToken = async (payload) => {
         handleApiError(error);
     }
 };
+
+export const getNotificationByToken = async (token) => {
+    try {
+        const response = await api.get(NOTIFICATION_ENDPOINTS.NOTIFICATIONS.GET_NOTIFICATION_BY_TOKEN, {
+            params: { token },
+            headers: getCommonHeaders(),
+        });
+        return response.data.response;
+    } catch (error) {
+        handleApiError(error);
+    }
+};
+
+export const updateDeviceSilenceStatus = async (token, isSilenced) => {
+    try {
+        const response = await api.post(NOTIFICATION_ENDPOINTS.NOTIFICATIONS.SILENCE_NOTIFICATION, null, {
+            params: { token, isSilenced },
+            headers: getCommonHeaders(),
+        });
+        return response.data.response;
+    } catch (error) {
+        handleApiError(error);
+    }
+};
