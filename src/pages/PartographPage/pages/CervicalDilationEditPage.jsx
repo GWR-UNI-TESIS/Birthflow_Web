@@ -76,7 +76,7 @@ const CervicalDilationEditPage = () => {
                         <Typography.Title level={3}>Editar Dilatacion Cervical</Typography.Title>
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
                             <Form.Item label="Dilatación (cm)" name="dilation" rules={[{ required: true, message: "Campo requerido" }]}>
-                                <Input type="number" min="0" max="10" step="0.5" placeholder="Valor de Dilatación" />
+                                <Input type="number" min="0" max="11" step="0.5" placeholder="Valor de Dilatación" />
                             </Form.Item>
 
                             <Form.Item label="Hora de medición" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
