@@ -6,11 +6,20 @@ import { useAuth } from '../../../contexts/auth-context';
 import { formatTimeNumeric } from '../../../utils/datetime-format';
 import { motion } from "framer-motion";
 import '../../../styles/scrollbar.module.css';
+import { useNavigate } from 'react-router-dom';
+import PATH from '../../../routes/path';
+
 const PinPartograms = () => {
   const scrollRef = useRef();
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
   const { user } = useAuth();
   const { data, loading: dataLoading, error: dataError } = usePartographsPin(user.id);
+
+  let navigate = useNavigate();
+
+  const handleNavigateToPartograph = (partographId) => {
+    navigate(PATH.PARTOGRAPH(partographId));
+  }
 
 
   const scrollLeft = () => {
@@ -25,7 +34,6 @@ const PinPartograms = () => {
 
     if (dataError) message.error("Error al cargar los partogramas.");
   }, [dataError]);
-
 
 
   const isEmpty = !data || !data.response || data.response.length === 0;
@@ -61,7 +69,7 @@ const PinPartograms = () => {
           </div>
 
 
-         {isEmpty ? (
+          {isEmpty ? (
             <Empty description="No hay partogramas anclados" />
           ) : (<div
             ref={scrollRef}
@@ -94,17 +102,20 @@ const PinPartograms = () => {
 
                   }}
                   actions={[
-                    <EyeOutlined key="show" label='Ver' />,
+                    <a onClick={() => handleNavigateToPartograph(item.partographId)}>
+                      <EyeOutlined key="show" label='Ver' />
+                    </a>,
+
                   ]}
                 >
                   <Descriptions layout="vertical" >
-                    <Descriptions.Item label="Expediente">
+                    <Descriptions.Item label="Expediente" span={2}>
                       {item.recordName}
                     </Descriptions.Item>
                     <Descriptions.Item label="Fecha">
                       {formatTimeNumeric(item.date)}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Tiempos Trabajo">
+                    <Descriptions.Item label="Modificado">
                       {formatTimeNumeric(item.updateAt)}
                     </Descriptions.Item>
                     <Descriptions.Item label="Propiedad">

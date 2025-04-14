@@ -11,10 +11,12 @@ const ChildbirthNoteView = ({ childbirthNote, partographId }) => {
             {childbirthNote ? (
                 <>
                     <Descriptions bordered column={2}>
-                        <Descriptions.Item label="Descripción">{childbirthNote.description}</Descriptions.Item>
+                        <Descriptions.Item label="Descripción" span={2} >{childbirthNote.description}</Descriptions.Item>
+                        <Descriptions.Item label="Fecha">{childbirthNote.date}</Descriptions.Item>
                         <Descriptions.Item label="Hora">{childbirthNote.hour}</Descriptions.Item>
                         <Descriptions.Item label="Sexo">{childbirthNote.sex}</Descriptions.Item>
                         <Descriptions.Item label="APGAR">{childbirthNote.apgar}</Descriptions.Item>
+                        <Descriptions.Item label="Peso">{childbirthNote.peso}</Descriptions.Item>
                         <Descriptions.Item label="Temperatura">{childbirthNote.temperature}</Descriptions.Item>
                         <Descriptions.Item label="Caput Succedaneum">{childbirthNote.caputto}</Descriptions.Item>
                         <Descriptions.Item label="Circular">{childbirthNote.circular}</Descriptions.Item>
@@ -39,9 +41,9 @@ const ChildbirthNoteView = ({ childbirthNote, partographId }) => {
                     </div>
                 </>
             ) : (
-                <div style={{ textAlign: "center", margin:10,}}>
-                    <Typography.Title level={5} style={{marginBottom:25}}>No hay nota de parto registrada.</  Typography.Title>
-                 
+                <div style={{ textAlign: "center", margin: 10, }}>
+                    <Typography.Title level={5} style={{ marginBottom: 25 }}>No hay nota de parto registrada.</  Typography.Title>
+
                     <Button type="primary" onClick={() => setModalVisible(true)}>
                         Crear Nota de Parto
                     </Button>

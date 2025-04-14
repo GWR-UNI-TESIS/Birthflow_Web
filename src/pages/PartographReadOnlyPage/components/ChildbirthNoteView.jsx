@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Descriptions, Typography, Button } from "antd";
-import ChildbirthNoteModal from "../modals/ChildbirthNoteModal";
 
 const ChildbirthNoteView = ({ childbirthNote, partographId }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -10,13 +9,15 @@ const ChildbirthNoteView = ({ childbirthNote, partographId }) => {
             <Typography.Title level={3}>Nota de Parto</Typography.Title>
 
             <Descriptions bordered column={2}>
-                <Descriptions.Item label="Descripción">{childbirthNote.description ?? ""}</Descriptions.Item>
+                <Descriptions.Item label="Descripción" span={2} >{childbirthNote.description}</Descriptions.Item>
+                <Descriptions.Item label="Fecha">{childbirthNote.date ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="Hora">{childbirthNote.hour ?? ""}</Descriptions.Item>
-                <Descriptions.Item label="Sexo">{childbirthNote.sex  ?? ""}</Descriptions.Item>
+                <Descriptions.Item label="Sexo">{childbirthNote.sex ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="APGAR">{childbirthNote.apgar ?? ""}</Descriptions.Item>
+                <Descriptions.Item label="Peso">{childbirthNote.peso ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="Temperatura">{childbirthNote.temperature ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="Caput Succedaneum">{childbirthNote.caputto ?? ""}</Descriptions.Item>
-                <Descriptions.Item label="Circular">{childbirthNote.circular ?? "" }</Descriptions.Item>
+                <Descriptions.Item label="Circular">{childbirthNote.circular ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="Líquido Amniótico">{childbirthNote.lamniotico ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="Micción">{childbirthNote.miccion ?? ""}</Descriptions.Item>
                 <Descriptions.Item label="Meconio">{childbirthNote.meconio ?? ""}</Descriptions.Item>

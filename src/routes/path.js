@@ -11,6 +11,7 @@ const PATH = {
   
     // Rutas con parámetros (para uso en navegación)
     PARTOGRAPH: (id) => `/partograph/${id}`,
+    PARTOGRAPH_READ_ONLY: (id) => `/partograph/read-only/${id}`,
     PARTOGRAPH_EDIT: (id) => `/partograph/${id}/edit`,
     PARTOGRAPH_HISTORY: (id) => `/partograph/${id}/history`,
     CERVICAL_DILATION_EDIT: (partographId, dilationId) => `/partograph/${partographId}/cervical-dilation/${dilationId}/edit`,
@@ -22,6 +23,7 @@ const PATH = {
     // Plantillas de rutas (para Router)
     TEMPLATE: {
       PARTOGRAPH: '/partograph/:partographId',
+      PARTOGRAPH_READ_ONLY: '/partograph/read-only/:partographId',
       PARTOGRAPH_EDIT: '/partograph/:partographId/edit',
       PARTOGRAPH_HISTORY: '/partograph/:partographId/history',
       CERVICAL_DILATION_EDIT: '/partograph/:partographId/cervical-dilation/:dilationId/edit',

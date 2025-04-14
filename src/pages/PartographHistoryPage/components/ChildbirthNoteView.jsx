@@ -8,10 +8,12 @@ const ChildbirthNoteView = ({ childbirthNote }) => {
             {childbirthNote ? (
                 <>
                     <Descriptions bordered column={2}>
-                        <Descriptions.Item label="Descripción">{childbirthNote.description}</Descriptions.Item>
+                        <Descriptions.Item label="Descripción" span={2} >{childbirthNote.description}</Descriptions.Item>
+                        <Descriptions.Item label="Fecha">{childbirthNote.date}</Descriptions.Item>
                         <Descriptions.Item label="Hora">{childbirthNote.hour}</Descriptions.Item>
                         <Descriptions.Item label="Sexo">{childbirthNote.sex}</Descriptions.Item>
                         <Descriptions.Item label="APGAR">{childbirthNote.apgar}</Descriptions.Item>
+                        <Descriptions.Item label="Peso">{childbirthNote.peso}</Descriptions.Item>
                         <Descriptions.Item label="Temperatura">{childbirthNote.temperature}</Descriptions.Item>
                         <Descriptions.Item label="Caput Succedaneum">{childbirthNote.caputto}</Descriptions.Item>
                         <Descriptions.Item label="Circular">{childbirthNote.circular}</Descriptions.Item>
@@ -28,12 +30,6 @@ const ChildbirthNoteView = ({ childbirthNote }) => {
                         <Descriptions.Item label="Brazalete">{childbirthNote.brazalete}</Descriptions.Item>
                         <Descriptions.Item label="Huella Digital">{childbirthNote.huellaDig}</Descriptions.Item>
                     </Descriptions>
-
-                    <div style={{ marginTop: "20px", textAlign: "center" }}>
-                        <Button type="primary" onClick={() => setModalVisible(true)}>
-                            Editar Nota de Parto
-                        </Button>
-                    </div>
                 </>
             ) : (
                 <div style={{ textAlign: "center", margin: 10, }}>

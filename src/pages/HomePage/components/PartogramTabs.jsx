@@ -8,9 +8,9 @@ import usePartographs from "../../../hooks/use-partographs";
 import { updatePartographState } from "../../../services/partograph-service/partograph-service";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 import { useAuth } from "../../../contexts/auth-context";
+import SharePartographModal from "./SharePartographModal";
+import PATH from "../../../routes/path";
 
-
-const { TabPane } = Tabs;
 const { Option } = Select;
 
 const formatDate = (dateString) => {
@@ -34,6 +34,9 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
     });
 
     const { data, loading: partographLoading, error: dataError } = usePartographs(filters);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedPartographId, setSelectedPartographId] = useState(null);
 
 
     useEffect(() => {
@@ -84,7 +87,8 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                                 message.warning("Solo el creador puede compartir el partograma");
                                 return;
                             }
-                            message.info(`Compartir ${record.partographId}`);
+                            setSelectedPartographId(record.partographId);
+                            setModalVisible(true); 
                             return;
 
                         case "favorite":
@@ -158,7 +162,7 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                 };
 
                 const items = [
-                    { label: "Compartir", key: "share", disabled: !isCreator, icon: <ShareAltOutlined /> },
+                    { label: "Compartir", key: "share", icon: <ShareAltOutlined /> },
                     { type: "divider" },
                     {
                         label: record.favorite ? "Desmarcar como favorito" : "Marcar como favorito",
@@ -276,8 +280,12 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                                         ) {
                                             return;
                                         }
-
-                                        navigate(`/partograph/${record.partographId}`);
+                                        if(record.accessType == 2){
+                                            navigate(PATH.PARTOGRAPH(record.partographId));
+                                        }else{
+                                            navigate(PATH.PARTOGRAPH_READ_ONLY(record.partographId));
+                                        }
+                                       
                                     },
                                 };
                             }}
@@ -287,6 +295,16 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                     )}
                 </div>
             </Layout.Content>
+
+            <SharePartographModal
+                visible={modalVisible}
+                partographId={selectedPartographId}
+                catalogs={catalogs}
+                onClose={() => {
+                    setModalVisible(false);
+                    setSelectedPartographId(null);
+                }}
+            />
         </Spin>
     );
 };
