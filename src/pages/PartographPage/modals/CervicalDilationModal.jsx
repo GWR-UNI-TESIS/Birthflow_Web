@@ -51,7 +51,7 @@ const CervicalDilationModal = ({ visible, onClose, partographId }) => {
                     <Input
                         type="number"
                         min="0"
-                        max="10"
+                        max="11"
                         step="0.5"
                         placeholder="Valor de Dilatación"
                     />

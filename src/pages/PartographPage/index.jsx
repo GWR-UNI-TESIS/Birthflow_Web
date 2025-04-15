@@ -22,17 +22,17 @@ import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
 import usePartograh from "../../hooks/use-partograph";
 import usePartographNotifications from "../../hooks/use-partograph-notifications";
-import {getPartographPdf} from '../../services/report-service/report-service';
-import PartogramChart from "./components/chart";
+import PartogramChart from "../../components/Charts/chart";
 import CervicalDilationModal from "./modals/CervicalDilationModal";
 import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
 import FetalHeartRateModal from "./modals/FetalHeartRateModal";
 import ContractionFrequencyModal from "./modals/ContractionFrequencyModal";
 import PresentationPositionVarietyModal from "./modals/PresentationPositionVarietyModal";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
-
+import PdfPreviewLoader from "../../components/PDF/PdfPreviewLoader";
 import { formatDateTime } from "../../utils/datetime-format";
 import PATH from "../../routes/path";
+import NotificationDrawer from "../../components/NotificacionDrawer/NotificationDrawer";
 const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
@@ -48,31 +48,7 @@ const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   </div>
 );
 
-const NotificationList = ({ partographId }) => {
-  const { data, error, loading } = usePartographNotifications(partographId);
 
-  if (loading) return <Spin tip="Cargando notificaciones..." />;
-  if (error) return <p>Error al cargar notificaciones.</p>;
-
-  if (!data || data.length === 0) return <p>No hay notificaciones disponibles.</p>;
-
-  return (
-    <List
-      className="demo-loadmore-list"
-      loading={loading}
-      itemLayout="vertical"
-      dataSource={data?.response}
-      renderItem={(item) => (
-        <List.Item key={item.notificationId}>
-          <Skeleton avatar title={false} loading={item.loading} active>
-            <List.Item.Meta title={<a>{item.title}</a>} description={item.message} />
-            <div>{formatDateTime(item.scheduledFor)}</div>
-          </Skeleton>
-        </List.Item>
-      )}
-    />
-  );
-};
 
 const PartographPage = () => {
   const [isCervicalDilationModalVisible, setIsCervicalDilationModalVisible] = useState(false);
@@ -80,11 +56,6 @@ const PartographPage = () => {
   const [isFetalHeartRateModalVisible, setIsFetalHeartRateModalVisible] = useState(false);
   const [isContractionFrequencyModalVisible, setIsContractionFrequencyModalVisible] = useState(false);
   const [isPresentationPositionVarietyModalVisible, setIsPresentationPositionVarietyModalVisible] = useState(false);
-  const [isNotificationDrawerVisible, setNotificationDrawerVisible] = useState(false);
-  const [selectedPartographId, setSelectedPartographId] = useState(null);
-  const [pdfVisible, setPdfVisible] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState(null);
-  const [pdfLoading, setPdfLoading] = useState(false);
   const {
     catalogs,
     loading: catalogsLoading,
@@ -96,23 +67,9 @@ const PartographPage = () => {
   const navigate = useNavigate();
   const { data, loading, error } = usePartograh(partographId);
 
-  if (loading || catalogsLoading || pdfLoading ) return <Spin fullscreen />;
+  if (loading || catalogsLoading ) return <Spin fullscreen tip={"Cargando datos del partogramas..."} />;
   if (error) return <Alert message="Error al cargar los datos" type="error" />;
 
-
-  const mostrarPDF = async () => {
-    try {
-      setPdfLoading(true);
-      const blob = await getPartographPdf(partographId);
-      const url = URL.createObjectURL(blob);
-      setPdfUrl(url);
-      setPdfVisible(true);
-      setPdfLoading(false);
-    } catch (error) {
-      console.error("Error mostrando PDF:", error);
-      setPdfLoading(false);
-    }
-  };
   const partograph = data.response || data;
 
   const cervicalColumns = [
@@ -207,13 +164,8 @@ const PartographPage = () => {
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
           <Button onClick={() => navigate( PATH.PARTOGRAPH_HISTORY(partographId))}>Historial</Button>
-          <Button onClick={mostrarPDF}>Generar PDF</Button>
-          <Button onClick={() => {
-            setSelectedPartographId(partographId);
-            setNotificationDrawerVisible(true);
-          }}>
-            Notificaciones
-          </Button>
+          <PdfPreviewLoader partographId={partographId}/>
+          <NotificationDrawer partographId={partographId} />
         </div>
       </div>
       <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
@@ -302,44 +254,6 @@ const PartographPage = () => {
           partographId={partographId}
         />
 
-        <Drawer
-          title="Notificaciones del Partograma"
-          placement="right"
-          width={400}
-          onClose={() => setNotificationDrawerVisible(false)}
-          open={isNotificationDrawerVisible}
-        >
-          {selectedPartographId ? (
-            <NotificationList partographId={selectedPartographId} />
-          ) : (
-            <p>No se ha seleccionado un partograma.</p>
-          )}
-        </Drawer>
-
-        <Modal
-          open={pdfVisible}
-          onCancel={() => setPdfVisible(false)}
-          footer={[
-            <Button key="close" onClick={() => setPdfVisible(false)}>
-              Cerrar
-            </Button>,
-          ]}
-          width="80%"
-          style={{ top: 20 }}
-          title="Vista previa del PDF"
-        >
-          {pdfUrl ? (
-            <iframe
-              src={pdfUrl}
-              title="PDF Preview"
-              width="100%"
-              height="600px"
-              style={{ border: "none" }}
-            />
-          ) : (
-            <p>Cargando PDF...</p>
-          )}
-        </Modal>
       </Layout.Content>
     </>
   );

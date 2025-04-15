@@ -33,7 +33,7 @@ function GroupsApp() {
           />
         </div>
       </div>
-      <Layout.Content>
+      <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
 
         <div style={{ background: "#fff", minHeight: 280, padding: 10, borderRadius: "8px" }}>
 
@@ -45,7 +45,7 @@ function GroupsApp() {
           />
 
           <Divider />
-          <GroupTable listData={listData} onEdit={setEditingGroup} /> {/* Envía la función a la tabla */}
+          <GroupTable listData={listData} onEdit={setEditingGroup}  />
         </div>
       </Layout.Content>
     </>
