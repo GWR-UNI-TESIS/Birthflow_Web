@@ -16,12 +16,13 @@ import EditPartographPage from "../pages/PartographPage/pages/EditPartographPage
 import PartographHistoryPage from "../pages/PartographHistoryPage";
 import ArchivePartographsPage from "../pages/ArchivePage/index";
 import PartographReadOnlyPage from "../pages/PartographReadOnlyPage/index";
-import GroupsApps from '../pages/groups/GroupsApp';
+import GroupsApps from '../pages/groups/index';
 import ConfigurationApp from "../pages/Configuration/ConfigurationApp";
 import UpdateUser from "../pages/Configuration/components/Form/UserInfoUpdateForm";
 import PATH from './path';
 import AuthPage from "../pages/Auth/Index";
 import { AnimatePresence } from "framer-motion";
+import UsersInGroup from "../pages/groups/pages/UsersInGroup";
 
 
 
@@ -46,7 +47,8 @@ const InnerRoutes = () => {
                   <Route path={PATH.ARCHIVED} element={<PageWrapper><ArchivePartographsPage /></PageWrapper>} />
                   <Route path={PATH.HOME} element={<PageWrapper><Home /></PageWrapper>} />
                   <Route path={PATH.CREATE_PARTOGRAPH} element={<PageWrapper><CreatePartographPage /></PageWrapper>} />
-                  <Route path={PATH.CREATE_GROUP} element={<PageWrapper><GroupsApps /></PageWrapper>} />
+                  <Route path={PATH.GROUPS} element={<PageWrapper><GroupsApps /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.USERS_IN_GROUP} element={<PageWrapper><UsersInGroup /></PageWrapper>} />
                   <Route path={PATH.CONFIG} element={<PageWrapper><ConfigurationApp /></PageWrapper>} />
                   <Route path={PATH.TEMPLATE.PARTOGRAPH} element={<PageWrapper><PartographPage /></PageWrapper>} />
                   <Route path={PATH.TEMPLATE.PARTOGRAPH_READ_ONLY} element={<PageWrapper><PartographReadOnlyPage /></PageWrapper>} />

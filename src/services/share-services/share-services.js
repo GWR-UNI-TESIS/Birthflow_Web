@@ -66,6 +66,22 @@ export const searchUserGroups = async (query) => {
     }
 };
 
+export const searchUsers = async (query) => {
+    try {
+        const response = await api.get(
+            SHARE_ENDPOINTS.SHARE.SEARCH_USERS, {
+            headers: getCommonHeaders(),
+            params: {
+                query,
+            },
+        }
+        );
+        return processApiResponse(response);
+    } catch (error) {
+        handleApiError(error);
+    }
+};
+
 export const assignUserGroupsToPartograph = async (partographId, permissionTypeId, list) => {
     const payload = {
         partographId,

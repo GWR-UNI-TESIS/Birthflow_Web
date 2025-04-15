@@ -7,7 +7,7 @@ const PATH = {
     ARCHIVED: '/partographs/archived',
     CONFIG: '/config',
     CREATE_PARTOGRAPH: '/create-partograph',
-    CREATE_GROUP: '/create-group',
+    GROUPS: '/groups',
   
     // Rutas con parámetros (para uso en navegación)
     PARTOGRAPH: (id) => `/partograph/${id}`,
@@ -19,7 +19,7 @@ const PATH = {
     CONTRACTION_FREQUENCY_EDIT: (partographId, contractionId) => `/partograph/${partographId}/contraction-frequency/${contractionId}/edit`,
     FETAL_HEART_RATE_EDIT: (partographId, heartRateId) => `/partograph/${partographId}/fetal-heart-rate/${heartRateId}/edit`,
     PRESENTATION_POSITION_VARIETY_EDIT: (partographId, positionVarietyId) => `/partograph/${partographId}/presentation-position-variety/${positionVarietyId}/edit`,
-  
+    USERS_IN_GROUP: (id) => `/groups/${id}/users`,
     // Plantillas de rutas (para Router)
     TEMPLATE: {
       PARTOGRAPH: '/partograph/:partographId',
@@ -31,6 +31,7 @@ const PATH = {
       CONTRACTION_FREQUENCY_EDIT: '/partograph/:partographId/contraction-frequency/:contractionId/edit',
       FETAL_HEART_RATE_EDIT: '/partograph/:partographId/fetal-heart-rate/:heartRateId/edit',
       PRESENTATION_POSITION_VARIETY_EDIT: '/partograph/:partographId/presentation-position-variety/:positionVarietyId/edit',
+      USERS_IN_GROUP: '/groups/:groupId/users',
     },
   };
   

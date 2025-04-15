@@ -3,6 +3,7 @@ const SHARE_ENDPOINTS = {
         SEARCH_USERS_GROUPS: `/api/share/search-user-group`,
         ASSIGN_USERS_GROUPS: `/api/share/asign-user-group`,
         GET_USERS_GROUPS: `/api/share/asign-user-group/get`,
+        SEARCH_USERS: `/api/share/search-user`,
     },
 };
 

@@ -14,7 +14,7 @@ const HeaderBar = ({ onNotificationDrawerToggle }) => {
 
     const handleGroupsClick = () => {
 
-        navigate(PATH.CREATE_GROUP);
+        navigate(PATH.GROUPS);
     };
 
     const handleConfigurationClick = () => {

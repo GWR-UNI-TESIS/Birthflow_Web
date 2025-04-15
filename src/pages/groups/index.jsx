@@ -45,7 +45,7 @@ function GroupsApp() {
           />
 
           <Divider />
-          <GroupTable listData={listData} onEdit={setEditingGroup} /> {/* Envía la función a la tabla */}
+          <GroupTable listData={listData} onEdit={setEditingGroup}  />
         </div>
       </Layout.Content>
     </>
