@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/auth-context";
 import {
@@ -14,17 +14,22 @@ import { v4 as uuidv4 } from "uuid";
 import PATH from "../../routes/path";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from '../../assets/imagen-login.jpg';
+import LoginComponent from "./components/LoginComponent";
+import RegisterComponent from "./components/RegisterComponent";
 
 const AuthPage = () => {
   const { login, register, authError, setAuthError, loading, accessToken } = useAuth();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const hasAnimatedOnce = useRef(false);
 
   const handleLogin = async (values) => {
     try {
       setAuthError(null);
-      await login(values);
-      navigate(PATH.HOME);
+      var result = await login(values);
+      if (result.success) {
+        navigate(PATH.HOME);
+      }
     } catch (error) {
       setAuthError(error.message);
     }
@@ -90,7 +95,7 @@ const AuthPage = () => {
           }}
         />
       </div>
-      <Divider type="vertical" style={{ height: '100%' }}  className="auth-image-container" />
+      <Divider type="vertical" style={{ height: '100%' }} className="auth-image-container" />
       {/* Formulario */}
       <div
         style={{
@@ -117,98 +122,17 @@ const AuthPage = () => {
           <Spin spinning={loading} fullscreen tip={"Cargando ....."} />
 
           <AnimatePresence mode="wait">
-            {isLogin ? (
-              <motion.div
-                key="login"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.3 }}
-              >
-                <h2 style={{ textAlign: "center", color: "#1890ff" }}>Iniciar Sesión</h2>
-                {authError && (
-                  <Alert
-                    message="Error"
-                    description={authError}
-                    type="error"
-                    showIcon
-                    closable
-                    style={{ marginBottom: 20 }}
-                  />
-                )}
-                <Form name="login" onFinish={handleLogin} layout="vertical">
-                  <Form.Item
-                    label="Nombre de Usuario o email"
-                    name="email"
-                    rules={[
-                      { required: true, message: "Por favor ingresa tu nombre de usuario!" },
-                    ]}
-                  >
-                    <Input placeholder="Ingresa tu nombre de usuario" />
-                  </Form.Item>
 
-                  <Form.Item
-                    label="Contraseña"
-                    name="password"
-                    rules={[{ required: true, message: "Por favor ingresa tu contraseña!" }]}
-                  >
-                    <Input.Password placeholder="Ingresa tu contraseña" />
-                  </Form.Item>
+            <motion.div
+              initial={!hasAnimatedOnce.current ? { opacity: 0, x: 50 } : false}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3 }}
+              onAnimationComplete={() => { hasAnimatedOnce.current = true; }}
+            >{ }
+              {isLogin ? <LoginComponent authError={authError} handleLogin={handleLogin} loading={loading} /> : <RegisterComponent authError={authError} handleRegister={handleRegister} loading={loading} />}
+            </motion.div>
 
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit" block loading={loading}>
-                      Iniciar Sesión
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="register"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.3 }}
-              >
-                <h2 style={{ textAlign: "center", color: "#1890ff" }}>Registro</h2>
-                {authError && (
-                  <Alert
-                    message="Error"
-                    description={authError}
-                    type="error"
-                    showIcon
-                    style={{ marginBottom: 20 }}
-                  />
-                )}
-                <Form name="register" onFinish={handleRegister} layout="vertical">
-                  <Form.Item label="Nombre" name="name" rules={[{ required: true }]}>
-                    <Input placeholder="Ingresa tu nombre" />
-                  </Form.Item>
-
-                  <Form.Item label="Apellido" name="secondName" rules={[{ required: true }]}>
-                    <Input placeholder="Ingresa tu apellido" />
-                  </Form.Item>
-
-                  <Form.Item label="Email" name="email" rules={[{ required: true }]}>
-                    <Input placeholder="Ingresa tu email" />
-                  </Form.Item>
-
-                  <Form.Item label="Nombre de Usuario" name="username" rules={[{ required: true }]}>
-                    <Input placeholder="Ingresa tu nombre de usuario" />
-                  </Form.Item>
-
-                  <Form.Item label="Número de Teléfono" name="phoneNumber" rules={[{ required: true }]}>
-                    <Input type="number" placeholder="Ingresa tu número de teléfono" />
-                  </Form.Item>
-
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit" block loading={loading}>
-                      Registrarse
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </motion.div>
-            )}
           </AnimatePresence>
 
           <Button type="link" onClick={() => setIsLogin(!isLogin)} block>

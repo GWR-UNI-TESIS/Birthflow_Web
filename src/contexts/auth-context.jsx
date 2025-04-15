@@ -10,6 +10,7 @@ import { updateUserInfo } from "../services/account-services/account-service";
 
 import { messaging, getToken, onMessage } from "../utils/firebase";
 import { registerNotificationToken } from "../services/notification-service/notification-service";
+import { mutate } from "swr";
 
 const AuthContext = createContext();
 
@@ -18,8 +19,20 @@ export const AuthProvider = ({ children }) => {
     const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
     const [authError, setAuthError] = useState(null);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null);
+
+    const [authChecked, setAuthChecked] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isTemporalPassword, setIsTemporalPassword] = useState(false);
+
+    const [enabled, setEnabled] = React.useState(true);
+    const [threshold, setThreshold] = React.useState(3);
+    const [api, contextHolder] = notification.useNotification({
+        stack: enabled
+            ? {
+                threshold,
+            }
+            : false,
+    });
 
     useEffect(() => {
         const setupNotifications = async () => {
@@ -33,31 +46,32 @@ export const AuthProvider = ({ children }) => {
                     return;
                 }
                 const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-                
+
                 const currentToken = await getToken(messaging, {
                     vapidKey: "BBu8qPdD8eeWSzl8yJaGXr5xBb8FJjAuscbxgQKOpDyz0hmuYPR_aBPBZaKWJH0r-6Fqlp5ENJGjj_OueQRnLFM",
                     serviceWorkerRegistration: registration,
                 });
 
                 if (currentToken) {
-                    // 🔄 Siempre registrar el token actual al backend
+                    // Siempre registrar el token actual al backend
                     await registerNotificationToken({
                         userId: user.id,
                         token: currentToken,
                         deviceInfo: "WEB",
                     });
 
-                    console.log("Token registrado correctamente:", currentToken);
+                    localStorage.setItem("device_token", currentToken);
 
-                    // 🔔 Escuchar notificaciones en primer plano
+                    //  Escuchar notificaciones en primer plano
                     onMessage(messaging, (payload) => {
                         const { title, body } = payload.notification || {};
-                        console.log("Notificación recibida:", payload);
 
-                        notification.open({
+                        api.open({
                             message: title ?? "Nueva notificación",
                             description: body ?? "",
-                            placement: "bottomRight",
+                            placement: "topRight",
+                            duration: 5,
+                            showProgress: true,
                         });
 
                         // Opcional: recargar datos relacionados
@@ -72,21 +86,26 @@ export const AuthProvider = ({ children }) => {
         setupNotifications();
     }, [user]);
 
-
     useEffect(() => {
         const init = async () => {
-            setLoading(true); // 🔥 Aquí activamos loading desde el inicio
+            setLoading(true);
+            if (!accessToken || accessToken === "null") {
+                setAuthChecked(true); // ← importante
+                setLoading(false);
+                return false;
+            };
             try {
-                handleTokenValidation();
+                await handleTokenValidation();
             } catch (err) {
                 logout();
             } finally {
-                setLoading(false); // 🔥 Lo bajamos cuando ya terminó todo
+                setLoading(false);
+                setAuthChecked(true); // ← marcar como ya verificado
             }
         };
 
         init();
-    }, []); //  Solo ejecuta cuando `accessToken` cambia
+    }, []);
 
     //  Función para actualizar tokens en el estado y localStorage
     const updateTokens = ({ accessToken, refreshToken, user }) => {
@@ -198,6 +217,7 @@ export const AuthProvider = ({ children }) => {
     //  Cerrar sesión
     const logout = () => {
         clearAuthData();
+        mutate(() => true, undefined, { revalidate: false });
     };
 
     //  Memorizar el contexto para evitar renders innecesarios
@@ -208,6 +228,7 @@ export const AuthProvider = ({ children }) => {
         updateUser,
         isTemporalPassword,
         accessToken,
+        authChecked,
         refreshAccessToken,
         login,
         logout,

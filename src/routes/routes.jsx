@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import PageWrapper from "../components/PageWrapper";
 import Home from "../pages/HomePage/index";
 import Welcome from "../pages/WelcomePage";
 import PartographPage from "../pages/PartographPage";
@@ -13,113 +14,65 @@ import FetalHeartRateEditPage from "../pages/PartographPage/pages/FetalHeartRate
 import PresentationPositionVarietyEditPage from "../pages/PartographPage/pages/PresentationPositionVarietyEditPage";
 import EditPartographPage from "../pages/PartographPage/pages/EditPartographPage";
 import PartographHistoryPage from "../pages/PartographHistoryPage";
-import GroupsApps from '../pages/groups/GroupsApp';
+import ArchivePartographsPage from "../pages/ArchivePage/index";
+import PartographReadOnlyPage from "../pages/PartographReadOnlyPage/index";
+import GroupsApps from '../pages/groups/index';
 import ConfigurationApp from "../pages/Configuration/ConfigurationApp";
 import UpdateUser from "../pages/Configuration/components/Form/UserInfoUpdateForm";
 import PATH from './path';
 import AuthPage from "../pages/Auth/Index";
+import { AnimatePresence } from "framer-motion";
+import UsersInGroup from "../pages/groups/pages/UsersInGroup";
 
-const AppRoutes = () => {
+
+
+const InnerRoutes = () => {
+  const location = useLocation();
+
   return (
-    <Router>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         {/* Rutas sin LayoutGeneral */}
-        <Route path={PATH.WELCOME} element={<Welcome />} />
-        <Route path={PATH.LOGIN} element={<AuthPage />} />
-        <Route path={PATH.USER_EDIT} element={<UpdateUser />} />
+        <Route path={PATH.WELCOME} element={<PageWrapper><Welcome /></PageWrapper>} />
+        <Route path={PATH.LOGIN} element={<PageWrapper><AuthPage /></PageWrapper>} />
+        <Route path={PATH.USER_EDIT} element={<PageWrapper><UpdateUser /></PageWrapper>} />
+
         {/* Rutas con LayoutGeneral */}
         <Route
           path="/*"
           element={
             <ProtectedRoute>
               <LayoutGeneral>
-                <Routes>
-                  <Route
-                    path={PATH.HOME}
-                    element={
-                      <Home />
-                    }
-                  />
-                  <Route
-                    path={PATH.CREATE_PARTOGRAPH}
-                    element={
-                      <CreatePartographPage />
-                    }
-                  />
-                  <Route
-                    path={PATH.CREATE_GROUP}
-                    element={
-                      <GroupsApps />
-                    }
-                  />
-                  <Route
-                    path={PATH.CONFIG}
-                    element={
-                      <ConfigurationApp />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.PARTOGRAPH}
-                    element={
-                      <PartographPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.PARTOGRAPH_HISTORY}
-                    element={
-                      <PartographHistoryPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.PARTOGRAPH_EDIT}
-                    element={
-                      <EditPartographPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.CERVICAL_DILATION_EDIT}
-                    element={
-                      <CervicalDilationEditPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.MEDICAL_SURVEILLANCE_EDIT}
-                    element={
-                      <MedicalSurveillanceEditPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.CONTRACTION_FREQUENCY_EDIT}
-                    element={
-                      <ContractionFrequencyEditPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.FETAL_HEART_RATE_EDIT}
-                    element={
-                      <FetalHeartRateEditPage />
-                    }
-                  />
-
-                  <Route
-                    path={PATH.TEMPLATE.PRESENTATION_POSITION_VARIETY_EDIT}
-                    element={
-                      <PresentationPositionVarietyEditPage />
-                    }
-                  />
+                <Routes location={location} key={location.pathname}>
+                  <Route path={PATH.ARCHIVED} element={<PageWrapper><ArchivePartographsPage /></PageWrapper>} />
+                  <Route path={PATH.HOME} element={<PageWrapper><Home /></PageWrapper>} />
+                  <Route path={PATH.CREATE_PARTOGRAPH} element={<PageWrapper><CreatePartographPage /></PageWrapper>} />
+                  <Route path={PATH.GROUPS} element={<PageWrapper><GroupsApps /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.USERS_IN_GROUP} element={<PageWrapper><UsersInGroup /></PageWrapper>} />
+                  <Route path={PATH.CONFIG} element={<PageWrapper><ConfigurationApp /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.PARTOGRAPH} element={<PageWrapper><PartographPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.PARTOGRAPH_READ_ONLY} element={<PageWrapper><PartographReadOnlyPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.PARTOGRAPH_HISTORY} element={<PageWrapper><PartographHistoryPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.PARTOGRAPH_EDIT} element={<PageWrapper><EditPartographPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.CERVICAL_DILATION_EDIT} element={<PageWrapper><CervicalDilationEditPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.MEDICAL_SURVEILLANCE_EDIT} element={<PageWrapper><MedicalSurveillanceEditPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.CONTRACTION_FREQUENCY_EDIT} element={<PageWrapper><ContractionFrequencyEditPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.FETAL_HEART_RATE_EDIT} element={<PageWrapper><FetalHeartRateEditPage /></PageWrapper>} />
+                  <Route path={PATH.TEMPLATE.PRESENTATION_POSITION_VARIETY_EDIT} element={<PageWrapper><PresentationPositionVarietyEditPage /></PageWrapper>} />
                 </Routes>
               </LayoutGeneral>
             </ProtectedRoute>
           }
         />
       </Routes>
+    </AnimatePresence>
+  );
+
+}
+const AppRoutes = () => {
+  return (
+    <Router>
+      <InnerRoutes />
     </Router>
   );
 };

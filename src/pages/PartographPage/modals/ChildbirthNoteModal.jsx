@@ -1,13 +1,13 @@
-import React, {useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, Button, Form, Input, message } from "antd";
-import { createBirthNote, updateBirthNote  } from "../../../services/partograph-service/partograph-service";
+import { createBirthNote, updateBirthNote } from "../../../services/partograph-service/partograph-service";
 import { mutate } from "swr";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 const ChildbirthNoteModal = ({ visible, onClose, partographId, initialData }) => {
     const [form] = Form.useForm();
 
     const handleClose = () => {
-        form.resetFields(); 
+        form.resetFields();
         onClose();
     };
     useEffect(() => {
@@ -18,15 +18,17 @@ const ChildbirthNoteModal = ({ visible, onClose, partographId, initialData }) =>
         }
     }, [visible, initialData]);
 
-    
+
     const handleSubmit = async (values) => {
         try {
             const payload = {
                 partographId,
                 description: values.description,
+                date: values.date,
                 hour: values.hour,
                 sex: values.sex,
                 apgar: values.apgar,
+                peso: values.peso,
                 temperature: values.temperature,
                 caputto: values.caputto,
                 circular: values.circular,
@@ -65,7 +67,9 @@ const ChildbirthNoteModal = ({ visible, onClose, partographId, initialData }) =>
                 <Form.Item label="Descripción" name="description" rules={[{ required: true, message: "Campo requerido" }]}>
                     <Input.TextArea rows={2} />
                 </Form.Item>
-
+                <Form.Item label="Fecha" name="date" rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Input />
+                </Form.Item>
                 <Form.Item label="Hora" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
                     <Input />
                 </Form.Item>
@@ -77,7 +81,9 @@ const ChildbirthNoteModal = ({ visible, onClose, partographId, initialData }) =>
                 <Form.Item label="APGAR" name="apgar">
                     <Input />
                 </Form.Item>
-
+                <Form.Item label="Peso" name="peso">
+                    <Input />
+                </Form.Item>
                 <Form.Item label="Temperatura" name="temperature">
                     <Input />
                 </Form.Item>

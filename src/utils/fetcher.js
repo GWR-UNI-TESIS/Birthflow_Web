@@ -2,6 +2,8 @@
 import { useAuth } from "../contexts/auth-context";
 import { api } from "../services/api";
 
+let refreshPromise = null;
+
 export const useFetcher = () => {
   const { refreshAccessToken, logout } = useAuth();
 
@@ -25,12 +27,19 @@ export const useFetcher = () => {
       if (error.response?.status === 401) {
         try {
           console.warn("Token expirado, intentando refrescar...");
-          const newTokens = await refreshAccessToken();
-          if (!newTokens) throw new Error("Tokenes no válido");
+
+          // Si ya hay un refresh en proceso, esperar a que termine
+          if (!refreshPromise) {
+            refreshPromise = refreshAccessToken()
+              .finally(() => {
+                refreshPromise = null;
+              });
+          }
+
+          await refreshPromise;
 
           let newToken = localStorage.getItem("accessToken");
           const retryResponse = await api(getOptions(newToken));
-
           return retryResponse.data;
         } catch (refreshError) {
           console.error("Error al refrescar el token:", refreshError);

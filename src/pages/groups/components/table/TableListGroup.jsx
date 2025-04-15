@@ -1,4 +1,6 @@
-import { Table } from "antd";
+import { Space, Table } from "antd";
+import { useNavigate } from "react-router-dom";
+import PATH from "../../../../routes/path";
 
 const columns = [
   { title: "Id", dataIndex: "id", key: "id" },
@@ -6,6 +8,8 @@ const columns = [
 ];
 
 function GroupTable({ listData, onEdit }) {
+
+  const navigate = useNavigate();
   return (
     <div>
       <Table
@@ -17,7 +21,13 @@ function GroupTable({ listData, onEdit }) {
             title: "Acción",
             key: "action",
             render: (_, record) => (
-              <a onClick={() => onEdit(record)}>Editar</a> // Botón de edición
+              <Space size="middle">
+                <a onClick={() => onEdit(record)}>Editar</a>
+                <a onClick={() => {
+                  navigate(PATH.USERS_IN_GROUP(record.id), { state: { createdBy: record.createdBy } })
+                }
+                }>Usuarios</a>
+              </Space>
             ),
           },
         ]}

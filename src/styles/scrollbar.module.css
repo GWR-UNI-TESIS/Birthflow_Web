@@ -1,0 +1,25 @@
+/* Estilo para navegadores WebKit (Chrome, Edge, Safari) */
+.horizontal-scroll::-webkit-scrollbar {
+  height: 8px; /* Grosor del scroll horizontal */
+}
+
+.horizontal-scroll::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Color de fondo de la pista */
+  border-radius: 10px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  background: #bbb; /* Color del scroll */
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb:hover {
+  background: #888; /* Color al pasar el mouse */
+}
+
+/* Estilo para Firefox */
+.horizontal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #bbb #f0f0f0;
+}

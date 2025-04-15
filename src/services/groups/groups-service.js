@@ -1,6 +1,6 @@
 import { api } from "../api";
 import { getDeviceInfo } from "../../utils/device-id";
-import { GROUPS_ENDPOINTS} from "./groups-endpoints";
+import { GROUPS_ENDPOINTS } from "./groups-endpoints";
 
 // Constante para headers comunes
 const HEADERS = {
@@ -10,18 +10,18 @@ const HEADERS = {
 
 // Función para obtener el token de autenticación (ajústala según tu implementación)
 const getAuthToken = () => {
-    // Ejemplo: recuperar el token desde localStorage
-    return localStorage.getItem("accessToken") || "";
-  };
+  // Ejemplo: recuperar el token desde localStorage
+  return localStorage.getItem("accessToken") || "";
+};
 
 // Función que devuelve los headers comunes para cada solicitud, incluyendo el token si existe
 const getCommonHeaders = () => {
-    const token = getAuthToken();
-    return {
-      [HEADERS.DEVICE_INFO]: getDeviceInfo(),
-      ...(token && { [HEADERS.AUTHORIZATION]: `Bearer ${token}` }),
-    };
+  const token = getAuthToken();
+  return {
+    [HEADERS.DEVICE_INFO]: getDeviceInfo(),
+    ...(token && { [HEADERS.AUTHORIZATION]: `Bearer ${token}` }),
   };
+};
 
 // Función para manejar errores de la API
 const handleApiError = (error) => {
@@ -83,6 +83,48 @@ export const updateGroup = async (payload) => {
       GROUPS_ENDPOINTS.GROUPS.UPDATE_GROUPS,
       payload,
       { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const getUsersInGroup = async (groupId) => {
+  try {
+    const response = await api.get(
+      GROUPS_ENDPOINTS.GROUPS.GET_USERS_IN_GROUP, {
+      headers: getCommonHeaders(),
+      params: {
+        groupId,
+      },
+    }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const addUserToGroup = async (payload) => {
+  try {
+    const response = await api.post(
+      GROUPS_ENDPOINTS.GROUPS.CREATE_USERS_IN_GROUP,
+      payload,
+      { headers: getCommonHeaders() }
+    );
+    return processApiResponse(response);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+
+export const removeUserFromGroup = async (payload) => {
+  try {
+    const response = await api.delete(
+      GROUPS_ENDPOINTS.GROUPS.DELETE_USERS_IN_GROUP,
+      { headers: getCommonHeaders(), data: payload}
     );
     return processApiResponse(response);
   } catch (error) {

@@ -14,7 +14,10 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { Typography } from "antd";
-import { OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer } from "./CustomSymbols";
+import {
+    OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer,
+    OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer
+} from "../../../components/Charts/CustomSymbols";
 import { useCatalog } from "../../../contexts/catalog-context";
 const symbolMap = {
     OIDA: OdaSymbolRenderer,
@@ -53,7 +56,7 @@ const PartogramChart = ({ partograph }) => {
     if (partograph.cervicalDilationLog.length > 0) {
         startTime = new Date(partograph.cervicalDilationLog[0].Hour).getTime();
     }
-    
+
     let formattedAlertCurve;
     // Transformar `alertCurve`
     if (partograph.curves.AlertCurve && partograph.curves.AlertCurve.length > 0) {

@@ -1,17 +1,19 @@
 import React, { useDebugValue, useEffect, useState } from "react";
-import { Layout, Typography, Switch, Button, Divider, Card, Modal, Breadcrumb  } from "antd";
+import { Layout, Typography, Switch, Button, Divider, Card, Modal, Breadcrumb, message } from "antd";
 import { UserOutlined, LockOutlined, InfoCircleOutlined, EditOutlined } from "@ant-design/icons";
 import UserForm from "../Configuration/components/Form/UserInfoUpdateForm";
 import PasswordForm from "../Configuration/components/Form/UpdatePasswordForm";
 import { useAuth } from "../../contexts/auth-context";
-import BackButton  from '../../components/ReturnButton';
+import BackButton from '../../components/ReturnButton';
 import PATH from "../../routes/path";
 import { NavLink } from "react-router-dom";
+import { getNotificationByToken, updateDeviceSilenceStatus } from "../../services/notification-service/notification-service";
+
 function Settings() {
   const { user } = useAuth(); // Obtener usuario desde el contexto
   const [isModalVisible, setIsModalVisible] = useState(false); // Para el form de actualizar el usuario
   const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false); // Para el form de actualizar la password
-
+  const [isNotificationEnable, setIsNotificationEnable] = useState(false);
   const showModal = () => setIsModalVisible(true);
   const handleCancel = () => setIsModalVisible(false);
 
@@ -20,10 +22,39 @@ function Settings() {
 
 
   useEffect(() => {
-    if (user) {
-      
+    const fetchSilenceStatus = async () => {
+      const token = localStorage.getItem("device_token");
+      if (token) {
+        try {
+          const result = await getNotificationByToken(token);
+          // Invertimos el valor porque isSilenced = true significa que NO están habilitadas
+          setIsNotificationEnable(!result.isSilenced);
+        } catch (error) {
+          console.error("Error al obtener el estado de notificación:", error);
+        }
+      }
+    };
+
+    fetchSilenceStatus();
+  }, []);
+
+  const handleToggle = async (checked) => {
+    const token = localStorage.getItem("device_token");
+    try {
+      setIsNotificationEnable(checked);
+      await updateDeviceSilenceStatus(token, !checked);
+
+
+      message.success(
+        checked
+          ? "Notificaciones activadas"
+          : "Notificaciones silenciadas"
+      );
+    } catch (error) {
+      message.error("Error al actualizar el estado de notificación");
+      console.error(error);
     }
-  }, [user])
+  };
 
   return (
     <>
@@ -60,7 +91,12 @@ function Settings() {
           {/* Notificaciones */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Typography.Text>Habilitar Notificaciones</Typography.Text>
-            <Switch />
+            <Switch
+              checked={isNotificationEnable}
+              onChange={handleToggle}
+              checkedChildren="ON"
+              unCheckedChildren="OFF"
+            />
           </div>
 
           <Divider />

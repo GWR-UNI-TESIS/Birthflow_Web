@@ -2,12 +2,13 @@ import useSWR from "swr";
 import { useFetcher } from "../utils/fetcher";
 import { PARTOGRAPH_ENDPOINTS } from "../services/partograph-service/endpoints";
 
-const usePartographsPin = (userId) => {
+const useArchivePartographs = (userId) => {
     const { fetcher } = useFetcher();
+
     const shouldFetch = !!userId; // evita llamada si no hay userId
 
     const { data, error, isLoading } = useSWR(
-        shouldFetch ? PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPHS_PIN(userId) : null,
+        shouldFetch ? PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPHS_ARCHIVED(userId) : null,
         (url) => fetcher(url, 'GET')
     );
 
@@ -18,4 +19,4 @@ const usePartographsPin = (userId) => {
     };
 };
 
-export default usePartographsPin;
+export default useArchivePartographs;

@@ -14,8 +14,11 @@ import {
     ResponsiveContainer
 } from "recharts";
 import { Typography } from "antd";
-import { OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer } from "./CustomSymbols";
-import { useCatalog } from "../../../contexts/catalog-context";
+import {
+    OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer,
+    OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer
+} from "./CustomSymbols";
+import { useCatalog } from "../../contexts/catalog-context";
 const symbolMap = {
     OIDA: OdaSymbolRenderer,
     OIDP: OdpSymbolRenderer,

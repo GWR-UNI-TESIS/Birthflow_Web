@@ -4,17 +4,17 @@ import PATH from "../routes/path";
 import { Spin } from "antd";
 
 const ProtectedRoute = ({ children }) => {
-    const { accessToken, user, loading } = useAuth();
-  
-    if (loading) {
-      return <Spin fullscreen tip="Cargando"/>; // 🔒 Evita que entre mientras validás
-    }
-  
-    if (!accessToken || !user) {
-      return <Navigate to={PATH.LOGIN} replace />;
-    }
-  
-    return children;
-  };
-  
+  const { accessToken, user, loading, authChecked } = useAuth();
+
+  if (loading && !authChecked) {
+    return <Spin fullscreen tip="Verificando sesión..." />;
+  }
+
+  if (!accessToken || !user) {
+    return <Navigate to={PATH.LOGIN} replace />;
+  }
+
+  return children;
+};
+
 export default ProtectedRoute;
