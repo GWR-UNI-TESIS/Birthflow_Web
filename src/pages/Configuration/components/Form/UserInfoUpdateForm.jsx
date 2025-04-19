@@ -24,7 +24,7 @@ const UserForm = () => {
     const handleSubmit = async (values) => {
         try {
             setLoading(true); // Mostrar loading mientras se actualiza
-            await updateUser({ ...values, id: user.id }); // Asegúrate de enviar el `id` del usuario
+            await updateUser({ ...values, id: user.id }); 
             setLoading(false);
             alert("Datos actualizados correctamente");
         } catch (error) {
