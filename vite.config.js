@@ -17,6 +17,7 @@ export default ({ mode }) => {
     test: {
       globals: true,
       environment: 'jsdom',
+      setupFiles: ['./vitest.setup.js']
     }
     
   });
