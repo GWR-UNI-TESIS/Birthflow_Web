@@ -104,6 +104,7 @@ const SharePartographModal = ({ visible, onClose, partographId, catalogs }) => {
         onOk={handleAccept}
         okText="Aceptar"
         cancelText="Cancelar"
+        data-testid="modal-compartir"
       >
         <Space direction="vertical" style={{ width: "100%" }}>
           <Input
@@ -142,6 +143,7 @@ const SharePartographModal = ({ visible, onClose, partographId, catalogs }) => {
                     <Button
                       danger
                       icon={<DeleteOutlined />}
+                      aria-label={`Eliminar ${item.name}`}
                       size="small"
                       onClick={() => handleDelete(item)}
                     />,
