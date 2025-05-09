@@ -36,6 +36,8 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const setupNotifications = async () => {
+            if (!authChecked || !user || !accessToken) return;
+
             if (!user) return;
 
             try {
@@ -84,7 +86,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         setupNotifications();
-    }, [user]);
+    }, [authChecked, user, accessToken]);
 
     useEffect(() => {
         const init = async () => {

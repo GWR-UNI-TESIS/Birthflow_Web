@@ -195,7 +195,7 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
 
                 return (
                     <Dropdown menu={{ items, onClick }} trigger={["click"]}>
-                        <Button icon={<MoreOutlined />} aria-label="Opciones del partograma" />
+                        <Button icon={<MoreOutlined />} />
                     </Dropdown>
                 );
             },
@@ -280,10 +280,14 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                                         ) {
                                             return;
                                         }
-                                        if (record.accessType == 2) {
+                                        if (record.accessType == null) {
                                             navigate(PATH.PARTOGRAPH(record.partographId));
                                         } else {
-                                            navigate(PATH.PARTOGRAPH_READ_ONLY(record.partographId));
+                                            if (record.accessType == 2) {
+                                                navigate(PATH.PARTOGRAPH(record.partographId));
+                                            } else {
+                                                navigate(PATH.PARTOGRAPH_READ_ONLY(record.partographId));
+                                            }
                                         }
 
                                     },
