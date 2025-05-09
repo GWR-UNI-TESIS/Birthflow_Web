@@ -23,6 +23,7 @@ import PATH from './path';
 import AuthPage from "../pages/Auth/Index";
 import { AnimatePresence } from "framer-motion";
 import UsersInGroup from "../pages/groups/pages/UsersInGroup";
+import ForgetPassword from "../pages/Auth/ForgetPassword";
 
 
 
@@ -35,6 +36,7 @@ const InnerRoutes = () => {
         {/* Rutas sin LayoutGeneral */}
         <Route path={PATH.WELCOME} element={<PageWrapper><Welcome /></PageWrapper>} />
         <Route path={PATH.LOGIN} element={<PageWrapper><AuthPage /></PageWrapper>} />
+        <Route path={PATH.FORGET_PASSWORD} element={<PageWrapper><ForgetPassword /></PageWrapper>} />
         <Route path={PATH.USER_EDIT} element={<PageWrapper><UpdateUser /></PageWrapper>} />
 
         {/* Rutas con LayoutGeneral */}

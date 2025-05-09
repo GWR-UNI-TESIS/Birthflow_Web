@@ -2,6 +2,7 @@ const PATH = {
     // Rutas estáticas
     WELCOME: '/welcome',
     LOGIN: '/login',
+    FORGET_PASSWORD: '/forget-password',
     USER_EDIT: '/config/userEdit',
     HOME: '/',
     ARCHIVED: '/partographs/archived',
