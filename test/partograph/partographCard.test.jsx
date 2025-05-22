@@ -1,24 +1,24 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
-import '@testing-library/jest-dom'; 
+import '@testing-library/jest-dom';
 import PartogramCards from '../../src/pages/HomePage/components/PartogramCards';
 
 
 beforeAll(() => {
-    window.matchMedia = window.matchMedia || function () {
-      return {
-        matches: false,
-        media: '',
-        onchange: null,
-        addListener: () => {},
-        removeListener: () => {},
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        dispatchEvent: () => {},
-      };
+  window.matchMedia = window.matchMedia || function () {
+    return {
+      matches: false,
+      media: '',
+      onchange: null,
+      addListener: () => { },
+      removeListener: () => { },
+      addEventListener: () => { },
+      removeEventListener: () => { },
+      dispatchEvent: () => { },
     };
-  });
+  };
+});
 
 vi.mock('../../src/utils/datetime-format', () => ({
   formatTimeNumeric: vi.fn((date) => `formatted-${date}`),
