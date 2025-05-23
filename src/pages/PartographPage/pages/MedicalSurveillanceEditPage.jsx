@@ -21,14 +21,14 @@ const POSICION_MATERNA_OPTIONS = [
 ];
 
 const DOLOR_LOCALIZACION_OPTIONS = [
-    { value: "sacro", label: "Sacro" },
+    { value: "Sacro", label: "Sacro" },
     { value: "Suprapúbico", label: "Suprapúbico" },
 ];
 
 const DOLOR_INTENSIDAD_OPTIONS = [
-    { value: "debil", label: "Débil" },
-    { value: "medio", label: "Medio" },
-    { value: "fuerte", label: "Fuerte" },
+    { value: "Débil", label: "Débil" },
+    { value: "Medio", label: "Medio" },
+    { value: "Fuerte", label: "Fuerte" },
 ];
 
 const MedicalSurveillanceEditPage = () => {
@@ -48,9 +48,9 @@ const MedicalSurveillanceEditPage = () => {
                     posicionMaterna: response.maternalPosition,
                     tensionArterial: response.arterialPressure,
                     pulsoMaterno: response.maternalPulse,
-                    frecuenciaCardiacaFetal: response.fetalHeartRate,
+                    //frecuenciaCardiacaFetal: response.fetalHeartRate,
                     duracionContracciones: response.contractionsDuration,
-                    frecuenciaContracciones: response.frequencyContractions,
+                    //frecuenciaContracciones: response.frequencyContractions,
                     Dolor: response.pain ? response.pain.toString() : "",
                 });
                 setIsLoading(false);
@@ -71,9 +71,9 @@ const MedicalSurveillanceEditPage = () => {
                 maternalPosition: values.posicionMaterna,
                 arterialPressure: values.tensionArterial.toString(),
                 maternalPulse: values.pulsoMaterno.toString(),
-                fetalHeartRate: values.frecuenciaCardiacaFetal.toString(),
+                fetalHeartRate: 'N/A',
                 contractionsDuration: values.duracionContracciones.toString(),
-                frequencyContractions: values.frecuenciaContracciones.toString(),
+                frequencyContractions: 'N/A',
                 pain: values.Dolor ? values.Dolor.toString() : "",
                 time: dayjs(values.tiempo).format("YYYY-MM-DDTHH:mm:ss"),
             });
@@ -128,22 +128,22 @@ const MedicalSurveillanceEditPage = () => {
                             <Form.Item label="Pulso Materno" name="pulsoMaterno" rules={[{ required: true, message: "Campo requerido" }]}>
                                 <FormElement />
                             </Form.Item>
-
+                            {/*
                             <Form.Item label="Frecuencia Cardíaca Fetal" name="frecuenciaCardiacaFetal" 
                               rules={[{ required: true, message: "Campo requerido" }]}>
                                 <FormElement />
                             </Form.Item>
-
+                            */}
                             <Form.Item label="Duración Contracciones" name="duracionContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
                                 <FormElement />
                             </Form.Item>
-
+                            {/*
                             <Form.Item label="Frecuencia de Contracciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
                                 <Input placeholder="Frecuencia de Contracciones" type="number" />
                             </Form.Item>
-
-                            <Form.Item name="Dolor">
-                                <UnifiedDropdown locationOptions={DOLOR_LOCALIZACION_OPTIONS} intensityOptions={DOLOR_INTENSIDAD_OPTIONS} />
+                            */}
+                            <Form.Item name="Dolor" label="Dolor" rules={[{ required: true, message: "Campo requerido" }]} >
+                                <UnifiedDropdown locationOptions={DOLOR_LOCALIZACION_OPTIONS} intensityOptions={DOLOR_INTENSIDAD_OPTIONS}/>
                             </Form.Item>
 
                             <Form.Item>

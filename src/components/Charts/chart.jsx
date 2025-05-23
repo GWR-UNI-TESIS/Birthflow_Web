@@ -83,16 +83,7 @@ const PartogramChart = ({ partograph }) => {
         }));
     }
 
-    let formattedMedicalSurveillance = partograph.medicalSurveillanceTable.map((point) => {
-        const fetalHeartRate = parseFloat(point.fetalHeartRate.split("x")[0]); // Extraer el número
-        const frequencyContractions = parseFloat(point.frequencyContractions);
-
-        return {
-            timeRelative: (new Date(point.time).getTime() - startTime) / (60 * 60 * 1000),
-            fetalHeartRate: mapFetalHeartRate(fetalHeartRate), // Convertir el rango a 0-11
-            frequencyContractions: frequencyContractions
-        };
-    });
+    let formattedMedicalSurveillance = partograph.medicalSurveillanceTable = [];
 
     // Agregar datos de `fetalHeartRates` si existen
     if (partograph.fetalHeartRates && partograph.fetalHeartRates.length > 0) {
@@ -165,7 +156,7 @@ const PartogramChart = ({ partograph }) => {
                     type="monotone"
                     dataKey="cervicalDilation"
                     data={formattedAlertCurve}
-                    stroke="#8884d8"
+                    stroke="#FF5733"
                     strokeWidth={3}
                     name="Curva de Alerta"
                 />
@@ -175,7 +166,7 @@ const PartogramChart = ({ partograph }) => {
                     type="monotone"
                     dataKey="cervicalDilation"
                     data={formattedRealCurve}
-                    stroke="#FF5733"
+                    stroke="black"
                     strokeWidth={3}
                     name="Curva Real"
                 />

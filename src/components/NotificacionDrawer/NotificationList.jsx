@@ -1,6 +1,6 @@
 import { List, Skeleton, Spin } from "antd";
 import usePartographNotifications from "../../hooks/use-partograph-notifications";
-import { formatDateTime } from "../../utils/datetime-format";
+import { formatDateInNicaragua } from "../../utils/datetime-format";
 
 const NotificationList = ({ partographId }) => {
     const { data, error, loading } = usePartographNotifications(partographId);
@@ -20,7 +20,7 @@ const NotificationList = ({ partographId }) => {
                 <List.Item key={item.notificationId}>
                     <Skeleton avatar title={false} loading={item.loading} active>
                         <List.Item.Meta title={<a>{item.title}</a>} description={item.message} />
-                        <div>{formatDateTime(item.scheduledFor)}</div>
+                        <div>{formatDateInNicaragua(item.scheduledFor)}</div>
                     </Skeleton>
                 </List.Item>
             )}

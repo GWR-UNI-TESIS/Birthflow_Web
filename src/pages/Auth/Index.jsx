@@ -13,7 +13,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import PATH from "../../routes/path";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from '../../assets/imagen-login.jpg';
+import logo from '../../assets/imagen-login-2.png';
 import LoginComponent from "./components/LoginComponent";
 import RegisterComponent from "./components/RegisterComponent";
 

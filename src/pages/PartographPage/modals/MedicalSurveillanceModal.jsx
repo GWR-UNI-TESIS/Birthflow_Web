@@ -9,8 +9,8 @@ import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpo
 import dayjs from "dayjs";
 
 const POSICION_MATERNA_OPTIONS = [
-    { value: "Lat.Derecho", label: "Lat. Derecho" },
-    { value: "Lat.Izquierdo", label: "Lat. Izquierdo" },
+    { value: "Lat. Derecho", label: "Lat. Derecho" },
+    { value: "Lat. Izquierdo", label: "Lat. Izquierdo" },
     { value: "Dorsal", label: "Dorsal" },
     { value: "Semisentada", label: "Semisentada" },
     { value: "Sentada", label: "Sentada" },
@@ -18,14 +18,14 @@ const POSICION_MATERNA_OPTIONS = [
 ];
 
 const DOLOR_LOCALIZACION_OPTIONS = [
-    { value: "sacro", label: "Sacro" },
-    { value: "Suprapúbico", label: "Suprapúbico" },
+    { value: "Sacro", label: "Sacro" },
+    { value: "Suprapubico", label: "Suprapubico" },
 ];
 
 const DOLOR_INTENSIDAD_OPTIONS = [
-    { value: "debil", label: "Débil" },
-    { value: "medio", label: "Medio" },
-    { value: "fuerte", label: "Fuerte" },
+    { value: "Debil", label: "Debil" },
+    { value: "Medio", label: "Medio" },
+    { value: "Fuerte", label: "Fuerte" },
 
 
 ]; const MedicalSurveillanceModal = ({ visible, onClose, partographId }) => {
@@ -47,9 +47,9 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                 maternalPosition: values.posicionMaterna,
                 arterialPressure: values.tensionArterial.toString(),
                 maternalPulse: values.pulsoMaterno.toString(),
-                fetalHeartRate: values.frecuenciaCardiacaFetal.toString(),
+                fetalHeartRate: "N/A",
                 contractionsDuration: values.duracionContracciones.toString(),
-                frequencyContractions: values.frecuenciaContracciones.toString(),
+                frequencyContractions: "N/A",
                 pain: values.Dolor ? values.Dolor.toString() : "",
                 letter: 'A', // Se envía vacío si no hay valor
                 time: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
@@ -105,6 +105,7 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                     <FormElement />
                 </Form.Item>
 
+                {/*
                 <Form.Item
                     label="Frecuencia Cardíaca Fetal"
                     name="frecuenciaCardiacaFetal"
@@ -114,7 +115,8 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                 >
                     <FormElement />
                 </Form.Item>
-
+                */}
+              
                 <Form.Item
                     label="Duración Contracciones"
                     name="duracionContracciones"
@@ -124,12 +126,13 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                 >
                     <FormElement />
                 </Form.Item>
-
+                {/*
                 <Form.Item label="Frecuencia de Contracciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
                     <Input placeholder="Frecuencia de Contracciones" type="number" />
                 </Form.Item>
+                */}
 
-                <Form.Item name="Dolor" valuePropName="value" getValueFromEvent={(val) => val}>
+                <Form.Item label="Dolor" name="Dolor" rules={[{ required: true, message: "Campo requerido" }]} valuePropName="value" getValueFromEvent={(val) => val}>
                     <UnifiedDropdown locationOptions={DOLOR_LOCALIZACION_OPTIONS} intensityOptions={DOLOR_INTENSIDAD_OPTIONS} />
                 </Form.Item>
                 <Form.Item>

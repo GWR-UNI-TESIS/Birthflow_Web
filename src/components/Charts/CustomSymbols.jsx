@@ -19,7 +19,7 @@ export const OdaSymbolRenderer = ({ cx, cy }) => {
   const yTop = centerY - radius;
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -54,7 +54,7 @@ export const OdpSymbolRenderer = ({ cx, cy }) => {
   const yBottom = centerY + radius;
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -90,7 +90,7 @@ export const OdtSymbolRenderer = ({ cx, cy }) => {
   const yRight = centerY;
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -125,7 +125,7 @@ export const OiaSymbolRenderer = ({ cx, cy }) => {
   const yTop = centerY - radius;
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -160,7 +160,7 @@ export const OipSymbolRenderer = ({ cx, cy }) => {
   const yBottom = centerY + radius;
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -197,7 +197,7 @@ export const OitSymbolRenderer = ({ cx, cy }) => {
   const yDiagLeft = centerY + radius * Math.sin((45 * Math.PI) / 180);
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -232,7 +232,7 @@ export const OsSymbolRenderer = ({ cx, cy }) => {
   const yRight = centerY + radius * Math.sin((45 * Math.PI) / 180);
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
@@ -267,7 +267,7 @@ export const OpSymbolRenderer = ({ cx, cy }) => {
   const yLeft = centerY + radius * Math.sin((225 * Math.PI) / 180);
 
   return (
-    <svg x={cx - 10} y={cy - 10} width="20" height="20" viewBox="0 0 24 24">
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
       {/* Círculo principal */}
       <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
 
