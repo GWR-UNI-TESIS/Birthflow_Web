@@ -84,20 +84,11 @@ const PartogramChart = ({ partograph }) => {
         }));
     }
 
-    let formattedMedicalSurveillance = partograph.medicalSurveillanceTableLog.map((point) => {
-        const fetalHeartRate = parseFloat(point.FetalHeartRate.split("x")[0]); // Extraer el número
-        const frequencyContractions = parseFloat(point.frequencyContractions);
-
-        return {
-            timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000),
-            fetalHeartRate: mapFetalHeartRate(fetalHeartRate), // Convertir el rango a 0-11
-            frequencyContractions: frequencyContractions
-        };
-    });
+    let formattedMedicalSurveillance = [];
 
     // Agregar datos de `fetalHeartRates` si existen
-    if (partograph.fetalHeartRatesLog && partograph.fetalHeartRatesLog.length > 0) {
-        const formattedFetalHeartRates = partograph.fetalHeartRatesLog.map((point) => ({
+    if (partograph.fetalHeartRateLog && partograph.fetalHeartRateLog.length > 0) {
+        const formattedFetalHeartRates = partograph.fetalHeartRateLog.map((point) => ({
             timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000),
             fetalHeartRate: mapFetalHeartRate(parseFloat(point.Value))
         }));
@@ -195,7 +186,6 @@ const PartogramChart = ({ partograph }) => {
 
                 <Scatter data={formattedMedicalSurveillance} dataKey="fetalHeartRate" fill="blue" shape="square" name="Frecuencia Cardíaca Fetal" />
 
-                {/* 🔥 Puntos de Frequency Contractions (Triángulos) */}
                 <Scatter data={formattedMedicalSurveillance} dataKey="frequencyContractions" fill="orange" shape="triangle" name="Frecuencia de Contracciones" />
                 <Scatter
                     data={formattedPresentationVarieties}

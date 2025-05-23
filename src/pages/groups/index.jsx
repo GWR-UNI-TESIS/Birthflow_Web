@@ -27,7 +27,7 @@ function GroupsApp() {
           <BackButton to={PATH.HOME} />
           <Breadcrumb
             items={[
-              { title: <NavLink to={PATH.HOME}>Home</NavLink> },
+              { title: <NavLink to={PATH.HOME}>Inicio</NavLink> },
               { title: "Grupos de trabajo" },
             ]}
           />

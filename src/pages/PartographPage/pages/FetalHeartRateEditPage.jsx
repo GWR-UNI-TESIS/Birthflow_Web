@@ -65,7 +65,7 @@ const FetalHeartRateEditPage = () => {
                 <BackButton to={PATH.PARTOGRAPH(partographId)} />
                 <Breadcrumb
                     items={[
-                        { title: <NavLink to="/">Home</NavLink> },
+                        { title: <NavLink to="/">Inicio</NavLink> },
                         { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Editar Frecuencia Cardíaca Fetal" },
                     ]}

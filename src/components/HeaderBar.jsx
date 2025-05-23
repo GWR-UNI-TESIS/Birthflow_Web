@@ -67,7 +67,7 @@ const HeaderBar = ({ onNotificationDrawerToggle }) => {
 
     return (
         <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "#001529", padding: "0 16px" }}>
-            <Title level={3} style={{ color: "white", margin: 0 }}>Birthflow</Title>
+            <Title level={3} style={{ color: "white", margin: 0 }}>Partogramas</Title>
             <Space size="large">
                 <Button type="text" onClick={onNotificationDrawerToggle} icon={<BellOutlined />} style={{ color: "white" }} />
                 <Dropdown menu={{ items }} placement="bottomRight">

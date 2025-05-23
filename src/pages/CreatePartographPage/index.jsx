@@ -72,7 +72,7 @@ const CreatePartographPage = () => {
         partographId: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Este valor se puede generar o asignar según convenga
         name: values.Name,
         recordName: values.RecordName,
-        date: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
+        date: dayjs(values.date).format("YYYY-MM-DDTHH:mm:ss"),
         observation: values.observation || "", // Si agregas un campo observation en el formulario
         workTime: effectiveColumn,
       };

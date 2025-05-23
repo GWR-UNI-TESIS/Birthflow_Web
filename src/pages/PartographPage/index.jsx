@@ -90,9 +90,9 @@ const PartographPage = () => {
     { title: "Posición Materna", dataIndex: "maternalPosition", key: "maternalPosition" },
     { title: "Presión Arterial", dataIndex: "arterialPressure", key: "arterialPressure" },
     { title: "Pulso Materno", dataIndex: "maternalPulse", key: "maternalPulse" },
-    { title: "F.C. Fetal", dataIndex: "fetalHeartRate", key: "fetalHeartRate" },
+    //{ title: "F.C. Fetal", dataIndex: "fetalHeartRate", key: "fetalHeartRate" },
     { title: "Duración de Contracciones", dataIndex: "contractionsDuration", key: "contractionsDuration" },
-    { title: "Frecuencia de Contracciones", dataIndex: "frequencyContractions", key: "frequencyContractions" },
+    //{ title: "Frecuencia de Contracciones", dataIndex: "frequencyContractions", key: "frequencyContractions" },
     { title: "Dolor", dataIndex: "pain", key: "pain" },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
     {
@@ -160,7 +160,7 @@ const PartographPage = () => {
       <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
           <BackButton to={PATH.HOME} />
-          <Breadcrumb items={[{ title: <NavLink to="/">Home</NavLink> }, { title: "Partograma" }]} />
+          <Breadcrumb items={[{ title: <NavLink to="/">Inicio</NavLink> }, { title: "Partograma" }]} />
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
           <Button onClick={() => navigate( PATH.PARTOGRAPH_HISTORY(partographId))}>Historial</Button>

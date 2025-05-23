@@ -70,7 +70,7 @@ function UsersInGroup() {
           <BackButton to={PATH.HOME} />
           <Breadcrumb
             items={[
-              { title: <NavLink to={PATH.HOME}>Home</NavLink> },
+              { title: <NavLink to={PATH.HOME}>Inicio</NavLink> },
 
               { title: <NavLink to={PATH.GROUPS}>Grupos</NavLink> },
               { title: "Usuarios en el grupo" },

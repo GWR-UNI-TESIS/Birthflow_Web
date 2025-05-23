@@ -4,7 +4,7 @@ import useNotifications from "../hooks/use-notifications";
 import React, { useState } from "react";
 import { Layout, Drawer, List, Skeleton } from "antd";
 import HeaderBar from "./HeaderBar";
-import { formatDateTime } from "../utils/datetime-format";
+import { formatDateInNicaragua } from "../utils/datetime-format";
 
 const { Content } = Layout;
 
@@ -34,7 +34,7 @@ const LayoutGeneral = ({ children }) => {
             <List.Item key={item.notificationId}>
               <Skeleton avatar title={false} loading={item.loading} active>
                 <List.Item.Meta title={<a>{item.title}</a>} description={item.message} />
-                <div>{formatDateTime(item.scheduledFor)}</div>
+                <div>{formatDateInNicaragua(item.scheduledFor)}</div>
               </Skeleton>
             </List.Item>
           )}
