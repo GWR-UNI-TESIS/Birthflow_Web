@@ -11,17 +11,13 @@ import {
   Breadcrumb,
   Flex,
   Typography,
-  List,
-  Skeleton,
-  Drawer,
-  Modal
 } from "antd";
+
 import { useParams, NavLink, useNavigate } from "react-router-dom";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { useCatalog } from "../../contexts/catalog-context";
 import BackButton from "../../components/ReturnButton";
 import usePartograh from "../../hooks/use-partograph";
-import usePartographNotifications from "../../hooks/use-partograph-notifications";
 import PartogramChart from "../../components/Charts/chart";
 import CervicalDilationModal from "./modals/CervicalDilationModal";
 import MedicalSurveillanceModal from './modals/MedicalSurveillanceModal'
@@ -30,9 +26,10 @@ import ContractionFrequencyModal from "./modals/ContractionFrequencyModal";
 import PresentationPositionVarietyModal from "./modals/PresentationPositionVarietyModal";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
 import PdfPreviewLoader from "../../components/PDF/PdfPreviewLoader";
-import { formatDateTime } from "../../utils/datetime-format";
+
 import PATH from "../../routes/path";
 import NotificationDrawer from "../../components/NotificacionDrawer/NotificationDrawer";
+
 const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
@@ -47,8 +44,6 @@ const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
     )}
   </div>
 );
-
-
 
 const PartographPage = () => {
   const [isCervicalDilationModalVisible, setIsCervicalDilationModalVisible] = useState(false);

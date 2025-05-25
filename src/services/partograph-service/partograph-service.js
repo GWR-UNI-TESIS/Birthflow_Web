@@ -120,6 +120,7 @@ export const getCervicalDilation = async (id) => {
   }
 };
 
+//Metodo que obtiene la dilataciones cervicales
 export const createCervicalDilation = async (payload) => {
   try {
     const response = await PARTOGRAPH_API.post(

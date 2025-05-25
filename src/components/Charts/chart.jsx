@@ -73,7 +73,6 @@ const PartogramChart = ({ partograph }) => {
         realTime: new Date(point.hour)
     }));
 
-
     let formattedNewAlertCurve = [];
     if (partograph.curves.newAlertCurve && partograph.curves.newAlertCurve.length > 0) {
         formattedNewAlertCurve = partograph.curves.newAlertCurve.map((point) => ({
@@ -83,7 +82,7 @@ const PartogramChart = ({ partograph }) => {
         }));
     }
 
-    let formattedMedicalSurveillance = partograph.medicalSurveillanceTable = [];
+    let formattedMedicalSurveillance = [];
 
     // Agregar datos de `fetalHeartRates` si existen
     if (partograph.fetalHeartRates && partograph.fetalHeartRates.length > 0) {
@@ -123,7 +122,6 @@ const PartogramChart = ({ partograph }) => {
     };
 
     return (
-
         <ResponsiveContainer width="100%" height={700}>
             <ComposedChart>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -150,7 +148,8 @@ const PartogramChart = ({ partograph }) => {
                 <Legend />
 
 
-                <ReferenceLine y={4.5} label="Linea de creacion de curva de alerta" position="insideTop" stroke="black" strokeDasharray="5 5" />
+                <ReferenceLine y={4.5} label="Linea de creacion de curva de alerta" position="insideTop" 
+                stroke="black" strokeDasharray="5 5" />
                 {/* Línea de la Curva de Alerta */}
                 <Line
                     type="monotone"

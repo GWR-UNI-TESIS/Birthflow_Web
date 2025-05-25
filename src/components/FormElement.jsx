@@ -36,6 +36,7 @@ const FormElement = ({ value = "", onChange, label, width }) => {
                     onChange={(e) => setTextValue(e.target.value)}
                     placeholder="Ingrese valor"
                     style={{ flex: 1 }}
+                    name="valor"
                 />
                 <span>X</span>
                 <Select

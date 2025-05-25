@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
                 const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
 
                 const currentToken = await getToken(messaging, {
-                    vapidKey: "BBu8qPdD8eeWSzl8yJaGXr5xBb8FJjAuscbxgQKOpDyz0hmuYPR_aBPBZaKWJH0r-6Fqlp5ENJGjj_OueQRnLFM",
+                    vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
                     serviceWorkerRegistration: registration,
                 });
 
@@ -75,9 +75,6 @@ export const AuthProvider = ({ children }) => {
                             duration: 5,
                             showProgress: true,
                         });
-
-                        // Opcional: recargar datos relacionados
-                        // mutateNotifications();
                     });
                 }
             } catch (err) {
