@@ -26,9 +26,9 @@ const DOLOR_INTENSIDAD_OPTIONS = [
     { value: "Debil", label: "Debil" },
     { value: "Medio", label: "Medio" },
     { value: "Fuerte", label: "Fuerte" },
+]; 
 
-
-]; const MedicalSurveillanceModal = ({ visible, onClose, partographId }) => {
+const MedicalSurveillanceModal = ({ visible, onClose, partographId }) => {
     const [form] = Form.useForm();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -50,7 +50,7 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                 fetalHeartRate: "N/A",
                 contractionsDuration: values.duracionContracciones.toString(),
                 frequencyContractions: "N/A",
-                pain: values.Dolor ? values.Dolor.toString() : "",
+                pain: values.dolor ? values.dolor.toString() : "",
                 letter: 'A', // Se envía vacío si no hay valor
                 time: dayjs(values.hour).format("YYYY-MM-DDTHH:mm:ss"),
             };
@@ -132,7 +132,7 @@ const DOLOR_INTENSIDAD_OPTIONS = [
                 </Form.Item>
                 */}
 
-                <Form.Item label="Dolor" name="Dolor" rules={[{ required: true, message: "Campo requerido" }]} valuePropName="value" getValueFromEvent={(val) => val}>
+                <Form.Item label="Dolor" name="dolor" rules={[{ required: true, message: "Campo requerido" }]} valuePropName="value" getValueFromEvent={(val) => val}>
                     <UnifiedDropdown locationOptions={DOLOR_LOCALIZACION_OPTIONS} intensityOptions={DOLOR_INTENSIDAD_OPTIONS} />
                 </Form.Item>
                 <Form.Item>

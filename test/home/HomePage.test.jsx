@@ -48,7 +48,7 @@ vi.mock('../../src/contexts/catalog-context', () => {
     }
 })
 
-// 🧪 Mocks visuales para evitar que falle por hijos
+// Mocks visuales para evitar que falle por hijos
 vi.mock('../../src/pages/HomePage/components/PinPartograms', () => ({
     default: () => <div data-testid="mock-pin-partograms">Mock PinPartograms</div>
 }))

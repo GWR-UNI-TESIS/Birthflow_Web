@@ -29,16 +29,16 @@ const ArterialPressure = ({ value = "", onChange, label, width }) => {
         <Input
           value={systolic}
           onChange={(e) => setSystolic(e.target.value)}
-          placeholder="Sistólica"
           type="number"
           style={{ flex: 1 }}
+          name="sistolica"
         />
         <span>/</span>
         <Input
           value={diastolic}
           onChange={(e) => setDiastolic(e.target.value)}
-          placeholder="Diastólica"
           type="number"
+          name="diastolica"
           style={{ flex: 1 }}
         />
       </div>

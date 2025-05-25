@@ -14,7 +14,7 @@ const CervicalDilationModal = ({ visible, onClose, partographId }) => {
         onClose();
     };
 
-
+    //Metodo para guardar la informacion
     const handleSubmit = async (values) => {
         try {
             setIsSubmitting(true);
@@ -37,7 +37,6 @@ const CervicalDilationModal = ({ visible, onClose, partographId }) => {
             setIsSubmitting(false);
         }
     };
-
 
     return (
         <Modal
