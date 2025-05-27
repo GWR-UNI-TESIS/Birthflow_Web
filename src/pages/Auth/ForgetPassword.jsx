@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 const { Step } = Steps;
 const { Title } = Typography;
 
+//Pantalla para la funcionalidad de restablecer contraseña
 const ForgetPassword = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,7 @@ const ForgetPassword = () => {
 
   const [form] = Form.useForm();
 
+  //Metodo para seguir con el formulario paso 1 al pas 3
   const next = async () => {
     try {
       setLoading(true);
@@ -54,9 +56,9 @@ const ForgetPassword = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
+  //Pantalla principal
   return (
     <>
-
       <Layout.Content style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ background: "#fff", padding: 24, borderRadius: "8px", width: "100%", maxWidth: 600, minHeight:400 }}>
 
