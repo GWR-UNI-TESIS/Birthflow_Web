@@ -194,7 +194,7 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                 ];
 
                 return (
-                    <Dropdown menu={{ items, onClick }} trigger={["click"]}>
+                    <Dropdown menu={{ items, onClick }} trigger={["click"]} placement="bottomRight" >
                         <Button icon={<MoreOutlined />} />
                     </Dropdown>
                 );
