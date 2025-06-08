@@ -5,7 +5,7 @@ import { Flex, Tabs, Input, Select, Radio, Table, Spin, Layout, message, Modal, 
 import { TableOutlined, AppstoreOutlined, ShareAltOutlined, StarFilled, StarOutlined, InboxOutlined, MoreOutlined, BellFilled, BellOutlined, PushpinOutlined, DeleteOutlined } from "@ant-design/icons";
 import PartogramCards from "./PartogramCards";
 import usePartographs from "../../../hooks/use-partographs";
-import { updatePartographState } from "../../../services/partograph-service/partograph-service";
+import { updatePartographState, deletePartograph } from "../../../services/partograph-service/partograph-service";
 import { PARTOGRAPH_ENDPOINTS } from "../../../services/partograph-service/endpoints";
 import { useAuth } from "../../../contexts/auth-context";
 import SharePartographModal from "./SharePartographModal";
@@ -119,17 +119,24 @@ const PartogramTabs = ({ viewMode, setViewMode, catalogs }) => {
                                 cancelText: "Cancelar",
                                 okButtonProps: { danger: true },
                                 onOk: async () => {
-                                    message.success(`Eliminado ${record.partographId}`);
-                                    mutate(
-                                        PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_ALL,
-                                        (data) => ({
-                                            ...data,
-                                            response: data.response.filter(
-                                                (p) => p.partographId !== record.partographId
-                                            ),
-                                        }),
-                                        false
-                                    );
+                                    try {
+                                        deletePartograph(record.partographId);
+                                        message.success(`Eliminado ${record.recordName}`);
+
+                                        mutate(
+                                            PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_ALL,
+                                            (data) => ({
+                                                ...data,
+                                                response: data.response.filter(
+                                                    (p) => p.partographId !== record.partographId
+                                                ),
+                                            }),
+                                            false
+                                        );
+                                    } catch (ex) {
+                                        message.error(`Ha ocurrido un error al eliminar el partograma ${record.recordName}`);
+                                    }
+
                                 },
                             });
                             return;

@@ -40,7 +40,6 @@ describe('ForgetPassword - Paso 1', () => {
     })
 })
 
-
 describe('ForgetPassword - Paso 2', () => {
     it('valida el código OTP y avanza al paso 3', async () => {
         const user = userEvent.setup()

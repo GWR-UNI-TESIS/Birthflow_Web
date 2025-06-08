@@ -96,7 +96,7 @@ export const updatePartograph = async (payload) => {
 
 export const deletePartograph = async (partographId) => {
   try {
-    const response = await PARTOGRAPH_API.patch(
+    const response = await PARTOGRAPH_API.delete(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.DELETE_PARTOGRAPH(partographId),
       { headers: getCommonHeaders() }
     );
