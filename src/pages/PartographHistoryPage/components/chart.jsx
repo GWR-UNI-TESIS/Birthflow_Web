@@ -154,7 +154,7 @@ const PartogramChart = ({ partograph }) => {
                 <ReferenceLine y={4.5} label="Linea de creacion de curva de alerta" position="insideTop" stroke="black" strokeDasharray="5 5" />
                 {/* Línea de la Curva de Alerta */}
                 <Line
-                    type="monotone"
+                    type="linear"
                     dataKey="cervicalDilation"
                     data={formattedAlertCurve}
                     stroke="#8884d8"
@@ -164,7 +164,7 @@ const PartogramChart = ({ partograph }) => {
 
                 {/* Línea de la Curva Real */}
                 <Line
-                    type="monotone"
+                    type="linear"
                     dataKey="cervicalDilation"
                     data={formattedRealCurve}
                     stroke="#FF5733"
@@ -175,7 +175,7 @@ const PartogramChart = ({ partograph }) => {
                 {/* Línea de la Nueva Curva de Alerta (si existe) */}
                 {formattedNewAlertCurve.length > 0 && (
                     <Line
-                        type="monotone"
+                        type="linear"
                         dataKey="cervicalDilation"
                         data={formattedNewAlertCurve}
                         stroke="#4CAF50"
