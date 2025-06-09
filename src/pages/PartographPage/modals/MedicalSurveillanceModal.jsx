@@ -60,7 +60,7 @@ const MedicalSurveillanceModal = ({ visible, onClose, partographId }) => {
             mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId));
 
             message.success("Elemento de la tabla de vigilancia medica registrada exitosamente.");
-            setIsSubmitting(true);
+            setIsSubmitting(false);
             handleClose();// Cerrar modal después de guardar
         } catch (error) {
             setIsSubmitting(false);
