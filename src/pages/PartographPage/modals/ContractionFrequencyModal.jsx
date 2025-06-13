@@ -32,11 +32,11 @@ const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
             handleClose();// Cerrar modal después de guardar
         } catch (error) {
             setIsSubmitting(false);
-            message.error("Error al registrar la frecuencia.");
+            message.error("Error al registrar la frecuenciam de contracciones.");
         }
     };
     return (
-        <Modal title="Frecuencia Cardiaca Fetal" open={visible} onCancel={handleClose} footer={null}>
+        <Modal title="Agregar Frecuencia de Contracciones" open={visible} onCancel={handleClose} footer={null}>
             <div style={{ padding: "10px" }}>
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
                     <Form.Item label="Frec. Contraciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}>

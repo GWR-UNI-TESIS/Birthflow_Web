@@ -19,6 +19,7 @@ import { getPartographHistory } from "../../services/partograph-history/partogra
 import PartogramChart from "./components/chart";
 import ChildbirthNoteView from "./components/ChildbirthNoteView";
 import PATH from "../../routes/path";
+import { formatDateInNicaragua } from "../../utils/datetime-format";
 
 const TableSection = ({ title, columns, data }) => (
     <div style={{ paddingTop: 16 }}>
@@ -93,7 +94,7 @@ const PartographHistoryPage = () => {
     if (error) return <Alert message="Error al cargar los datos" type="error" />;
 
     const historyColumns = [
-        { title: "Fecha de Cambio", dataIndex: "changedAt", key: "changedAt", render: text => new Date(text).toLocaleString() },
+        { title: "Fecha de Cambio", dataIndex: "changedAt", key: "changedAt", render: text => formatDateInNicaragua(text)},
         { title: "Modificado Por", dataIndex: "changedByName", key: "changedByName" },
         { title: "Acción", key: "action", render: (_, record) => <Button onClick={() => applyVersion(record)}>Ver</Button> }
     ];
