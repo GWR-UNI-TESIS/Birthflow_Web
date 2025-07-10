@@ -16,7 +16,7 @@ import {
 import { Typography } from "antd";
 import {
     OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer, OipSymbolRenderer,
-    OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer
+    OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer, InSymbolRenderer
 } from "../../../components/Charts/CustomSymbols";
 import { useCatalog } from "../../../contexts/catalog-context";
 const symbolMap = {
@@ -27,7 +27,8 @@ const symbolMap = {
     OIIP: OipSymbolRenderer,
     OIIT: OitSymbolRenderer,
     OS: OsSymbolRenderer,
-    OP: OpSymbolRenderer
+    OP: OpSymbolRenderer,
+    IND: InSymbolRenderer
 };
 
 const mapFetalHeartRate = (Value) => {
@@ -104,19 +105,24 @@ const PartogramChart = ({ partograph }) => {
         formattedMedicalSurveillance = [...formattedMedicalSurveillance, ...formattedContractionFrequencies];
     }
 
-    // Transformar `presentationPositionVarieties`
+
+        // Transformar `presentationPositionVarieties`
     const formattedPresentationVarieties = partograph.presentationPositionVarietyLog.map((point) => {
         // Buscar `hodgePlane` en el catálogo
         const hodgePlaneCatalogItem = catalogs?.hodgePlanesCatalog?.find((item) => item.id === point.HodgePlane);
         const positionCatalogItem = catalogs?.positionCatalog?.find((item) => item.id === point.Position);
+
+        // Si chartPosition es 0, no retornar este elemento
+        if (!hodgePlaneCatalogItem || hodgePlaneCatalogItem.chartPosition === 0) return null;
 
         return {
             timeRelative: (new Date(point.Time).getTime() - startTime) / (60 * 60 * 1000),
             hodgePlane: hodgePlaneCatalogItem ? hodgePlaneCatalogItem.chartPosition : point.hodgePlane, // Valor en el eje Y
             symbol: positionCatalogItem ? positionCatalogItem.code : "ODA"
         };
-    });
+    }).filter(Boolean); // Elimina los `null` del resultado final
 
+    
     // Formateador del eje X: Muestra la hora real
     const formatXAxis = (tick) => {
         const date = new Date(startTime + tick * 60 * 60 * 1000);

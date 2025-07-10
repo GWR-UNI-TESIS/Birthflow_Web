@@ -283,3 +283,15 @@ export const OpSymbolRenderer = ({ cx, cy }) => {
   );
 };
 
+
+// 🔹 InSymbolRenderer
+export const InSymbolRenderer = ({ cx, cy }) => {
+
+  return (
+    <svg x={cx - 10} y={cy - 10} width="32" height="32" viewBox="0 0 24 24">
+      {/* Círculo principal */}
+      <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="transparent" />
+    </svg>
+  );
+};
+
