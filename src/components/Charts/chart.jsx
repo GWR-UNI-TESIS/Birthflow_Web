@@ -16,7 +16,7 @@ import {
 import { Typography } from "antd";
 import {
     OdaSymbolRenderer, OdpSymbolRenderer, OdtSymbolRenderer, OiaSymbolRenderer,
-    OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer
+    OipSymbolRenderer, OitSymbolRenderer, OsSymbolRenderer, OpSymbolRenderer, InSymbolRenderer
 } from "./CustomSymbols";
 import { useCatalog } from "../../contexts/catalog-context";
 const symbolMap = {
@@ -27,7 +27,8 @@ const symbolMap = {
     OIIP: OipSymbolRenderer,
     OIIT: OitSymbolRenderer,
     OS: OsSymbolRenderer,
-    OP: OpSymbolRenderer
+    OP: OpSymbolRenderer,
+    IND: InSymbolRenderer
 };
 
 const mapFetalHeartRate = (value) => {
@@ -108,12 +109,15 @@ const PartogramChart = ({ partograph }) => {
         const hodgePlaneCatalogItem = catalogs?.hodgePlanesCatalog?.find((item) => item.id === point.hodgePlane);
         const positionCatalogItem = catalogs?.positionCatalog?.find((item) => item.id === point.position);
 
+        // Si chartPosition es 0, no retornar este elemento
+        if (!hodgePlaneCatalogItem || hodgePlaneCatalogItem.chartPosition === 0) return null;
+
         return {
             timeRelative: (new Date(point.time).getTime() - startTime) / (60 * 60 * 1000),
-            hodgePlane: hodgePlaneCatalogItem ? hodgePlaneCatalogItem.chartPosition : point.hodgePlane, // Valor en el eje Y
+            hodgePlane: hodgePlaneCatalogItem.chartPosition,
             symbol: positionCatalogItem ? positionCatalogItem.code : "ODA"
         };
-    });
+    }).filter(Boolean); // Elimina los `null` del resultado final
 
     // Formateador del eje X: Muestra la hora real
     const formatXAxis = (tick) => {
@@ -148,8 +152,8 @@ const PartogramChart = ({ partograph }) => {
                 <Legend />
 
 
-                <ReferenceLine y={4.5} label="Linea de creacion de curva de alerta" position="insideTop" 
-                stroke="black" strokeDasharray="5 5" />
+                <ReferenceLine y={4.5} label="Linea de creacion de curva de alerta" position="insideTop"
+                    stroke="black" strokeDasharray="5 5" />
                 {/* Línea de la Curva de Alerta */}
                 <Line
                     type="linear"
