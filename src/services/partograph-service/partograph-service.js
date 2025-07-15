@@ -301,7 +301,7 @@ export const createFetalHeartRate = async (payload) => {
 
 export const updateFetalHeartRate = async (payload) => {
   try {
-    const response = await PARTOGRAPH_API.delete(
+    const response = await PARTOGRAPH_API.patch(
       PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.UPDATE_FETAL_HEART_RATE,
       payload,
       { headers: getCommonHeaders() }
