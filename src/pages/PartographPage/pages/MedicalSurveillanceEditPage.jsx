@@ -32,12 +32,16 @@ const DOLOR_INTENSIDAD_OPTIONS = [
 ];
 
 const MedicalSurveillanceEditPage = () => {
+    // Params / navegación / form
     const { partographId, medicalId } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
+
+    // Carga y envío
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Cargar valores iniciales del backend
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -48,20 +52,21 @@ const MedicalSurveillanceEditPage = () => {
                     posicionMaterna: response.maternalPosition,
                     tensionArterial: response.arterialPressure,
                     pulsoMaterno: response.maternalPulse,
-                    //frecuenciaCardiacaFetal: response.fetalHeartRate,
+                    // frecuenciaCardiacaFetal: response.fetalHeartRate,
                     duracionContracciones: response.contractionsDuration,
-                    //frecuenciaContracciones: response.frequencyContractions,
+                    // frecuenciaContracciones: response.frequencyContractions,
                     Dolor: response.pain ? response.pain.toString() : "",
                 });
-                setIsLoading(false);
-            } catch (error) {
+            } catch {
                 message.error("Error al cargar la vigilancia médica.");
+            } finally {
                 setIsLoading(false);
             }
         };
         fetchData();
     }, [medicalId, form]);
 
+    // Enviar actualización
     const handleSubmit = async (values) => {
         try {
             setIsSubmitting(true);
@@ -71,29 +76,33 @@ const MedicalSurveillanceEditPage = () => {
                 maternalPosition: values.posicionMaterna,
                 arterialPressure: values.tensionArterial.toString(),
                 maternalPulse: values.pulsoMaterno.toString(),
-                fetalHeartRate: 'N/A',
+                fetalHeartRate: "N/A",
                 contractionsDuration: values.duracionContracciones.toString(),
-                frequencyContractions: 'N/A',
+                frequencyContractions: "N/A",
                 pain: values.Dolor ? values.Dolor.toString() : "",
                 time: dayjs(values.tiempo).format("YYYY-MM-DDTHH:mm:ss"),
             });
 
+            // Refrescar partograma en caché (SWR)
             mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId));
 
             message.success("Vigilancia médica actualizada exitosamente.");
-            setIsSubmitting(false);
             navigate(PATH.PARTOGRAPH(partographId));
-        } catch (error) {
-            message.error("Error al actualizar la vigilancia médica. Vuelva a probar mas tarde.");
+        } catch {
+            message.error("Error al actualizar la vigilancia médica. Vuelva a probar más tarde.");
+        } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
         <>
+            {/* Capa de carga a pantalla completa */}
             <Spin spinning={isLoading} fullscreen />
+
+            {/* Migas + volver */}
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-            <BackButton to={PATH.PARTOGRAPH(partographId)} />
+                <BackButton to={PATH.PARTOGRAPH(partographId)} />
                 <Breadcrumb
                     items={[
                         { title: <NavLink to="/">Inicio</NavLink> },
@@ -102,16 +111,27 @@ const MedicalSurveillanceEditPage = () => {
                     ]}
                 />
             </div>
-            <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
+
+            <Layout.Content style={{ margin: "1rem", color: "lightblue" }}>
                 <div style={{ background: "#fff", minHeight: 280, padding: 10, borderRadius: "8px" }}>
                     <div style={{ maxWidth: "700px", padding: 25, margin: "0 auto", marginTop: "20px" }}>
                         <Typography.Title level={3}>Editar Vigilancia Médica</Typography.Title>
+
+                        {/* Formulario de edición */}
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                            <Form.Item label="Hora" name="tiempo" rules={[{ required: true, message: "Campo requerido" }]}>
+                            <Form.Item
+                                label="Hora"
+                                name="tiempo"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <DatePicker showTime={{ format: "HH:mm" }} format="YYYY-MM-DD HH:mm" style={{ width: "100%" }} />
                             </Form.Item>
 
-                            <Form.Item label="Posición Materna" name="posicionMaterna" rules={[{ required: true, message: "Campo requerido" }]}>
+                            <Form.Item
+                                label="Posición Materna"
+                                name="posicionMaterna"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <Select placeholder="Seleccione">
                                     {POSICION_MATERNA_OPTIONS.map((opt) => (
                                         <Select.Option key={opt.value} value={opt.value}>
@@ -121,29 +141,44 @@ const MedicalSurveillanceEditPage = () => {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item label="Tensión Arterial" name="tensionArterial" rules={[{ required: true, message: "Campo requerido" }]}>
+                            <Form.Item
+                                label="Tensión Arterial"
+                                name="tensionArterial"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <ArterialPressure />
                             </Form.Item>
 
-                            <Form.Item label="Pulso Materno" name="pulsoMaterno" rules={[{ required: true, message: "Campo requerido" }]}>
+                            <Form.Item
+                                label="Pulso Materno"
+                                name="pulsoMaterno"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <FormElement />
                             </Form.Item>
-                            {/*
-                            <Form.Item label="Frecuencia Cardíaca Fetal" name="frecuenciaCardiacaFetal" 
-                              rules={[{ required: true, message: "Campo requerido" }]}>
+
+                            {/* <Form.Item label="Frecuencia Cardíaca Fetal" name="frecuenciaCardiacaFetal" rules={[{ required: true, message: "Campo requerido" }]}><FormElement /></Form.Item> */}
+
+                            <Form.Item
+                                label="Duración Contracciones"
+                                name="duracionContracciones"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <FormElement />
                             </Form.Item>
-                            */}
-                            <Form.Item label="Duración Contracciones" name="duracionContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
-                                <FormElement />
-                            </Form.Item>
-                            {/*
-                            <Form.Item label="Frecuencia de Contracciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
-                                <Input placeholder="Frecuencia de Contracciones" type="number" />
-                            </Form.Item>
-                            */}
-                            <Form.Item name="Dolor" label="Dolor" rules={[{ required: true, message: "Campo requerido" }]} >
-                                <UnifiedDropdown locationOptions={DOLOR_LOCALIZACION_OPTIONS} intensityOptions={DOLOR_INTENSIDAD_OPTIONS}/>
+
+                            {/* <Form.Item label="Frecuencia de Contracciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}><Input placeholder="Frecuencia de Contracciones" type="number" /></Form.Item> */}
+
+                            <Form.Item
+                                name="Dolor"
+                                label="Dolor"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
+                                {/* Dropdown unificado: localización + intensidad */}
+                                <UnifiedDropdown
+                                    locationOptions={DOLOR_LOCALIZACION_OPTIONS}
+                                    intensityOptions={DOLOR_INTENSIDAD_OPTIONS}
+                                />
                             </Form.Item>
 
                             <Form.Item>

@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Button, Drawer } from "antd";
-import NotificationList from "./NotificationList"; // Asegúrate de tener este componente
+import NotificationList from "./NotificationList"; // Lista de notificaciones
 
+// Drawer lateral para mostrar las notificaciones de un partograma
 const NotificationDrawer = ({ partographId }) => {
   const [open, setOpen] = useState(false);
 
+  // Abre el drawer
   const mostrarDrawer = () => setOpen(true);
+
+  // Cierra el drawer
   const cerrarDrawer = () => setOpen(false);
 
   return (

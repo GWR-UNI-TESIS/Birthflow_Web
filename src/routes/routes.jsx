@@ -25,26 +25,27 @@ import { AnimatePresence } from "framer-motion";
 import UsersInGroup from "../pages/groups/pages/UsersInGroup";
 import ForgetPassword from "../pages/Auth/ForgetPassword";
 
-
-
 const InnerRoutes = () => {
-  const location = useLocation();
+  const location = useLocation(); // Ubicación actual para animar transiciones
 
   return (
+    // Contenedor de animaciones entre rutas
     <AnimatePresence mode="wait">
+      {/* Ruteo principal controlado por la ubicación (para transiciones fluidas) */}
       <Routes location={location} key={location.pathname}>
-        {/* Rutas sin LayoutGeneral */}
+        {/* Rutas públicas (sin LayoutGeneral) */}
         <Route path={PATH.WELCOME} element={<PageWrapper><Welcome /></PageWrapper>} />
         <Route path={PATH.LOGIN} element={<PageWrapper><AuthPage /></PageWrapper>} />
         <Route path={PATH.FORGET_PASSWORD} element={<PageWrapper><ForgetPassword /></PageWrapper>} />
         <Route path={PATH.USER_EDIT} element={<PageWrapper><UpdateUser /></PageWrapper>} />
 
-        {/* Rutas con LayoutGeneral */}
+        {/* Rutas protegidas con LayoutGeneral y anidadas */}
         <Route
           path="/*"
           element={
             <ProtectedRoute>
               <LayoutGeneral>
+                {/* Subrutas internas dentro del layout */}
                 <Routes location={location} key={location.pathname}>
                   <Route path={PATH.ARCHIVED} element={<PageWrapper><ArchivePartographsPage /></PageWrapper>} />
                   <Route path={PATH.HOME} element={<PageWrapper><Home /></PageWrapper>} />
@@ -69,10 +70,11 @@ const InnerRoutes = () => {
       </Routes>
     </AnimatePresence>
   );
+};
 
-}
 const AppRoutes = () => {
   return (
+    // Router raíz de la app
     <Router>
       <InnerRoutes />
     </Router>

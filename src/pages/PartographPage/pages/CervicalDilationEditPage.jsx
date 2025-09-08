@@ -9,13 +9,18 @@ import dayjs from "dayjs";
 import PATH from "../../../routes/path";
 
 const CervicalDilationEditPage = () => {
+    // Params / navegación / estado de formulario
     const { partographId, dilationId } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
+
+    // Estados de carga y envío
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
+
+    // Cargar datos iniciales
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -26,15 +31,16 @@ const CervicalDilationEditPage = () => {
                     hour: dayjs(response.hour),
                     ramOrRem: response.remOrRam,
                 });
-                setIsLoading(false);
-            } catch (error) {
+            } catch {
                 message.error("Error al cargar la dilatación cervical.");
+            } finally {
                 setIsLoading(false);
             }
         };
         fetchData();
     }, [dilationId, form]);
 
+    // Enviar actualización
     const handleSubmit = async (values) => {
         try {
             setIsSubmitting(true);
@@ -46,40 +52,55 @@ const CervicalDilationEditPage = () => {
                 remOrRam: values.ramOrRem || false,
             });
 
-            // Mutar para actualizar el partograma en la UI
+            // Refrescar cache del partograma
             mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId));
 
             message.success("Dilatación actualizada exitosamente.");
-            setIsSubmitting(false);
-            navigate(PATH.PARTOGRAPH(partographId)); // Redirigir de vuelta al partograma
-        } catch (error) {
-            message.error("Error al actualizar la dilatación cervical. Vuelva a probar mas tarde.");
+            navigate(PATH.PARTOGRAPH(partographId));
+        } catch {
+            message.error("Error al actualizar la dilatación cervical. Vuelva a probar más tarde.");
+        } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
         <>
+            {/* Capa de carga a pantalla completa */}
             <Spin spinning={isLoading} fullscreen />
+
+            {/* Migas + volver */}
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-                <BackButton to={PATH.PARTOGRAPH(partographId)}/>
-                <Breadcrumb items={[
-                    { title: <NavLink to="/">Inicio</NavLink> },
-                    { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
-                    { title: "Editar Dilatacion Cervical" }
-                ]} />
+                <BackButton to={PATH.PARTOGRAPH(partographId)} />
+                <Breadcrumb
+                    items={[
+                        { title: <NavLink to="/">Inicio</NavLink> },
+                        { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
+                        { title: "Editar Dilatación Cervical" },
+                    ]}
+                />
             </div>
+
             <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
                 <div style={{ background: colorBgContainer, minHeight: 280, padding: 10, borderRadius: borderRadiusLG }}>
-
                     <div style={{ maxWidth: "700px", padding: 25, margin: "0 auto", marginTop: "20px" }}>
-                        <Typography.Title level={3}>Editar Dilatacion Cervical</Typography.Title>
+                        <Typography.Title level={3}>Editar Dilatación Cervical</Typography.Title>
+
+                        {/* Formulario de edición */}
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                            <Form.Item label="Dilatación (cm)" name="dilation" rules={[{ required: true, message: "Campo requerido" }]}>
+                            <Form.Item
+                                label="Dilatación (cm)"
+                                name="dilation"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <Input type="number" min="0" max="11" step="0.5" placeholder="Valor de Dilatación" />
                             </Form.Item>
 
-                            <Form.Item label="Hora de medición" name="hour" rules={[{ required: true, message: "Campo requerido" }]}>
+                            <Form.Item
+                                label="Hora de medición"
+                                name="hour"
+                                rules={[{ required: true, message: "Campo requerido" }]}
+                            >
                                 <DatePicker showTime={{ format: "HH:mm" }} format="YYYY-MM-DD HH:mm" style={{ width: "100%" }} />
                             </Form.Item>
 

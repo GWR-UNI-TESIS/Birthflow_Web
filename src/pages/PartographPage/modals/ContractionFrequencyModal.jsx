@@ -8,12 +8,12 @@ import dayjs from "dayjs";
 const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
     const [form] = Form.useForm();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     const handleClose = () => {
-        form.resetFields(); 
+        form.resetFields();
         onClose();
     };
-    
+
     const handleSubmit = async (values) => {
         try {
             setIsSubmitting(true);
@@ -39,7 +39,23 @@ const ContractionFrequencyModal = ({ visible, onClose, partographId }) => {
         <Modal title="Agregar Frecuencia de Contracciones" open={visible} onCancel={handleClose} footer={null}>
             <div style={{ padding: "10px" }}>
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                    <Form.Item label="Frec. Contraciones" name="frecuenciaContracciones" rules={[{ required: true, message: "Campo requerido" }]}>
+                    <Form.Item label="Frec. Contraciones" name="frecuenciaContracciones"
+                        rules={[{ required: true, message: "Campo requerido" },
+                        {
+                            validator: (_, value) => {
+                                if (value === undefined || value === null || value === "") {
+                                    return Promise.resolve(); // el required ya lo valida
+                                }
+                                const num = Number(value);
+                                if (num >= 1 && num <= 13) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject("Debe estar entre 1 y 13");
+                            },
+                        },
+                        ]}
+
+                    >
                         <Input placeholder="Frec. Contracciones" type="number" />
                     </Form.Item>
 

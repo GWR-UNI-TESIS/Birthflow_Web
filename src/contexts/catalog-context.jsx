@@ -1,15 +1,19 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { plainAxios } from '../services/api';
 import { Spin } from 'antd';
+
 const CatalogContext = createContext();
 
+// Hook para consumir el contexto de catálogos
 export const useCatalog = () => useContext(CatalogContext);
 
+// Proveedor de catálogos (obtiene data desde la API y la expone vía contexto)
 export const CatalogProvider = ({ children }) => {
     const [catalogs, setCatalogs] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Carga inicial de catálogos
     useEffect(() => {
         const fetchCatalogs = async () => {
             try {
@@ -26,8 +30,9 @@ export const CatalogProvider = ({ children }) => {
         fetchCatalogs();
     }, []);
 
+    // Mientras carga, muestra spinner
     if (loading) {
-        return <Spin fullscreen tip="Cargando ..."></Spin>; // Puedes personalizar el mensaje o agregar un spinner
+        return <Spin fullscreen tip="Cargando ..." />;
     }
 
     return (

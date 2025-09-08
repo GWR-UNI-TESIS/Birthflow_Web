@@ -10,35 +10,37 @@ import dayjs from "dayjs";
 import PATH from "../../../routes/path";
 
 const PresentationPositionVarietyEditPage = () => {
+    // Params / navegación / form
     const { partographId, positionVarietyId } = useParams();
     const navigate = useNavigate();
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
     const [form] = Form.useForm();
+
+    // Carga y envío
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Cargar valores iniciales del backend
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
                 const response = await getPresentationPositionVariety(positionVarietyId);
-                console.log("Datos recibidos:", response);
-
                 form.setFieldsValue({
                     posicion: response.position,
                     planoHodge: response.hodgePlane,
                     tiempo: dayjs(response.time),
                 });
-
-                setIsLoading(false);
-            } catch (error) {
+            } catch {
                 message.error("Error al cargar la variedad de posición.");
+            } finally {
                 setIsLoading(false);
             }
         };
         fetchData();
     }, [positionVarietyId, form]);
 
+    // Enviar actualización
     const handleSubmit = async (values) => {
         try {
             setIsSubmitting(true);
@@ -50,13 +52,14 @@ const PresentationPositionVarietyEditPage = () => {
                 time: dayjs(values.tiempo).format("YYYY-MM-DDTHH:mm:ss"),
             });
 
+            // Refrescar partograma en caché (SWR)
             mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(partographId));
 
             message.success("Variedad de posición actualizada exitosamente.");
-            setIsSubmitting(false);
             navigate(PATH.PARTOGRAPH(partographId));
-        } catch (error) {
-            message.error("Error al actualizar la variedad de posición. Vuelva a probar mas tarde.");
+        } catch {
+            message.error("Error al actualizar la variedad de posición. Vuelva a probar más tarde.");
+        } finally {
             setIsSubmitting(false);
         }
     };
@@ -65,7 +68,10 @@ const PresentationPositionVarietyEditPage = () => {
 
     return (
         <>
+            {/* Capa de carga a pantalla completa */}
             <Spin spinning={isLoading} fullscreen />
+
+            {/* Migas + volver */}
             <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
                 <BackButton to={PATH.PARTOGRAPH(partographId)} />
                 <Breadcrumb
@@ -76,10 +82,13 @@ const PresentationPositionVarietyEditPage = () => {
                     ]}
                 />
             </div>
-            <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
+
+            <Layout.Content style={{ margin: "1rem", color: "lightblue" }}>
                 <div style={{ background: "#fff", minHeight: 280, padding: 10, borderRadius: "8px" }}>
                     <div style={{ maxWidth: "700px", padding: 25, margin: "0 auto", marginTop: "20px" }}>
                         <Typography.Title level={3}>Editar Variedad de Posición</Typography.Title>
+
+                        {/* Formulario de edición */}
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
                             <Form.Item
                                 label="Posición"
@@ -114,7 +123,11 @@ const PresentationPositionVarietyEditPage = () => {
                                 name="tiempo"
                                 rules={[{ required: true, message: "Campo requerido" }]}
                             >
-                                <DatePicker showTime={{ format: "HH:mm" }} format="YYYY-MM-DD HH:mm" style={{ width: "100%" }} />
+                                <DatePicker
+                                    showTime={{ format: "HH:mm" }}
+                                    format="YYYY-MM-DD HH:mm"
+                                    style={{ width: "100%" }}
+                                />
                             </Form.Item>
 
                             <Form.Item>
