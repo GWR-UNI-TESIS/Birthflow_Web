@@ -30,6 +30,7 @@ import PdfPreviewLoader from "../../components/PDF/PdfPreviewLoader";
 import PATH from "../../routes/path";
 import NotificationDrawer from "../../components/NotificacionDrawer/NotificationDrawer";
 
+// Componente reutilizable para secciones con tabla + botón "Agregar"
 const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
   <div style={{ paddingTop: 16 }}>
     <Typography.Title level={3}>{title}</Typography.Title>
@@ -46,27 +47,34 @@ const TableSection = ({ title, columns, data, buttonLabel, onButtonClick }) => (
 );
 
 const PartographPage = () => {
+  // Estado para modales de creación rápida
   const [isCervicalDilationModalVisible, setIsCervicalDilationModalVisible] = useState(false);
   const [isMedicalSurveillanceModalVisible, setIsMedicalSurveillanceModalVisible] = useState(false);
   const [isFetalHeartRateModalVisible, setIsFetalHeartRateModalVisible] = useState(false);
   const [isContractionFrequencyModalVisible, setIsContractionFrequencyModalVisible] = useState(false);
   const [isPresentationPositionVarietyModalVisible, setIsPresentationPositionVarietyModalVisible] = useState(false);
+
+  // Catálogos y tema
   const {
     catalogs,
     loading: catalogsLoading,
     error: catalogsError,
   } = useCatalog();
-
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
+
+  // Parámetros / navegación / datos del partograma (hook)
   const { partographId } = useParams();
   const navigate = useNavigate();
   const { data, loading, error } = usePartograh(partographId);
 
-  if (loading || catalogsLoading ) return <Spin fullscreen tip={"Cargando datos del partogramas..."} />;
+  // Carga inicial y errores globales
+  if (loading || catalogsLoading) return <Spin fullscreen tip={"Cargando datos del partogramas..."} />;
   if (error) return <Alert message="Error al cargar los datos" type="error" />;
 
+  // Normalizar respuesta del hook
   const partograph = data.response || data;
 
+  // Columnas: Dilatación cervical
   const cervicalColumns = [
     { title: "Valor", dataIndex: "value", key: "value" },
     { title: "Hora", dataIndex: "hour", key: "hour", render: text => new Date(text).toLocaleString() },
@@ -76,18 +84,19 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate( PATH.CERVICAL_DILATION_EDIT(partographId, record.id))} />
+          onClick={() => navigate(PATH.CERVICAL_DILATION_EDIT(partographId, record.id))} />
       ),
     },
   ];
 
+  // Columnas: Vigilancia médica
   const medicalColumns = [
     { title: "Posición Materna", dataIndex: "maternalPosition", key: "maternalPosition" },
     { title: "Presión Arterial", dataIndex: "arterialPressure", key: "arterialPressure" },
     { title: "Pulso Materno", dataIndex: "maternalPulse", key: "maternalPulse" },
-    //{ title: "F.C. Fetal", dataIndex: "fetalHeartRate", key: "fetalHeartRate" },
+    // { title: "F.C. Fetal", dataIndex: "fetalHeartRate", key: "fetalHeartRate" },
     { title: "Duración de Contracciones", dataIndex: "contractionsDuration", key: "contractionsDuration" },
-    //{ title: "Frecuencia de Contracciones", dataIndex: "frequencyContractions", key: "frequencyContractions" },
+    // { title: "Frecuencia de Contracciones", dataIndex: "frequencyContractions", key: "frequencyContractions" },
     { title: "Dolor", dataIndex: "pain", key: "pain" },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
     {
@@ -100,6 +109,7 @@ const PartographPage = () => {
     },
   ];
 
+  // Columnas: Variedad de posición de la presentación (usa catálogos para mostrar descripciones)
   const presentationColumns = [
     {
       title: "Plano de Hodge", dataIndex: "hodgePlane", key: "hodgePlane", render: (_, { hodgePlane }) => {
@@ -119,11 +129,12 @@ const PartographPage = () => {
       key: "actions",
       render: (_, record) => (
         <Button icon={<EditOutlined />} type="link" size="large"
-          onClick={() => navigate( PATH.PRESENTATION_POSITION_VARIETY_EDIT(partographId, record.id))} />
+          onClick={() => navigate(PATH.PRESENTATION_POSITION_VARIETY_EDIT(partographId, record.id))} />
       ),
     },
   ];
 
+  // Columnas: Frecuencia de contracciones
   const contractionColumns = [
     { title: "Valor", dataIndex: "value", key: "value" },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
@@ -137,6 +148,7 @@ const PartographPage = () => {
     },
   ];
 
+  // Columnas: F.C. Fetal
   const fetalColumns = [
     { title: "Valor", dataIndex: "value", key: "value" },
     { title: "Hora", dataIndex: "time", key: "time", render: text => new Date(text).toLocaleString() },
@@ -152,74 +164,87 @@ const PartographPage = () => {
 
   return (
     <>
+      {/* Encabezado: breadcrumb + acciones (historial, PDF, notificaciones) */}
       <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
           <BackButton to={PATH.HOME} />
           <Breadcrumb items={[{ title: <NavLink to="/">Inicio</NavLink> }, { title: "Partograma" }]} />
         </div>
         <div style={{ marginRight: "2rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Button onClick={() => navigate( PATH.PARTOGRAPH_HISTORY(partographId))}>Historial</Button>
-          <PdfPreviewLoader partographId={partographId}/>
+          <Button onClick={() => navigate(PATH.PARTOGRAPH_HISTORY(partographId))}>Historial</Button>
+          <PdfPreviewLoader partographId={partographId} />
           <NotificationDrawer partographId={partographId} />
         </div>
       </div>
+
       <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
         <div style={{ background: colorBgContainer, minHeight: 280, padding: 24, borderRadius: borderRadiusLG }}>
+          {/* Gráfico principal del partograma */}
           <PartogramChart partograph={partograph} />
 
+          {/* Información general del caso */}
           <div style={{ marginBottom: "24px" }}>
             <Typography.Title level={3}>Informacion General</Typography.Title>
             <Descriptions bordered column={1}>
-              <Descriptions.Item label="Nombre">
-                {partograph.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Expediente">
-                {partograph.recordName}
-              </Descriptions.Item>
-              <Descriptions.Item label="Fecha">
-                {new Date(partograph.date).toLocaleString()}
-              </Descriptions.Item>
-              <Descriptions.Item label="Valores para la creacion de curva de alerta">
-                {partograph.workTime}
-              </Descriptions.Item>
-              <Descriptions.Item label="Observación">
-                {partograph.observation || "Sin observaciones"}
-              </Descriptions.Item>
+              <Descriptions.Item label="Nombre">{partograph.name}</Descriptions.Item>
+              <Descriptions.Item label="Expediente">{partograph.recordName}</Descriptions.Item>
+              <Descriptions.Item label="Fecha">{new Date(partograph.date).toLocaleString()}</Descriptions.Item>
+              <Descriptions.Item label="Valores para la creacion de curva de alerta">{partograph.workTime}</Descriptions.Item>
+              <Descriptions.Item label="Observación">{partograph.observation || "Sin observaciones"}</Descriptions.Item>
             </Descriptions>
             <Flex align="flex-end" style={{ marginTop: "1rem", marginRight: "1rem" }} vertical>
               <Button type="primary" onClick={() => navigate(PATH.PARTOGRAPH_EDIT(partographId,))}>Editar</Button>
             </Flex>
           </div>
+
           <Divider />
-          <TableSection title="Dilataciones Cervicales" columns={cervicalColumns}
+
+          {/* Secciones de tablas (cada una con su modal para agregar) */}
+          <TableSection
+            title="Dilataciones Cervicales"
+            columns={cervicalColumns}
             data={partograph.cervicalDilations}
             buttonLabel="Agregar Dilatación Cervical"
             onButtonClick={() => setIsCervicalDilationModalVisible(true)}
           />
           <Divider />
-          <TableSection title="Vigilancia Médica" columns={medicalColumns}
+          <TableSection
+            title="Vigilancia Médica"
+            columns={medicalColumns}
             data={partograph.medicalSurveillanceTable}
             buttonLabel="Agregar elemento a tabla"
             onButtonClick={() => setIsMedicalSurveillanceModalVisible(true)}
           />
           <Divider />
-          <TableSection title="Variaciones de Posición de Presentación" columns={presentationColumns}
+          <TableSection
+            title="Variaciones de Posición de Presentación"
+            columns={presentationColumns}
             data={partograph.presentationPositionVarieties}
             buttonLabel="Agregar altura de la presentación"
             onButtonClick={() => setIsPresentationPositionVarietyModalVisible(true)}
           />
           <Divider />
-          <TableSection title="Frecuencia de Contracciones" columns={contractionColumns}
+          <TableSection
+            title="Frecuencia de Contracciones"
+            columns={contractionColumns}
             data={partograph.contractionFrequencies}
             buttonLabel="Agregar Frecuencia de Contracciones"
-            onButtonClick={() => setIsContractionFrequencyModalVisible(true)} />
+            onButtonClick={() => setIsContractionFrequencyModalVisible(true)}
+          />
           <Divider />
-          <TableSection title="Frecuencia Cardíaca Fetal" columns={fetalColumns}
+          <TableSection
+            title="Frecuencia Cardíaca Fetal"
+            columns={fetalColumns}
             data={partograph.fetalHeartRates}
             buttonLabel="Agregar Frecuencia Cardíaca Fetal"
-            onButtonClick={() => setIsFetalHeartRateModalVisible(true)} />
+            onButtonClick={() => setIsFetalHeartRateModalVisible(true)}
+          />
+
+          {/* Vista de nota de parto */}
           <ChildbirthNoteView childbirthNote={partograph.childbirthNote} partographId={partographId} />
         </div>
+
+        {/* Modales de creación rápida */}
         <CervicalDilationModal
           visible={isCervicalDilationModalVisible}
           onClose={() => setIsCervicalDilationModalVisible(false)}
@@ -230,30 +255,24 @@ const PartographPage = () => {
           onClose={() => setIsMedicalSurveillanceModalVisible(false)}
           partographId={partographId}
         />
-
         <PresentationPositionVarietyModal
           visible={isPresentationPositionVarietyModalVisible}
           onClose={() => setIsPresentationPositionVarietyModalVisible(false)}
           partographId={partographId}
         />
-
         <ContractionFrequencyModal
           visible={isContractionFrequencyModalVisible}
           onClose={() => setIsContractionFrequencyModalVisible(false)}
           partographId={partographId}
         />
-
         <FetalHeartRateModal
           visible={isFetalHeartRateModalVisible}
           onClose={() => setIsFetalHeartRateModalVisible(false)}
           partographId={partographId}
         />
-
       </Layout.Content>
     </>
   );
-
 };
-
 
 export default PartographPage;

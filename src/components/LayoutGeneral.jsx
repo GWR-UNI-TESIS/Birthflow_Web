@@ -8,6 +8,7 @@ import { formatDateInNicaragua } from "../utils/datetime-format";
 
 const { Content } = Layout;
 
+// Layout principal de la aplicación (incluye HeaderBar y Drawer de notificaciones)
 const LayoutGeneral = ({ children }) => {
   const location = useLocation();
   const [notificationDrawerVisible, setNotificationDrawerVisible] = useState(false);
@@ -16,7 +17,7 @@ const LayoutGeneral = ({ children }) => {
   const showDrawer = () => setNotificationDrawerVisible(true);
   const onClose = () => setNotificationDrawerVisible(false);
 
-  // Evitar renderizar el LayoutGeneral en la página de login
+  // No renderiza el layout general en la pantalla de login
   if (location.pathname === "/login") {
     return <>{children}</>;
   }
@@ -24,7 +25,14 @@ const LayoutGeneral = ({ children }) => {
   return (
     <Layout>
       <HeaderBar onNotificationDrawerToggle={showDrawer} />
-      <Drawer title="Notificaciones" open={notificationDrawerVisible} onClose={onClose} width={500}>
+
+      {/* Drawer lateral de notificaciones */}
+      <Drawer
+        title="Notificaciones"
+        open={notificationDrawerVisible}
+        onClose={onClose}
+        width={500}
+      >
         <List
           className="demo-loadmore-list"
           loading={dataLoading}
@@ -33,17 +41,21 @@ const LayoutGeneral = ({ children }) => {
           renderItem={(item) => (
             <List.Item key={item.notificationId}>
               <Skeleton avatar title={false} loading={item.loading} active>
-                <List.Item.Meta title={<a>{item.title}</a>} description={item.message} />
+                <List.Item.Meta
+                  title={<a>{item.title}</a>}
+                  description={item.message}
+                />
                 <div>{formatDateInNicaragua(item.scheduledFor)}</div>
               </Skeleton>
             </List.Item>
           )}
         />
       </Drawer>
+
+      {/* Contenido dinámico */}
       <div style={{ padding: "25px 20px" }}>{children}</div>
     </Layout>
   );
 };
 
 export default LayoutGeneral;
-    

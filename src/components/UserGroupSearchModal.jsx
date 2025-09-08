@@ -4,14 +4,15 @@ import { searchUserGroups } from "../services/share-services/share-services"; //
 
 const { Text } = Typography;
 
+// Modal para buscar y seleccionar usuarios o grupos
 const UserGroupSearchModal = ({ visible, onClose, onSelect }) => {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
 
+  // Ejecuta la búsqueda en el servicio
   const handleSearch = async () => {
     if (!query.trim()) return;
-
     setLoading(true);
     try {
       const data = await searchUserGroups(query);
@@ -24,6 +25,7 @@ const UserGroupSearchModal = ({ visible, onClose, onSelect }) => {
     }
   };
 
+  // Selecciona un resultado y cierra el modal
   const handleSelect = (item) => {
     onSelect(item);
     onClose();
@@ -54,7 +56,10 @@ const UserGroupSearchModal = ({ visible, onClose, onSelect }) => {
             bordered
             dataSource={results}
             renderItem={(item) => (
-              <List.Item onClick={() => handleSelect(item)} style={{ cursor: "pointer" }}>
+              <List.Item
+                onClick={() => handleSelect(item)}
+                style={{ cursor: "pointer" }}
+              >
                 {item.name}
               </List.Item>
             )}

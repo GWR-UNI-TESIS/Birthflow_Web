@@ -1,7 +1,7 @@
-import useSWR, { mutate } from "swr";
+import useSWR, { mutate } from "swr"; // <- useSWR no se usa; podrías removerlo
 import { NavLink, useNavigate } from "react-router";
 import React, { useState, useEffect } from 'react';
-import { Table, Breadcrumb, Layout, message, Modal, Dropdown, Button, Typography, Spin, Divider } from "antd";
+import { Table, Breadcrumb, Layout, message, Modal, Dropdown, Button, Typography, Spin } from "antd";
 import { ShareAltOutlined, StarFilled, StarOutlined, InboxOutlined, MoreOutlined, BellFilled, BellOutlined, PushpinOutlined, DeleteOutlined } from "@ant-design/icons";
 import BackButton from '../../components/ReturnButton';
 import useArchivePartographs from "../../hooks/use-archive-partographs";
@@ -12,12 +12,16 @@ import PATH from "../../routes/path";
 import { useCatalog } from "../../contexts/catalog-context";
 
 const ArchivePartographsPage = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
+  // Catálogos (por si necesitas mapear estados/labels)
   const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
+
+  // Data de partogramas archivados para el usuario actual
   const { data, loading: dataLoading, error: dataError } = useArchivePartographs(user.id);
 
+  // Formateo de fechas para columnas
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -27,14 +31,12 @@ const ArchivePartographsPage = () => {
     });
   };
 
-
+  // Feedback de error de catálogos
   useEffect(() => {
     if (catalogsError) message.error("Error al cargar los catálogos.");
   }, [catalogsError]);
 
-
-
-
+  // Definición de columnas de la tabla
   const columns = [
     { title: "Nombre", dataIndex: "name", key: "name" },
     { title: "Expediente", dataIndex: "recordName", key: "recordName" },
@@ -48,7 +50,7 @@ const ArchivePartographsPage = () => {
       title: "Modificado",
       dataIndex: "updateAt",
       key: "updateAt",
-      render: (date) => date ? formatDate(date) : "",
+      render: (date) => (date ? formatDate(date) : ""),
     },
     { title: "Propiedad", dataIndex: "nameCreatedBy", key: "nameCreatedBy" },
     {
@@ -57,6 +59,7 @@ const ArchivePartographsPage = () => {
       render: (_, record) => {
         const isCreator = record.createdBy === user.id;
 
+        // Base para PATCH de estado
         const patchPayloadBase = {
           partographId: record.partographId,
           isAchived: record.isAchived,
@@ -65,6 +68,7 @@ const ArchivePartographsPage = () => {
           favorite: record.favorite,
         };
 
+        // Manejo de acciones del menú (toggle estados / compartir / eliminar)
         const onClick = async ({ key }) => {
           const patchPayload = { ...patchPayloadBase };
 
@@ -98,6 +102,7 @@ const ArchivePartographsPage = () => {
                 message.warning("Solo el creador puede eliminar el partograma");
                 return;
               }
+              // Confirmación de borrado (optimistic update en mutate)
               Modal.confirm({
                 title: "Eliminar Partograma",
                 content: "¿Estás seguro de que deseas eliminar este partograma?",
@@ -125,9 +130,11 @@ const ArchivePartographsPage = () => {
           }
 
           try {
+            // Actualiza estado en backend
             await updatePartographState(patchPayload);
             message.success("Estado actualizado");
 
+            // Actualiza lista de archivados en cache (optimistic update)
             mutate(
               PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPHS_ARCHIVED(user.id),
               (data) => ({
@@ -141,12 +148,14 @@ const ArchivePartographsPage = () => {
               false
             );
 
+            // Revalidar detalle puntual
             mutate(PARTOGRAPH_ENDPOINTS.PARTOGRAPHS.GET_PARTOGRAPH(record.partographId));
           } catch (error) {
             message.error("Error al actualizar el estado");
           }
         };
 
+        // Items del menú contextual de acciones
         const items = [
           { label: "Compartir", key: "share", disabled: !isCreator, icon: <ShareAltOutlined /> },
           { type: "divider" },
@@ -185,28 +194,30 @@ const ArchivePartographsPage = () => {
           </Dropdown>
         );
       },
-    }
-  ]
+    },
+  ];
 
   return (
     <>
-      <div>
-
+      {/* Migas + botón regresar */}
       <div style={{ marginLeft: "1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-          <BackButton to={PATH.HOME} />
-          <Breadcrumb
-            items={[
-              { title: <NavLink to={PATH.HOME}>Home</NavLink> },
-              { title: "Partogramas Archivados" },
-            ]}
-          />
-        </div>
+        <BackButton to={PATH.HOME} />
+        <Breadcrumb
+          items={[
+            { title: <NavLink to={PATH.HOME}>Home</NavLink> },
+            { title: "Partogramas Archivados" },
+          ]}
+        />
       </div>
+
+      {/* Contenido principal */}
       <Layout.Content style={{ margin: "1rem", color: 'lightblue' }}>
         <div style={{ background: "#fff", minHeight: 280, padding: 10, borderRadius: "8px" }}>
+          <Typography.Title level={4} style={{ textAlign: "left", marginBottom: "15px" }}>
+            Partograma Archivados
+          </Typography.Title>
 
-          <Typography.Title level={4} style={{ textAlign: "left",  marginBottom:"15px"}}>Partograma Archivados</Typography.Title>
-          
+          {/* Loading de la tabla */}
           <Spin spinning={dataLoading} tip="Cargando partogramas archivados...">
             <Table
               key="partograph-table"
@@ -214,24 +225,22 @@ const ArchivePartographsPage = () => {
               columns={columns}
               rowKey="partographId"
               pagination={{ pageSize: 15 }}
-              scroll={{ x: "max-content" }} // <-- Esto es lo importante
-              onRow={(record,) => {
-                return {
-                  onClick: (event) => {
-                    // Evita navegación si se hace clic en el botón de acciones
-                    const target = event.target;
-                    if (
-                      target.closest(".ant-dropdown") || // botón o menú
-                      target.closest(".ant-dropdown-menu") ||
-                      target.closest(".ant-btn") // botón antd
-                    ) {
-                      return;
-                    }
-
-                    navigate(`/partograph/${record.partographId}`);
-                  },
-                };
-              }}
+              scroll={{ x: "max-content" }} // Evita cortes de columnas
+              onRow={(record) => ({
+                onClick: (event) => {
+                  // Evita navegación si el click fue en el menú/acciones
+                  const target = event.target;
+                  if (
+                    target.closest(".ant-dropdown") ||
+                    target.closest(".ant-dropdown-menu") ||
+                    target.closest(".ant-btn")
+                  ) {
+                    return;
+                  }
+                  // Navega al detalle del partograma
+                  navigate(`/partograph/${record.partographId}`);
+                },
+              })}
             />
           </Spin>
         </div>

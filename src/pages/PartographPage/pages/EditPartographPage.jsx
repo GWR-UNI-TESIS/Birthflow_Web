@@ -30,19 +30,25 @@ const EditPartographPage = () => {
     } = theme.useToken();
 
     const [form] = Form.useForm();
+
+    // Estados de carga y datos base
     const [loading, setLoading] = useState(true);
     const [partograph, setPartograph] = useState(null);
+
+    // Estados de selección para la tabla (curva de alerta)
     const [selectedMain, setSelectedMain] = useState(null);
     const [selectedSub, setSelectedSub] = useState(null);
     const [selectedMembrane, setSelectedMembrane] = useState(null);
     const [effectiveColumn, setEffectiveColumn] = useState(null);
 
+    // Catálogos del contexto
     const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
 
     useEffect(() => {
         if (catalogsError) message.error("Error al cargar los catálogos.");
     }, [catalogsError]);
 
+    // Cargar partograma e inicializar formulario/selecciones
     useEffect(() => {
         const fetchPartograph = async () => {
             try {
@@ -59,8 +65,7 @@ const EditPartographPage = () => {
                 setSelectedSub(data.selectedSub);
                 setSelectedMembrane(data.selectedMembrane);
                 setEffectiveColumn(data.workTime);
-                setLoading(false);
-            } catch (error) {
+            } catch {
                 message.error("Error al cargar el partograma");
             } finally {
                 setLoading(false);
@@ -69,30 +74,21 @@ const EditPartographPage = () => {
         fetchPartograph();
     }, [partographId, form]);
 
+    // Derivar selección de tabla desde la columna efectiva (si viene del backend)
     useEffect(() => {
         if (effectiveColumn) {
             let main = null, sub = null, membrane = null;
 
             if (effectiveColumn === "VTI") {
-                main = "Vertical";
-                sub = "Todas";
-                membrane = "Integras";
+                main = "Vertical"; sub = "Todas"; membrane = "Integras";
             } else if (effectiveColumn === "HMI") {
-                main = "Horizontal";
-                sub = "Multiparás";
-                membrane = "Integras";
+                main = "Horizontal"; sub = "Multiparás"; membrane = "Integras";
             } else if (effectiveColumn === "HMR") {
-                main = "Horizontal";
-                sub = "Multiparás";
-                membrane = "Rotas";
+                main = "Horizontal"; sub = "Multiparás"; membrane = "Rotas";
             } else if (effectiveColumn === "HNI") {
-                main = "Horizontal";
-                sub = "Nuliparás";
-                membrane = "Integras";
+                main = "Horizontal"; sub = "Nuliparás"; membrane = "Integras";
             } else if (effectiveColumn === "HNR") {
-                main = "Horizontal";
-                sub = "Nuliparás";
-                membrane = "Rotas";
+                main = "Horizontal"; sub = "Nuliparás"; membrane = "Rotas";
             }
 
             setSelectedMain(main);
@@ -101,7 +97,7 @@ const EditPartographPage = () => {
         }
     }, [effectiveColumn]);
 
-
+    // Guardar cambios del partograma
     const handleSave = async () => {
         try {
             const values = await form.validateFields();
@@ -116,27 +112,27 @@ const EditPartographPage = () => {
 
             await updatePartograph(payload);
             message.success("Partograma actualizado con éxito!");
-        } catch (error) {
+        } catch {
             message.error("Error al actualizar el partograma. Vuelva a probar mas tarde.");
         }
     };
 
-    if (loading || catalogsLoading) return <Spin fullscreen/>;
+    if (loading || catalogsLoading) return <Spin fullscreen />;
 
     return (
         <>
+            {/* Migas de pan + botón volver */}
             <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <BackButton to={PATH.PARTOGRAPH(partographId)}/>
+                <BackButton to={PATH.PARTOGRAPH(partographId)} />
                 <Breadcrumb
                     items={[
-                        {
-                            title: <NavLink to="/">Inicio</NavLink>,
-                        },
+                        { title: <NavLink to="/">Inicio</NavLink> },
                         { title: <NavLink to={PATH.PARTOGRAPH(partographId)}>Partograma</NavLink> },
                         { title: "Edición de Partograma" },
                     ]}
                 />
             </div>
+
             <Content style={{ margin: "1rem" }}>
                 <div
                     style={{
@@ -146,6 +142,7 @@ const EditPartographPage = () => {
                         borderRadius: borderRadiusLG,
                     }}
                 >
+                    {/* Formulario datos generales */}
                     <Typography.Title level={4}>Editar Partograma</Typography.Title>
                     <Form layout="vertical" form={form} style={{ width: 400 }}>
                         <Form.Item
@@ -173,7 +170,10 @@ const EditPartographPage = () => {
                             <Input.TextArea rows={3} />
                         </Form.Item>
                     </Form>
+
                     <Divider />
+
+                    {/* Selección para la curva de alerta */}
                     <Typography.Title level={4}>Valores para la creación de curva de alerta</Typography.Title>
                     <WorkTimeTable
                         catalogs={catalogs}
@@ -185,6 +185,8 @@ const EditPartographPage = () => {
                         setSelectedMembrane={setSelectedMembrane}
                         setEffectiveColumn={setEffectiveColumn}
                     />
+
+                    {/* Acción principal */}
                     <Flex gap="small" align="flex-end" style={{ marginTop: "3rem" }} vertical>
                         <Button type="primary" size="large" onClick={handleSave}>
                             Guardar Cambios

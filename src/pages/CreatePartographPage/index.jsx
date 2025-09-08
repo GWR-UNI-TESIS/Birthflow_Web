@@ -23,28 +23,23 @@ import dayjs from "dayjs";
 import PATH from "../../routes/path";
 
 const { Content } = Layout;
+
 const CreatePartographPage = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-
   const navigate = useNavigate();
-
   const [form] = Form.useForm();
 
-  // Estados para la selección en cada nivel
-  const [selectedMain, setSelectedMain] = useState(null); // "Vertical" o "Horizontal"
-  const [selectedSub, setSelectedSub] = useState(null); // Para Vertical: "Todas"; para Horizontal: "Multiparás" o "Nuliparás"
-  const [selectedMembrane, setSelectedMembrane] = useState(null); // "Integras" o "Rotas"
+  // Estados para selección en tabla de trabajo de parto
+  const [selectedMain, setSelectedMain] = useState(null);
+  const [selectedSub, setSelectedSub] = useState(null);
+  const [selectedMembrane, setSelectedMembrane] = useState(null);
   const [effectiveColumn, setEffectiveColumn] = useState(null);
 
-  // Se obtienen los catálogos del contexto
-  const {
-    catalogs,
-    loading: catalogsLoading,
-    error: catalogsError,
-  } = useCatalog();
+  // Catálogos del contexto
+  const { catalogs, loading: catalogsLoading, error: catalogsError } = useCatalog();
 
   useEffect(() => {
     if (catalogsError) message.error("Error al cargar los catálogos.");
@@ -52,61 +47,49 @@ const CreatePartographPage = () => {
 
   if (catalogsLoading) return <Spin />;
 
-  // Método para guardar la información del formulario y la selección de la tabla
+  // Guardar formulario y configuraciones de tabla
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
 
-      // Validación: aseguramos que se hayan realizado todas las selecciones de la tabla
-      if (
-        !selectedMain ||
-        !selectedSub ||
-        !selectedMembrane ||
-        !effectiveColumn
-      ) {
+      // Validación: asegurarse que todas las opciones estén seleccionadas
+      if (!selectedMain || !selectedSub || !selectedMembrane || !effectiveColumn) {
         message.error("Por favor, seleccione todas las opciones de la tabla.");
         return;
       }
 
+      // Payload que se envía al servicio
       const payload = {
-        partographId: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Este valor se puede generar o asignar según convenga
+        partographId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         name: values.Name,
         recordName: values.RecordName,
         date: dayjs(values.date).format("YYYY-MM-DDTHH:mm:ss"),
-        observation: values.observation || "", // Si agregas un campo observation en el formulario
+        observation: values.observation || "",
         workTime: effectiveColumn,
       };
 
       const result = await createPartograph(payload);
-      message.success("Partograma creado con exito con éxito!");
+      message.success("Partograma creado con éxito!");
       navigate(PATH.PARTOGRAPH(result.partographId));
 
-      // Aquí podrías redirigir o actualizar el estado según la respuesta
     } catch (error) {
-      message.error(
-        error.message || "Error en la validación o al guardar el partograma"
-      );
+      message.error(error.message || "Error en la validación o al guardar el partograma");
     }
   };
 
   return (
     <>
+      {/* Breadcrumb y botón de regreso */}
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
         <BackButton to={PATH.HOME} />
-
         <Breadcrumb
           items={[
-            {
-              title: (
-                <NavLink to="/" end>
-                  Home
-                </NavLink>
-              ),
-            },
-            { title: "Creacion de Partograma" },
+            { title: <NavLink to="/" end>Home</NavLink> },
+            { title: "Creación de Partograma" },
           ]}
         />
       </div>
+
       <Content style={{ margin: "1rem" }}>
         <div
           style={{
@@ -116,49 +99,27 @@ const CreatePartographPage = () => {
             borderRadius: borderRadiusLG,
           }}
         >
+          {/* Formulario de datos generales */}
           <Typography.Title level={4}>Datos Generales</Typography.Title>
-          <Form
-            layout="vertical"
-            form={form}
-            style={{ width: 400, marginBottom: 50 }}
-          >
-            <Form.Item
-              label="Nombre de la paciente"
-              name="Name"
-              rules={[
-                { required: true, message: "Por favor ingrese un nombre !" },
-              ]}
-            >
+          <Form layout="vertical" form={form} style={{ width: 400, marginBottom: 50 }}>
+            <Form.Item label="Nombre de la paciente" name="Name"
+              rules={[{ required: true, message: "Por favor ingrese un nombre !" }]}>
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Expediente"
-              name="RecordName"
-              rules={[
-                {
-                  required: true,
-                  message: "Por favor ingrese un expediente !",
-                },
-              ]}
-            >
+            <Form.Item label="Expediente" name="RecordName"
+              rules={[{ required: true, message: "Por favor ingrese un expediente !" }]}>
               <Input />
             </Form.Item>
-            <Form.Item
-              name="date"
-              label="Fecha"
-              rules={[
-                { required: true, message: "Por favor ingrese una fecha !" },
-              ]}
-            >
+            <Form.Item name="date" label="Fecha"
+              rules={[{ required: true, message: "Por favor ingrese una fecha !" }]}>
               <DatePicker />
             </Form.Item>
           </Form>
 
           <Divider />
 
-          <Typography.Title level={4}>
-            Valores para la creacion de la curva de alerta
-          </Typography.Title>
+          {/* Tabla para selección de valores de la curva */}
+          <Typography.Title level={4}>Valores para la creación de la curva de alerta</Typography.Title>
           <WorkTimeTable
             catalogs={catalogs}
             selectedMain={selectedMain}
@@ -169,12 +130,9 @@ const CreatePartographPage = () => {
             setSelectedMembrane={setSelectedMembrane}
             setEffectiveColumn={setEffectiveColumn}
           />
-          <Flex
-            gap="small"
-            align="flex-end"
-            style={{ marginTop: "3rem", marginRight: "1rem" }}
-            vertical
-          >
+
+          {/* Botón para guardar */}
+          <Flex gap="small" align="flex-end" style={{ marginTop: "3rem", marginRight: "1rem" }} vertical>
             <Button type="primary" size="large" onClick={handleSave}>
               Crear
             </Button>

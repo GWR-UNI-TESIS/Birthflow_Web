@@ -78,7 +78,20 @@ const ContractionFrequencyEditPage = () => {
                             <Form.Item
                                 label="Frecuencia de Contracciones"
                                 name="frecuenciaContracciones"
-                                rules={[{ required: true, message: "Campo requerido" }]}
+                                rules={[{ required: true, message: "Campo requerido" },
+                                    {
+                                    validator: (_, value) => {
+                                        if (value === undefined || value === null || value === "") {
+                                            return Promise.resolve(); // el required ya lo valida
+                                        }
+                                        const num = Number(value);
+                                        if (num >= 1 && num <= 13) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject("Debe estar entre 1 y 13");
+                                    },
+                                },
+                                ]}
                             >
                                 <Input placeholder="Frecuencia de Contracciones" type="number" />
                             </Form.Item>
